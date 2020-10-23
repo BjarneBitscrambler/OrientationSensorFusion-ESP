@@ -9,6 +9,6 @@ The sensor is used with the Signal K / SensESP project (https://github.com/Signa
 The aim of the testing is to determine characteristics of the sensor such as accuracy, repeatability, and response time.
 
 ## Where To Find...
-- test plans, data, results, etc are on this project's Wiki
+- test plans, data, results, etc are on [this project's Wiki](https://github.com/BjarneBitscrambler/OrientationSensorTesting/wiki)
 - code specific for this testing is under this project's Code tab
 - code for general operation of the sensor is on the [Upstream](https://github.com/SignalK/SensESP) and [author's](https://github.com/BjarneBitscrambler/SensESP) project pages
