@@ -6,18 +6,21 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*! \file hal_frdm_fxs_mult2_b.c
-    \brief Hardware Abstraction layer for the FRDM-FXS-MULT2-B sensor shield.
+/*! \file hal_axis_remap.c
+    \brief Hardware Abstraction layer for the particular sensors used.
+	Depending on the design of the sensor PCB, the axes of the sensor ICs
+	are not necessarily oriented as assumed by the fusion algorithm. This
+	file defines the axis remapping functions that are always applied to
+	the raw data before processing.
+
+	The present remapping is appropriate for the FXOS8700/FXAS21002C
+	sensor combination as found on the Adafruit breakout board.
+	***to be verified***  copied from 
+	FRDM_FXS_MULT2_B utilizing the FX0S8700 and FXAS21002 on the shield.
+
 */
 
 #include "sensor_fusion.h"  // top level magCal and sensor fusion interfaces
-
-// This HAL (Hardware Abstraction Layer) is applicable to:
-// FRDM_K64F +
-// FRDM_FXS_MULT2_B utilizing the FX0S8700 and FXAS21002 on the shield
-// It also works for the FRDM-STBC_AGM01 board.
-// It also works for the FRDM-STBC_AGM02 board (the driver_MAG3110.c inverts
-// the MAG3110 Z-axis reading to enforce +Z = up, so compatibility is maintained)
 
 void ApplyAccelHAL(struct AccelSensor *Accel)
 {
@@ -101,4 +104,3 @@ void ApplyGyroHAL(struct GyroSensor *Gyro)
 
 	return;
 }
-

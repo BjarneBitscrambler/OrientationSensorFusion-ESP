@@ -29,7 +29,7 @@ extern "C" {
 #include "stdint.h"
 
 
-#include "issdk_hal.h"                  // Hardware Abstraction Layer board dependencies beyond those generated in board.h by PEX
+#include "hal_issdk.h"                  // Hardware Abstraction Layer board hardware-specific functions
 #include "build.h"                      // This is where the build parameters are defined
 #include "magnetic.h"                   // Magnetic calibration functions/structures
 #include "precisionAccelerometer.h"     // Accel calibration functions/structures

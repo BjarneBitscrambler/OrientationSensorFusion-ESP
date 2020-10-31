@@ -8,15 +8,12 @@
 
 /*! \file drivers.h
     \brief Provides function prototypes for driver level interfaces
-
-   To use, for example, the NXP FXOS8700, include the driver_FXOS8700.c source
-   file in the build.
-
-   Users who are not using NXP hardware will need to supply their own drivers
-   in place of those defined here.
-
-   If running in an Arduino environment, the Sensor_I2C_Write_List() method 
-   used by the driver_xxxxxx.c files is defined in drivers.c
+    It does not have a corresponding .c or .cpp file. Rather, it declares
+    functions contained in hardware-specific files.
+   
+    To use, for example, the NXP FXOS8700, include the driver_FXOS8700.c source
+    file in the build and ensure its Init and Read methods for the sensor are 
+    declared here.
 
    Modified by Bjarne Hansen, 2020-10-24
 */
@@ -28,19 +25,14 @@
 extern "C" {
 #endif
 
-
-//#include "Driver_I2C.h"
-//#include "Driver_SPI.h"
-
 // must #include "sensor_fusion.h" before this file
 
-/// @name SysTick Macros
-/// The ARM SysTick counter is used to time various fusion options.  Timings
-/// are then conveyed to the NXP Sensor Fusion Toolbox, where they are displayed
-/// for the developer.  These functions should be portable to any ARM M0+, M3,
-/// M4 or M4F device.  If you are using a different CPU architecture, you will
-/// need to provide an equivalent set of macros, remove the macro calls from
-/// the fusion routines, or define a set of empty macros.
+/// @name SysTick timing methods
+/// The ARM SysTick routines were used on ARM M0+, M3,
+/// M4 or M4F platforms time various fusion operations.  Timings
+/// are then conveyed to and displayed by the NXP Sensor Fusion Toolbox.
+/// They are not essential to the sensor fusion algorithm, but have
+/// been redefined for use in the Arduino environment.
 ///@{
 extern void ARM_systick_enable(void);
 extern void ARM_systick_start_ticks(int32_t *pstart);

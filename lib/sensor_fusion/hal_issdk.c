@@ -1,4 +1,8 @@
-#include "replacement_functions.h"
+#include <Arduino.h>
+#include <esp32-hal.h>  //is this really needed? Doesn't Arduino.h include this?
+#include <stdint.h>
+
+#include "hal_issdk.h"
 
 
 void ARM_systick_enable( void ) {

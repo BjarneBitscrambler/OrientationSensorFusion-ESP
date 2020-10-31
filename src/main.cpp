@@ -6,16 +6,15 @@
 
 // Sensor Fusion Headers
 #include "sensor_fusion.h"      // top level magCal and sensor fusion interfaces
-#include "control.h"  	        // Command/Streaming interface - application specific
+#include "control.h"  	        // Command processing and data Streaming interface
 #include "status.h"   	        // Status indicator interface - application specific
 #include "drivers.h"  	        // NXP sensor drivers OR customer-supplied drivers
 
 
 #include "board.h"
 
-#include "debug_print.h"
-
-#include "sensor_io_i2c_sensesp.h"
+#include "debug_print.h"  //
+#include "sensor_io_i2c_sensesp.h"  //I2C interfaces for ESP platform
  
 // Sensor Fusion Global data structures
 SensorFusionGlobals sfg;                ///< This is the primary sensor fusion data structure
