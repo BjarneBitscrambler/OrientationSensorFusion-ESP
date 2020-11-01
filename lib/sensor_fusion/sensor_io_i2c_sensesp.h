@@ -11,7 +11,7 @@
 /**
  * @file sensor_io_i2c_sensesp.h
  * @brief The sensor_io_i2c_sensesp.h file declares low-level interface functions for reading
- *  and writing sensor registers.
+ *  and writing sensor registers using I2C.
  */
 
 #ifndef __SENSOR_IO_I2C_SENSESP_H
@@ -24,8 +24,6 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
-//#include "Driver_I2C.h"
-//#include "register_io_i2c.h"
 
 /*******************************************************************************
  * API
@@ -36,10 +34,10 @@ extern "C" {
 #define ARM_DRIVER_I2C void     //used to be a struct - now unused
 
 //TODO put these in a class
-bool I2CReadByte(byte address, byte reg, byte *destination);
-bool I2CReadBytes(byte address, byte reg, byte *destination, int num_bytes);
-bool I2CWriteByte(byte address, byte reg, byte value);
-bool I2CWriteBytes(byte address, byte reg, const byte *value,
+bool I2CReadByte(uint8_t address, uint8_t reg, uint8_t *destination);
+bool I2CReadBytes(uint8_t address, uint8_t reg, uint8_t *destination, int num_bytes);
+bool I2CWriteByte(uint8_t address, uint8_t reg, uint8_t value);
+bool I2CWriteBytes(uint8_t address, uint8_t reg, const uint8_t *value,
                 unsigned int num_bytes);
 
 /*! @brief       Write register data to a sensor

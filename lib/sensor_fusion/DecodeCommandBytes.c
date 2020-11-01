@@ -65,10 +65,10 @@
 #define cmd_PA10        (((((('P' << 8) | 'A') << 8) | '1') << 8) | '0') // "PA10" average precision accelerometer location 10
 #define cmd_PA11        (((((('P' << 8) | 'A') << 8) | '1') << 8) | '1') // "PA11" average precision accelerometer location 11
 
-void DecodeCommandBytes(SensorFusionGlobals *sfg, char iCommandBuffer[], uint8 sUART_InputBuffer[], uint16 nbytes)
+void DecodeCommandBytes(SensorFusionGlobals *sfg, char iCommandBuffer[], uint8_t sUART_InputBuffer[], uint16_t nbytes)
 {
-	int32 isum;		// 32 bit command identifier
-	int16 i, j;		// loop counters
+	int32_t isum;		// 32 bit command identifier
+	int16_t i, j;		// loop counters
 
 	// parse all received bytes in sUARTInputBuf into the iCommandBuffer delay line
 	for (i = 0; i < nbytes; i++) {
@@ -78,7 +78,7 @@ void DecodeCommandBytes(SensorFusionGlobals *sfg, char iCommandBuffer[], uint8 s
 		iCommandBuffer[3] = sUART_InputBuffer[i];
 
 		// check if we have a valid command yet
-		isum = ((((((int32)iCommandBuffer[0] << 8) | iCommandBuffer[1]) << 8) | iCommandBuffer[2]) << 8) | iCommandBuffer[3];
+		isum = ((((((int32_t)iCommandBuffer[0] << 8) | iCommandBuffer[1]) << 8) | iCommandBuffer[2]) << 8) | iCommandBuffer[3];
 		switch (isum) 		{
 		case cmd_VGplus: // "VG+ " = enable angular velocity packet transmission
                     sfg->pControlSubsystem->AngularVelocityPacketOn = true;

@@ -23,8 +23,8 @@
 */
 
 // Requires sensor_fusion.h to occur first in the #include stackup
-#ifndef SENSOR_FUSION_CONTROL_H_
-#define SENSOR_FUSION_CONTROL_H_
+#ifndef _CONTROL_H_
+#define _CONTROL_H_
 
 
 #ifdef __cplusplus
@@ -67,7 +67,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer);
 /// This function is responsible for decoding commands sent by the NXP Sensor Fusion Toolbox and setting
 /// the appropriate flags in the ControlSubsystem data structure.
 /// Packet protocols are defined in the NXP Sensor Fusion for Kinetis Product Development Kit User Guide.
-void DecodeCommandBytes(SensorFusionGlobals *sfg, char iCommandBuffer[], uint8 sUART_InputBuffer[], uint16 nbytes);
+void DecodeCommandBytes(SensorFusionGlobals *sfg, char iCommandBuffer[], uint8_t sUART_InputBuffer[], uint16_t nbytes);
 
 /// Used to initialize the Blue Radios Bluetooth module found on the
 /// FRDM-FXS-MULT2-B sensor shield from NXP.
@@ -85,4 +85,4 @@ extern uint8_t sUARTOutputBuffer[256];                  ///< main output buffer 
 #endif
 
 
-#endif /* SENSOR_FUSION_CONTROL_H_ */
+#endif /* _CONTROL_H_ */

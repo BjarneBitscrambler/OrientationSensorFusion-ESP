@@ -32,7 +32,7 @@ extern "C" {
 /// M4 or M4F platforms time various fusion operations.  Timings
 /// are then conveyed to and displayed by the NXP Sensor Fusion Toolbox.
 /// They are not essential to the sensor fusion algorithm, but have
-/// been redefined for use in the Arduino environment.
+/// been redefined in hal_issdk.c for use in the Arduino environment.
 ///@{
 extern void ARM_systick_enable(void);
 extern void ARM_systick_start_ticks(int32_t *pstart);

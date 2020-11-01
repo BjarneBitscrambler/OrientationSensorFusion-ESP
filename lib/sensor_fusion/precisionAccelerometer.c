@@ -18,7 +18,7 @@
 // function resets the accelerometer buffer and accelerometer calibration
 void fInitializeAccelCalibration(struct AccelCalibration *pthisAccelCal,
                                  struct AccelBuffer *pthisAccelBuffer,
-                                 volatile int8 *AccelCalPacketOn)
+                                 volatile int8_t *AccelCalPacketOn)
 {
     int8_t  i,
             j;          // loop counters
@@ -67,7 +67,7 @@ void fInitializeAccelCalibration(struct AccelCalibration *pthisAccelCal,
 
 void fUpdateAccelBuffer(struct AccelCalibration *pthisAccelCal,
                         struct AccelBuffer *pthisAccelBuffer,
-                        struct AccelSensor *pthisAccel, volatile int8 *AccelCalPacketOn)
+                        struct AccelSensor *pthisAccel, volatile int8_t *AccelCalPacketOn)
 {
     int16_t i;          // loop counter
 
@@ -218,7 +218,7 @@ void fComputeAccelCalibration4(struct AccelBuffer *pthisAccelBuffer,
                                struct AccelCalibration *pthisAccelCal,
                                struct AccelSensor *pthisAccel)
 {
-    int32   i,
+    int32_t   i,
             j;      // loop counters
     float   ftmp;   // scratch
     int8_t  ierror; // flag from matrix inversion
@@ -333,7 +333,7 @@ void fComputeAccelCalibration7(struct AccelBuffer *pthisAccelBuffer,
                                struct AccelCalibration *pthisAccelCal,
                                struct AccelSensor *pthisAccel)
 {
-    int32   i,
+    int32_t   i,
             j,
             m,
             n;      // loop counters
@@ -427,7 +427,7 @@ void fComputeAccelCalibration10(struct AccelBuffer *pthisAccelBuffer,
                                 struct AccelCalibration *pthisAccelCal,
                                 struct AccelSensor *pthisAccel)
 {
-    int32   i,
+    int32_t   i,
             j,
             k,
             l,

@@ -27,7 +27,7 @@
 void f3x3matrixAeqI(float A[][3])
 {
     float   *pAij;  // pointer to A[i][j]
-    int8    i,
+    int8_t    i,
             j;      // loop counters
     for (i = 0; i < 3; i++)
     {
@@ -49,7 +49,7 @@ void f3x3matrixAeqB(float A[][3], float B[][3])
 {
     float   *pAij;  // pointer to A[i][j]
     float   *pBij;  // pointer to B[i][j]
-    int8    i,
+    int8_t    i,
             j;      // loop counters
     for (i = 0; i < 3; i++)
     {
@@ -66,11 +66,11 @@ void f3x3matrixAeqB(float A[][3], float B[][3])
 }
 
 // function sets the matrix A to the identity matrix
-void fmatrixAeqI(float *A[], int16 rc)
+void fmatrixAeqI(float *A[], int16_t rc)
 {
     // rc = rows and columns in A
     float   *pAij;  // pointer to A[i][j]
-    int8    i,
+    int8_t    i,
             j;      // loop counters
     for (i = 0; i < rc; i++)
     {
@@ -91,7 +91,7 @@ void fmatrixAeqI(float *A[], int16 rc)
 void f3x3matrixAeqScalar(float A[][3], float Scalar)
 {
     float   *pAij;  // pointer to A[i][j]
-    int8    i,
+    int8_t    i,
             j;      // counters
     for (i = 0; i < 3; i++)
     {
@@ -110,7 +110,7 @@ void f3x3matrixAeqScalar(float A[][3], float Scalar)
 void f3x3matrixAeqAxScalar(float A[][3], float Scalar)
 {
     float   *pAij;  // pointer to A[i][j]
-    int8    i,
+    int8_t    i,
             j;      // loop counters
     for (i = 0; i < 3; i++)
     {
@@ -129,7 +129,7 @@ void f3x3matrixAeqAxScalar(float A[][3], float Scalar)
 void f3x3matrixAeqMinusA(float A[][3])
 {
     float   *pAij;  // pointer to A[i][j]
-    int8    i,
+    int8_t    i,
             j;      // loop counters
     for (i = 0; i < 3; i++)
     {
@@ -213,7 +213,7 @@ float f3x3matrixDetA(float A[][3])
 // eigvec[0..n-1][0..n-1] returns the normalized eigenvectors of A[][]
 // the eigenvectors are not sorted by value
 // n can vary up to and including 10 but the matrices A and eigvec must have 10 columns.
-void fEigenCompute10(float A[][10], float eigval[], float eigvec[][10], int8 n)
+void fEigenCompute10(float A[][10], float eigval[], float eigvec[][10], int8_t n)
 {
     // maximum number of iterations to achieve convergence: in practice 6 is typical
 #define NITERATIONS 15
@@ -231,14 +231,14 @@ void fEigenCompute10(float A[][10], float eigval[], float eigvec[][10], int8 n)
     float   residue;
 
     // matrix row and column indices
-    int8    i,
+    int8_t    i,
             j;
 
     // general loop counter
-    int8    k;
+    int8_t    k;
 
     // timeout ctr for number of passes of the algorithm
-    int8    ctr;
+    int8_t    ctr;
 
     // initialize eigenvectors matrix and eigenvalues array
     for (i = 0; i < n; i++)
@@ -386,7 +386,7 @@ void fEigenCompute10(float A[][10], float eigval[], float eigvec[][10], int8 n)
 // this function is identical to eigencompute10 except for the workaround for 4x4 matrices since C cannot
 
 // handle functions accepting matrices with variable numbers of columns.
-void fEigenCompute4(float A[][4], float eigval[], float eigvec[][4], int8 n)
+void fEigenCompute4(float A[][4], float eigval[], float eigvec[][4], int8_t n)
 {
     // maximum number of iterations to achieve convergence: in practice 6 is typical
 #define NITERATIONS 15
@@ -404,14 +404,14 @@ void fEigenCompute4(float A[][4], float eigval[], float eigvec[][4], int8 n)
     float   residue;
 
     // matrix row and column indices
-    int8    ir,
+    int8_t    ir,
             ic;
 
     // general loop counter
-    int8    j;
+    int8_t    j;
 
     // timeout ctr for number of passes of the algorithm
-    int8    ctr;
+    int8_t    ctr;
 
     // initialize eigenvectors matrix and eigenvalues array
     for (ir = 0; ir < n; ir++)
@@ -552,7 +552,7 @@ void fEigenCompute4(float A[][4], float eigval[], float eigvec[][4], int8 n)
 }
 
 void fComputeEigSlice(float fmatA[10][10], float fmatB[10][10], float fvecA[10],
-                      int8 i, int8 j, int8 iMatrixSize)
+                      int8_t i, int8_t j, int8_t iMatrixSize)
 {
     float   cot2phi;    // cotangent of half jacobi rotation angle
     float   tanhalfphi; // tangent of half jacobi rotation angle
@@ -560,7 +560,7 @@ void fComputeEigSlice(float fmatA[10][10], float fmatB[10][10], float fvecA[10],
     float   sinphi;     // sine of jacobi rotation angle
     float   cosphi;     // cosine of jacobi rotation angle
     float   ftmp;       // scratch
-    int8    k;          // loop counter
+    int8_t    k;          // loop counter
 
     // calculate cot(2*phi) where phi is the Jacobi rotation angle
     cot2phi = 0.5F * (fvecA[j] - fvecA[i]) / (fmatA[i][j]);
@@ -645,19 +645,19 @@ void fComputeEigSlice(float fmatA[10][10], float fmatB[10][10], float fvecA[10],
 // function uses Gauss-Jordan elimination to compute the inverse of matrix A in situ
 
 // on exit, A is replaced with its inverse
-void fmatrixAeqInvA(float *A[], int8 iColInd[], int8 iRowInd[], int8 iPivot[],
-                    int8 isize, int8 *pierror)
+void fmatrixAeqInvA(float *A[], int8_t iColInd[], int8_t iRowInd[], int8_t iPivot[],
+                    int8_t isize, int8_t *pierror)
 {
     float   largest;    // largest element used for pivoting
     float   scaling;    // scaling factor in pivoting
     float   recippiv;   // reciprocal of pivot element
     float   ftmp;       // temporary variable used in swaps
-    int8    i,
+    int8_t    i,
             j,
             k,
             l,
             m;          // index counters
-    int8    iPivotRow,
+    int8_t    iPivotRow,
             iPivotCol;  // row and column of pivot element
 
     // to avoid compiler warnings
@@ -799,7 +799,7 @@ void fmatrixAeqInvA(float *A[], int8 iColInd[], int8 iRowInd[], int8 iPivot[],
 // function rotates 3x1 vector u onto 3x1 vector using 3x3 rotation matrix fR.
 
 // the rotation is applied in the inverse direction if itranpose is true
-void fveqRu(float fv[], float fR[][3], float fu[], int8 itranspose)
+void fveqRu(float fv[], float fR[][3], float fu[], int8_t itranspose)
 {
     if (!itranspose)
     {

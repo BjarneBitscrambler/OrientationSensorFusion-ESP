@@ -33,7 +33,7 @@ void f3x3matrixAeqB(
 /// function sets the matrix A to the identity matrix
 void fmatrixAeqI(
     float *A[],                 ///< pointer to the matrix
-    int16 rc                    ///< dimension of the matrix
+    int16_t rc                    ///< dimension of the matrix
 );
 /// function sets every entry in the 3x3 matrix A to a constant scalar
 void f3x3matrixAeqScalar(
@@ -65,7 +65,7 @@ void fEigenCompute10(
     float A[][10],              ///< real symmetric matrix A[0..n-1][0..n-1]
     float eigval[],             ///< eigval[0..n-1] returns the eigenvalues of A[][].
     float eigvec[][10],         ///< eigvec[0..n-1][0..n-1] returns the normalized eigenvectors of A[][]
-    int8 n                      ///< n can vary up to and including 10 but the matrices A and eigvec must have 10 columns.
+    int8_t n                      ///< n can vary up to and including 10 but the matrices A and eigvec must have 10 columns.
 );
 /// function computes all eigenvalues and eigenvectors of a real symmetric matrix A[0..n-1][0..n-1]
 /// stored in the top left of a 4x4 array A[4][4]
@@ -77,25 +77,25 @@ void fEigenCompute4(
     float A[][4], 
     float eigval[],             ///< eigval[0..n-1] returns the eigenvalues of A[][].
     float eigvec[][4],          ///< eigvec[0..n-1][0..n-1] returns the normalized eigenvectors of A[][]
-    int8 n                      ///< n can vary up to and including 4 but the matrices A and eigvec must have 4 columns.
+    int8_t n                      ///< n can vary up to and including 4 but the matrices A and eigvec must have 4 columns.
 );
 void fComputeEigSlice(
     float fmatA[10][10], 
     float fmatB[10][10], 
     float fvecA[10], 
-    int8 i, 
-    int8 j, 
-    int8 iMatrixSize
+    int8_t i, 
+    int8_t j, 
+    int8_t iMatrixSize
 );
 /// function uses Gauss-Jordan elimination to compute the inverse of matrix A in situ
 /// on exit, A is replaced with its inverse
 void fmatrixAeqInvA(
     float *A[], 
-    int8 iColInd[], 
-    int8 iRowInd[], 
-    int8 iPivot[], 
-    int8 isize, 
-    int8* pierror
+    int8_t iColInd[], 
+    int8_t iRowInd[], 
+    int8_t iPivot[], 
+    int8_t isize, 
+    int8_t* pierror
 );
 /// function rotates 3x1 vector u onto 3x1 vector using 3x3 rotation matrix fR.
 /// the rotation is applied in the inverse direction if itranpose is true
@@ -103,7 +103,7 @@ void fveqRu(
     float fv[],         ///< 3x1 output vector
     float fR[][3],      ///< rotation matrix
     float fu[],         ///< 3x1 input vector
-    int8 itranspose     ///< true if inverse direction desired
+    int8_t itranspose     ///< true if inverse direction desired
 );
 /// function multiplies the 3x1 vector V by a 3x3 matrix A
 void fVeq3x3AxV(

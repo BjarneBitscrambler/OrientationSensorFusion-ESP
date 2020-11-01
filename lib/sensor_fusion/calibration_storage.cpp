@@ -51,7 +51,7 @@ bool GetMagCalibrationFromNVM( float *cal_values ) {
     EEPROM.readBytes(CALIBRATION_BUF_MAGNETIC_START, buf_magic,
                      CALIBRATION_BUF_MAGNETIC_HDR_SIZE);
     uint32_t magic_value = CALIBRATION_BUF_MAGNETIC_HDR_MAGIC;
-    uint8_t *pSrc = (uint8 *)&magic_value;
+    uint8_t *pSrc = (uint8_t *)&magic_value;
     for (int i = 0; i < CALIBRATION_BUF_MAGNETIC_HDR_SIZE; i++) {
       if( *pSrc != buf_magic[i] ) {
         return false;
@@ -86,7 +86,7 @@ bool GetGyroCalibrationFromNVM( float *cal_values ) {
     EEPROM.readBytes(CALIBRATION_BUF_GYRO_START, buf_magic,
                      CALIBRATION_BUF_GYRO_HDR_SIZE);
     uint32_t magic_value = CALIBRATION_BUF_GYRO_HDR_MAGIC;
-    uint8_t *pSrc = (uint8 *)&magic_value;
+    uint8_t *pSrc = (uint8_t *)&magic_value;
     for (int i = 0; i < CALIBRATION_BUF_GYRO_HDR_SIZE; i++) {
       if( *pSrc != buf_magic[i] ) {
         return false;
@@ -121,7 +121,7 @@ bool GetAccelCalibrationFromNVM( float *cal_values ) {
     EEPROM.readBytes(CALIBRATION_BUF_ACCEL_START, buf_magic,
                      CALIBRATION_BUF_ACCEL_HDR_SIZE);
     uint32_t magic_value = CALIBRATION_BUF_ACCEL_HDR_MAGIC;
-    uint8_t *pSrc = (uint8 *)&magic_value;
+    uint8_t *pSrc = (uint8_t *)&magic_value;
     for (int i = 0; i < CALIBRATION_BUF_ACCEL_HDR_SIZE; i++) {
       if( *pSrc != buf_magic[i] ) {
         return false;
@@ -157,14 +157,14 @@ void SaveMagCalibrationToNVM(SensorFusionGlobals *sfg)
     // write buffer with magnetic header + calibration in bytes 0 to 67
 	//bytes[0-3]: four byte header denoting magnetic calibration present
     uint32_t itmp32 = CALIBRATION_BUF_MAGNETIC_HDR_MAGIC;
-    pSrc = (uint8 *)&itmp32;
+    pSrc = (uint8_t *)&itmp32;
     for (int i = 0; i < CALIBRATION_BUF_MAGNETIC_HDR_SIZE; i++) {
 		*pDst = *pSrc;
         ++pDst;
         ++pSrc;
     }
     //bytes[4-67]: magnetic calibration: 15x float + 1x int32 subtotal 64 bytes
-    pSrc = (uint8 *)&(sfg->MagCal);
+    pSrc = (uint8_t *)&(sfg->MagCal);
     for (int i = 0; i < CALIBRATION_BUF_MAGNETIC_VAL_SIZE; i++) {
 		*pDst = *pSrc;
         ++pDst;
@@ -195,7 +195,7 @@ void SaveGyroCalibrationToNVM(SensorFusionGlobals *sfg)
     // write buffer with gyro header + calibration in bytes 0 to 15
 	//bytes[0-3]: four byte header denoting gyro calibration present
     uint32_t itmp32 = CALIBRATION_BUF_GYRO_HDR_MAGIC;
-    pSrc = (uint8 *)&itmp32;
+    pSrc = (uint8_t *)&itmp32;
     for (int i = 0; i < CALIBRATION_BUF_GYRO_HDR_SIZE; i++) {
 		*pDst = *pSrc;
         ++pDst;
@@ -203,11 +203,11 @@ void SaveGyroCalibrationToNVM(SensorFusionGlobals *sfg)
     }
 	//bytes [4-15]: 3 gyro offset floats sub totalling 12 bytes
 #if F_9DOF_GBY_KALMAN
-	pSrc = (uint8 *) sfg->SV_9DOF_GBY_KALMAN.fbPl;
+	pSrc = (uint8_t *) sfg->SV_9DOF_GBY_KALMAN.fbPl;
 #elif F_6DOF_GY_KALMAN
 	pSrc = (uint8 *) sfg->SV_6DOF_GY_KALMAN.fbPl;
 #endif
-    pSrc = (uint8 *)&(sfg->MagCal);
+    pSrc = (uint8_t *)&(sfg->MagCal);
     for (int i = 0; i < CALIBRATION_BUF_GYRO_VAL_SIZE; i++) {
 		*pDst = *pSrc;
         ++pDst;
@@ -238,14 +238,14 @@ void SaveAccelCalibrationToNVM(SensorFusionGlobals *sfg)
     // write buffer with accel header + calibration in bytes 0 to 87
 	//bytes[0-3]: four byte header denoting gyro calibration present
     uint32_t itmp32 = CALIBRATION_BUF_ACCEL_HDR_MAGIC;
-    pSrc = (uint8 *)&itmp32;
+    pSrc = (uint8_t *)&itmp32;
     for (int i = 0; i < CALIBRATION_BUF_ACCEL_HDR_SIZE; i++) {
 		*pDst = *pSrc;
         ++pDst;
         ++pSrc;
     }
 	//bytes [4-87]: 21 precision accelerometer calibration floats subtotalling 84 bytes
-	pSrc = (uint8 *) &(sfg->AccelCal);
+	pSrc = (uint8_t *) &(sfg->AccelCal);
     for (int i = 0; i < CALIBRATION_BUF_ACCEL_VAL_SIZE; i++) {
 		*pDst = *pSrc;
         ++pDst;
@@ -272,7 +272,7 @@ void EraseMagCalibrationFromNVM(void)
     pDst = buf_NVM + CALIBRATION_BUF_MAGNETIC_START;
 	//bytes[0-3]: four byte header denoting magnetic calibration present
     uint32_t itmp32 = CALIBRATION_NO_MAGIC;
-    pSrc = (uint8 *)&itmp32;
+    pSrc = (uint8_t *)&itmp32;
     for (int i = 0; i < CALIBRATION_BUF_MAGNETIC_HDR_SIZE; i++) {
 		*pDst = *pSrc;
         ++pDst;
@@ -299,7 +299,7 @@ void EraseGyroCalibrationFromNVM(void)
     pDst = buf_NVM + CALIBRATION_BUF_GYRO_START;
 	//bytes[0-3]: four byte header denoting magnetic calibration present
     uint32_t itmp32 = CALIBRATION_NO_MAGIC;
-    pSrc = (uint8 *)&itmp32;
+    pSrc = (uint8_t *)&itmp32;
     for (int i = 0; i < CALIBRATION_BUF_GYRO_HDR_SIZE; i++) {
 		*pDst = *pSrc;
         ++pDst;
@@ -326,7 +326,7 @@ void EraseAccelCalibrationFromNVM(void)
     pDst = buf_NVM + CALIBRATION_BUF_ACCEL_START;
 	//bytes[0-3]: four byte header denoting magnetic calibration present
     uint32_t itmp32 = CALIBRATION_NO_MAGIC;
-    pSrc = (uint8 *)&itmp32;
+    pSrc = (uint8_t *)&itmp32;
     for (int i = 0; i < CALIBRATION_BUF_ACCEL_HDR_SIZE; i++) {
 		*pDst = *pSrc;
         ++pDst;

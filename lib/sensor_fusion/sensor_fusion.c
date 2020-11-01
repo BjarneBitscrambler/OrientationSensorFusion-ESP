@@ -15,14 +15,10 @@
 #include "sensor_fusion.h"
 #include "magnetic.h"
 #include "drivers.h"
-//#include "issdk_hal.h"  //defines the ARM_*() calls in drivers.h
 #include "sensor_drv.h"
 #include "status.h"
 #include "control.h"
 #include "fusion.h"
-
-
-//#include "debug.h"
 
 /// Poor man's inheritance for status subsystem setStatus command
 /// This function is normally involved via the "sfg." global pointer.
@@ -166,8 +162,8 @@ int8_t initializeSensors(SensorFusionGlobals *sfg)
 #if F_USING_ACCEL
 void processAccelData(SensorFusionGlobals *sfg)
 {
-    int32 iSum[3];		        // channel sums
-    int16 i, j;			        // counters
+    int32_t iSum[3];		        // channel sums
+    int16_t i, j;			        // counters
     if (sfg->Accel.iFIFOExceeded > 0) {
       sfg->setStatus(sfg, SOFT_FAULT);
     }
@@ -182,7 +178,7 @@ void processAccelData(SensorFusionGlobals *sfg)
     {
         for (j = CHX; j <= CHZ; j++)
         {
-            sfg->Accel.iGs[j] = (int16)(iSum[j] / (int32) sfg->Accel.iFIFOCount);
+            sfg->Accel.iGs[j] = (int16_t)(iSum[j] / (int32_t) sfg->Accel.iFIFOCount);
             sfg->Accel.fGs[j] = (float)sfg->Accel.iGs[j] * sfg->Accel.fgPerCount;
         }
     }
@@ -202,8 +198,8 @@ void processAccelData(SensorFusionGlobals *sfg)
 #if F_USING_MAG
 void processMagData(SensorFusionGlobals *sfg)
 {
-    int32 iSum[3];		        // channel sums
-    int16 i, j;			        // counters
+    int32_t iSum[3];		        // channel sums
+    int16_t i, j;			        // counters
 
     // printf("ProcessingMagData()\n");
     if (sfg->Mag.iFIFOExceeded > 0) {
@@ -220,7 +216,7 @@ void processMagData(SensorFusionGlobals *sfg)
     {
       for (j = CHX; j <= CHZ; j++)
       {
-          sfg->Mag.iBs[j] = (int16)(iSum[j] / (int32) sfg->Mag.iFIFOCount);
+          sfg->Mag.iBs[j] = (int16_t)(iSum[j] / (int32_t) sfg->Mag.iFIFOCount);
           sfg->Mag.fBs[j] = (float)sfg->Mag.iBs[j] * sfg->Mag.fuTPerCount;
       }
     }
@@ -240,8 +236,8 @@ void processMagData(SensorFusionGlobals *sfg)
 #if F_USING_GYRO
 void processGyroData(SensorFusionGlobals *sfg)
 {
-    int32 iSum[3];		        // channel sums
-    int16 i, j;			        // counters
+    int32_t iSum[3];		        // channel sums
+    int16_t i, j;			        // counters
     if (sfg->Gyro.iFIFOExceeded > 0) {
       sfg->setStatus(sfg, SOFT_FAULT);
     }
@@ -260,7 +256,7 @@ void processGyroData(SensorFusionGlobals *sfg)
     {
         for (j = CHX; j <= CHZ; j++)
         {
-            sfg->Gyro.iYs[j] = (int16)(iSum[j] / (int32) sfg->Gyro.iFIFOCount);
+            sfg->Gyro.iYs[j] = (int16_t)(iSum[j] / (int32_t) sfg->Gyro.iFIFOCount);
             sfg->Gyro.fYs[j] = (float)sfg->Gyro.iYs[j] * sfg->Gyro.fDegPerSecPerCount;
         }
     }

@@ -15,8 +15,8 @@
     \brief The sensor_fusion.h file implements the top level programming interface
 */
 
-#ifndef SENSOR_FUSION_TYPES_H
-#define SENSOR_FUSION_TYPES_H
+#ifndef SENSOR_FUSION_H
+#define SENSOR_FUSION_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,19 +34,8 @@ extern "C" {
 #include "magnetic.h"                   // Magnetic calibration functions/structures
 #include "precisionAccelerometer.h"     // Accel calibration functions/structures
 #include "orientation.h"                // Functions for manipulating orientations
-#include "register_io_spi.h"
-
-/// @name Integer Typedefs
-/// Typedefs to map common integer types to standard form
-///@{
-typedef unsigned char byte;
-typedef int8_t int8;
-typedef int16_t int16;
-typedef int32_t int32;
-typedef uint8_t uint8;
-typedef uint16_t uint16;
-typedef uint32_t uint32;
-///@}
+#include "register_io_spi.h"			// Support for SPI interface devices (not currently used)
+#include "matrix.h"  					// Matrix math
 
 /// the quaternion type to be transmitted
 typedef enum quaternion {
@@ -168,7 +157,7 @@ struct PhysicalSensor {
 	struct PhysicalSensor *next;		///< pointer to next sensor in this linked list
         uint16_t schedule;                      ///< Parameter to control sensor sampling rate
 	initializeSensor_t *initialize;  	///< pointer to function to initialize sensor using the supplied drivers
-	readSensor_t *read;			///< pointer to function to read       sensor using the supplied drivers
+	readSensor_t *read;			///< pointer to function to read sensor using the supplied drivers
 };
 
 // Now start "standard" sensor fusion structure definitions
@@ -580,9 +569,6 @@ void conditionSample(
     int16_t sample[3]                                   ///< 16-bit register value from triaxial sensor read
 );
 
-// The following functions are defined in <hal_board_name>.c.
-// Please note that these are board-dependent
-
 /// \brief addToFifo is called from within sensor driver read functions
 ///
 /// addToFifo is called from within sensor driver read functions to transfer new readings into
@@ -595,6 +581,11 @@ void addToFifo(
     uint16_t maxFifoSize,                               ///< the size of the software (not hardware) FIFO
     int16_t sample[3]                                   ///< the sample to add
 );
+
+// The following functions are defined in hal_axis_remap.c
+// Please note that these are board-dependent - they account for 
+//various orientations of sensor ICs on the sensor PCB.
+
 /// \brief Apply the accelerometer Hardware Abstraction Layer
 void ApplyAccelHAL(
     struct AccelSensor *Accel                                  ///< pointer to accelerometer logical sensor
@@ -618,10 +609,8 @@ void ApplyGyroHAL(
 // The following function is defined in debug.c:
 applyPerturbation_t ApplyPerturbation;
 
-#include "matrix.h"  // this is only down here so we can take advantage of _t style typedefs above
-
 #ifdef __cplusplus
 }
 #endif
 
-#endif // SENSOR_FUSION_TYPES_H
+#endif // SENSOR_FUSION_H

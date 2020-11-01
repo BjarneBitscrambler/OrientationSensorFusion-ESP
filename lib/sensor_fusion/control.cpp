@@ -6,21 +6,15 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*! \file control.c
+/*! \file control.cpp
     \brief Defines control sub-system
 
     This file contains a UART implementation of the control subsystem.  The
     command interpreter and streaming functions are contained in two separate
     files.  So you can easily swap those out with only minor changes here.
 */
-//#include "fsl_debug_console.h"
 #include <Arduino.h>
 #include <HardwareSerial.h>
-
-//#include "board.h"
-//#include "pin_mux.h"
-//#include "fsl_uart.h"
-//#include "fsl_port.h"
 #include "sensor_fusion.h"
 #include "control.h"
 

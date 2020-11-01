@@ -8,14 +8,16 @@
 
 /*! \file output_stream.c
     \brief Implements streaming function for the status subsystem.  See status.h
+    Data packets are sent via serial interface, which can be a wired UART, Bluetooth,
+    socket via WiFi, etc.  Currently UART is only method fully implemented.
 */
 
 #include "sensor_fusion.h"  // top level magCal and sensor fusion interfaces
 #include "control.h"        // Command/Streaming interface - application specific
 #include "debug.h"          // for test purposes
-//#include "debug_print.h"
 #include "board.h"
-#define MAXPACKETRATEHZ 40
+
+#define MAXPACKETRATEHZ 40  //rate at which data packets are sent (e.g. to Fusion Toolbox)
 #define RATERESOLUTION 1000
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,7 +100,7 @@ void readCommon( SV_ptr data,
 ///    (OVERSAMPLE_RATIO * MAXPACKETRATEHZ) / SENSORFS
 uint16_t throttle()
 {
-    static int32 iThrottle = 0;
+    static int32_t iThrottle = 0;
     uint8_t skip;
     // The UART (serial over USB and over Bluetooth)
     // is limited to 115kbps which is more than adequate for the 31kbps
@@ -108,7 +110,7 @@ uint16_t throttle()
     // support a higher rate, the limit is set to MAXPACKETRATEHZ=40Hz.
 
     // the increment applied to iThrottle is in the range 0 to (RATERESOLUTION - 1)
-    iThrottle += ((int32) MAXPACKETRATEHZ * (int32) RATERESOLUTION) / (int32) FUSION_HZ;
+    iThrottle += ((int32_t) MAXPACKETRATEHZ * (int32_t) RATERESOLUTION) / (int32_t) FUSION_HZ;
     if (iThrottle >= RATERESOLUTION) {
         // update the throttle counter and transmit the packets over UART (USB and Bluetooth)
 	iThrottle -= RATERESOLUTION;

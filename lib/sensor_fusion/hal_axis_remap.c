@@ -24,14 +24,14 @@
 
 void ApplyAccelHAL(struct AccelSensor *Accel)
 {
-	int8 i;				// loop counter
+	int8_t i;				// loop counter
 
 	// apply HAL to all measurements read from FIFO buffer
 	for (i = 0; i < Accel->iFIFOCount; i++)
 	{
 		// apply HAL mapping to coordinate system used
 #if THISCOORDSYSTEM == NED
-		int16 itmp16 = Accel->iGsFIFO[i][CHX];
+		int16_t itmp16 = Accel->iGsFIFO[i][CHX];
 		Accel->iGsFIFO[i][CHX] = Accel->iGsFIFO[i][CHY];
 		Accel->iGsFIFO[i][CHY] = itmp16;
 #endif // NED
@@ -51,14 +51,14 @@ void ApplyAccelHAL(struct AccelSensor *Accel)
 // function applies the hardware abstraction layer to the magnetometer readings
 void ApplyMagHAL(struct MagSensor *Mag)
 {
-	int8 i;				// loop counter
+	int8_t i;				// loop counter
 
 	// apply HAL to all measurements read from FIFO buffer
 	for (i = 0; i < Mag->iFIFOCount; i++)
 	{
 		// apply HAL mapping to coordinate system used
 #if THISCOORDSYSTEM == NED
-		int16 itmp16 = Mag->iBsFIFO[i][CHX];
+		int16_t itmp16 = Mag->iBsFIFO[i][CHX];
 		Mag->iBsFIFO[i][CHX] = -Mag->iBsFIFO[i][CHY];
 		Mag->iBsFIFO[i][CHY] = -itmp16;
 		Mag->iBsFIFO[i][CHZ] = -Mag->iBsFIFO[i][CHZ];
@@ -79,14 +79,14 @@ void ApplyMagHAL(struct MagSensor *Mag)
 // function applies the hardware abstraction layer to the gyro readings
 void ApplyGyroHAL(struct GyroSensor *Gyro)
 {
-	int8 i;				// loop counter
+	int8_t i;				// loop counter
 
 	// apply HAL to all measurements read from FIFO buffer
 	for (i = 0; i < Gyro->iFIFOCount; i++)
 	{
 		// apply HAL mapping to coordinate system used
 #if THISCOORDSYSTEM == NED
-		int16 itmp16 = Gyro->iYsFIFO[i][CHX];
+		int16_t itmp16 = Gyro->iYsFIFO[i][CHX];
 		Gyro->iYsFIFO[i][CHX] = -Gyro->iYsFIFO[i][CHY];
 		Gyro->iYsFIFO[i][CHY] = -itmp16;
 		Gyro->iYsFIFO[i][CHZ] = -Gyro->iYsFIFO[i][CHZ];
