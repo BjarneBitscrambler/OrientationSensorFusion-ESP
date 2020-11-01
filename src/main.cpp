@@ -45,8 +45,9 @@ void setup() {
    delay(1000);
 
   //initialize the I2C system at max clock rate supported by sensors
- Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL, 400000 );
-   debug_log("I2C initted");
+  Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
+  Wire.setClock( 400000 ); //in ESP8266 library, can't set clock in same call that sets pins
+  debug_log("I2C initted");
 
   // initialize Sensor Fusion
   initializeControlPort(&controlSubsystem);  // configure pins and ports for the
@@ -80,8 +81,8 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-    int last_call = millis();
-    int loop_interval_ms = 1000 / FUSION_HZ;
+    unsigned long last_call = millis();
+    unsigned long loop_interval_ms = 1000 / FUSION_HZ;
     int i = 0;
     while (true) {
       if ((millis() - last_call) > loop_interval_ms) {

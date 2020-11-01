@@ -14,7 +14,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 #include "esp32-hal-gpio.h" //may have to replace if using ESP8266. Needed for pinMode() etc.
-// Can #include "Arduino.h" instead (which includes the *_hal_gpio), but then some other
+//#include "Arduino.h" //Can use this instead (which includes the *_hal_gpio), but then some other
 // constants get defined too (like PI) which clash with defines in sensor_fusion.h
 
 /*******************************************************************************

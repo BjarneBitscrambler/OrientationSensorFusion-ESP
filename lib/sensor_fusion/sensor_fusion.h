@@ -56,8 +56,12 @@ typedef enum quaternion {
 ///@}
 
 // booleans
+#ifndef true
 #define true 1  ///< Boolean TRUE
+#endif
+#ifndef false
 #define false 0 ///< Boolean FALSE
+#endif
 
 /// @name Generic bit-field values
 /// Generic bit-field values
