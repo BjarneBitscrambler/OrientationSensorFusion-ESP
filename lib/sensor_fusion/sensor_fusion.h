@@ -72,7 +72,7 @@ typedef enum quaternion {
 /// useful multiplicative conversion constants
 ///@{
 #ifndef PI
-	#define PI 3.141592654F				///< pi
+	#define PI 3.141592654F				///< pi  (it is also defined in Arduino.h)
 #endif
 #define PIOVER2 1.570796327F			///< pi / 2
 #define FPIOVER180 0.01745329251994F	        ///< degrees to radians conversion = pi / 180

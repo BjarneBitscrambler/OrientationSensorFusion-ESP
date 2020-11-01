@@ -114,10 +114,12 @@ int8_t installSensor(
     if (sfg && pSensor /*&& bus_driver */ && initialize && read)
     {
         pSensor->bus_driver = bus_driver;
-/*bj was        pSensor->deviceInfo.deviceInstance = busInfo->deviceInstance;
+    /* was  pSensor->deviceInfo.deviceInstance = busInfo->deviceInstance;
         pSensor->deviceInfo.functionParam = busInfo->functionParam;
-        pSensor->deviceInfo.idleFunction = busInfo->idleFunction; */
-        pSensor->deviceInfo.deviceInstance = NULL;
+        pSensor->deviceInfo.idleFunction = busInfo->idleFunction;
+        but these aren't used. Instead of changing structs everywhere, 
+        we just set to zero. */
+        pSensor->deviceInfo.deviceInstance = 0;
         pSensor->deviceInfo.functionParam = NULL;
         pSensor->deviceInfo.idleFunction = NULL;
 
