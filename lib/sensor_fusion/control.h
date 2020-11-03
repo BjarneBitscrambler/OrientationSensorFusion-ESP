@@ -32,10 +32,11 @@ extern "C" {
 #endif
 
 /// @name Control Port Function Type Definitions
-/// The "write" and "stream" commands provide two control functions visible at the main()
-/// level.  These typedefs define the structure of those two calls.
+/// "write" "stream" and "readCommands" provide three control functions visible at the main()
+/// level.  These typedefs define the structure of those calls.
 ///@{
 typedef int8_t (writePort_t) (struct ControlSubsystem *pComm, uint8_t buffer[], uint16_t nbytes);
+typedef int8_t (readCommand_t) (SensorFusionGlobals *sfg);
 typedef void (streamData_t)(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer);
 ///@}
 
@@ -52,8 +53,9 @@ typedef struct ControlSubsystem {
 	volatile uint8_t RPCPacketOn;			///< flag to enable roll, pitch, compass packet
 	volatile uint8_t AltPacketOn;			///< flag to enable altitude packet
 	volatile int8_t  AccelCalPacketOn;              ///< variable used to coordinate accelerometer calibration
-	writePort_t      *write;                        ///< low level function to write a char buffer to the serial stream
-	streamData_t	 *stream;                       ///< function to create packets for serial stream
+	writePort_t      *write;                        ///< function to write output packet buffer to the serial stream(s)
+    readCommand_t    *readCommands;                 //< function to check for incoming commands and process them
+    streamData_t     *stream;                       ///< function to create data packets for output
 } ControlSubsystem;
 
 int8_t initializeControlPort(ControlSubsystem *pComm);  ///< Call this once to initialize structures, ports, etc.
@@ -67,17 +69,13 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer);
 /// This function is responsible for decoding commands sent by the NXP Sensor Fusion Toolbox and setting
 /// the appropriate flags in the ControlSubsystem data structure.
 /// Packet protocols are defined in the NXP Sensor Fusion for Kinetis Product Development Kit User Guide.
-void DecodeCommandBytes(SensorFusionGlobals *sfg, char iCommandBuffer[], uint8_t sUART_InputBuffer[], uint16_t nbytes);
-
-/// Used to initialize the Blue Radios Bluetooth module found on the
-/// FRDM-FXS-MULT2-B sensor shield from NXP.
-void BlueRadios_Init(void);
+void DecodeCommandBytes(SensorFusionGlobals *sfg, uint8_t input_buffer[], uint16_t nbytes);
 
 /// Utility function used to place data in output buffer about to be transmitted via UART
 void sBufAppendItem(uint8_t *pDest, uint16_t *pIndex, uint8_t *pSource, uint16_t iBytesToCopy);
 
 // externals
-extern uint8_t sUARTOutputBuffer[256];                  ///< main output buffer defined in control.c
+extern uint8_t sUARTOutputBuffer[256];                  ///< main output buffer defined in control.cpp
 
 
 #ifdef __cplusplus

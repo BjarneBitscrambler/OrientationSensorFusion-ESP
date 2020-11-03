@@ -35,14 +35,14 @@
 #define cmd_ALTminus    (((((('A' << 8) | 'L') << 8) | 'T') << 8) | '-') // "ALT-" = Altitude packet off
 #define cmd_RST         (((((('R' << 8) | 'S') << 8) | 'T') << 8) | ' ') // "RST " = Soft reset
 #define cmd_RINS        (((((('R' << 8) | 'I') << 8) | 'N') << 8) | 'S') // "RINS" = Reset INS inertial navigation velocity and position
-#define cmd_SVAC        (((((('S' << 8) | 'V') << 8) | 'A') << 8) | 'C') // "SVAC" = save all calibrations to Kinetis flash
-#define cmd_SVMC        (((((('S' << 8) | 'V') << 8) | 'M') << 8) | 'C') // "SVMC" = save magnetic calibration to Kinetis flash
-#define cmd_SVYC        (((((('S' << 8) | 'V') << 8) | 'Y') << 8) | 'C') // "SVYC" = save gyroscope calibration to Kinetis flash
-#define cmd_SVGC        (((((('S' << 8) | 'V') << 8) | 'G') << 8) | 'C') // "SVGC" = save precision accelerometer calibration to Kinetis flash
-#define cmd_ERAC        (((((('E' << 8) | 'R') << 8) | 'A') << 8) | 'C') // "ERAC" = erase all calibrations from Kinetis flash
-#define cmd_ERMC        (((((('E' << 8) | 'R') << 8) | 'M') << 8) | 'C') // "ERMC" = erase magnetic calibration from Kinetis flash
-#define cmd_ERYC        (((((('E' << 8) | 'R') << 8) | 'Y') << 8) | 'C') // "ERYC" = erase gyro offset calibration from Kinetis flash
-#define cmd_ERGC        (((((('E' << 8) | 'R') << 8) | 'G') << 8) | 'C') // "ERGC" = erase precision accelerometer calibration from Kinetis flash
+#define cmd_SVAC        (((((('S' << 8) | 'V') << 8) | 'A') << 8) | 'C') // "SVAC" = save all calibrations to non-volatile storage
+#define cmd_SVMC        (((((('S' << 8) | 'V') << 8) | 'M') << 8) | 'C') // "SVMC" = save magnetic calibration to non-volatile storage
+#define cmd_SVYC        (((((('S' << 8) | 'V') << 8) | 'Y') << 8) | 'C') // "SVYC" = save gyroscope calibration to non-volatile storage
+#define cmd_SVGC        (((((('S' << 8) | 'V') << 8) | 'G') << 8) | 'C') // "SVGC" = save precision accelerometer calibration to non-volatile storage
+#define cmd_ERAC        (((((('E' << 8) | 'R') << 8) | 'A') << 8) | 'C') // "ERAC" = erase all calibrations from non-volatile storage
+#define cmd_ERMC        (((((('E' << 8) | 'R') << 8) | 'M') << 8) | 'C') // "ERMC" = erase magnetic calibration from non-volatile storage
+#define cmd_ERYC        (((((('E' << 8) | 'R') << 8) | 'Y') << 8) | 'C') // "ERYC" = erase gyro offset calibration from non-volatile storage
+#define cmd_ERGC        (((((('E' << 8) | 'R') << 8) | 'G') << 8) | 'C') // "ERGC" = erase precision accelerometer calibration from non-volatile storage
 #define cmd_180X        (((((('1' << 8) | '8') << 8) | '0') << 8) | 'X') // "180X" perturbation
 #define cmd_180Y        (((((('1' << 8) | '8') << 8) | '0') << 8) | 'Y') // "180Y" perturbation
 #define cmd_180Z        (((((('1' << 8) | '8') << 8) | '0') << 8) | 'Z') // "180Z" perturbation
@@ -65,17 +65,20 @@
 #define cmd_PA10        (((((('P' << 8) | 'A') << 8) | '1') << 8) | '0') // "PA10" average precision accelerometer location 10
 #define cmd_PA11        (((((('P' << 8) | 'A') << 8) | '1') << 8) | '1') // "PA11" average precision accelerometer location 11
 
-void DecodeCommandBytes(SensorFusionGlobals *sfg, char iCommandBuffer[], uint8_t sUART_InputBuffer[], uint16_t nbytes)
+void DecodeCommandBytes(SensorFusionGlobals *sfg, uint8_t input_buffer[], uint16_t nbytes)
 {
-	int32_t isum;		// 32 bit command identifier
-	int16_t i, j;		// loop counters
+  static char iCommandBuffer[5] = "~~~~";	// 5 bytes long to include the unused terminating \0
+  int32_t isum;		// 32 bit command identifier
+  int16_t i, j;		// loop counters
+
+  sfg->setStatus(sfg, RECEIVING_WIRED);
 
 	// parse all received bytes in sUARTInputBuf into the iCommandBuffer delay line
 	for (i = 0; i < nbytes; i++) {
 		// shuffle the iCommandBuffer delay line and add the new command byte
 		for (j = 0; j < 3; j++)
 			iCommandBuffer[j] = iCommandBuffer[j + 1];
-		iCommandBuffer[3] = sUART_InputBuffer[i];
+		iCommandBuffer[3] = input_buffer[i];
 
 		// check if we have a valid command yet
 		isum = ((((((int32_t)iCommandBuffer[0] << 8) | iCommandBuffer[1]) << 8) | iCommandBuffer[2]) << 8) | iCommandBuffer[3];
@@ -187,46 +190,46 @@ void DecodeCommandBytes(SensorFusionGlobals *sfg, char iCommandBuffer[], uint8_t
 		iCommandBuffer[3] = '~';
 		break;
 
-		case cmd_SVAC: // "SVAC" = save all calibrations to Kinetis flash
+		case cmd_SVAC: // "SVAC" = save all calibrations to non-volatile storage
                     SaveMagCalibrationToNVM(sfg);
                     SaveGyroCalibrationToNVM(sfg);
                     SaveAccelCalibrationToNVM(sfg);
                     iCommandBuffer[3] = '~';
 		break;
 
-		case cmd_SVMC: // "SVMC" = save magnetic calibration to Kinetis flash
+		case cmd_SVMC: // "SVMC" = save magnetic calibration to non-volatile storage
                     SaveMagCalibrationToNVM(sfg);
                     iCommandBuffer[3] = '~';
 		break;
 
-		case cmd_SVYC: // "SVYC" = save gyroscope calibration to Kinetis flash
+		case cmd_SVYC: // "SVYC" = save gyroscope calibration to non-volatile storage
                     SaveGyroCalibrationToNVM(sfg);
                     iCommandBuffer[3] = '~';
 		break;
 
-		case cmd_SVGC: // "SVGC" = save precision accelerometer calibration to Kinetis flash
+		case cmd_SVGC: // "SVGC" = save precision accelerometer calibration to non-volatile storage
                     SaveAccelCalibrationToNVM(sfg);
                     iCommandBuffer[3] = '~';
 		break;
 
-		case cmd_ERAC: // "ERAC" = erase all calibrations from Kinetis flash
+		case cmd_ERAC: // "ERAC" = erase all calibrations from non-volatile storage
                     EraseMagCalibrationFromNVM();
                     EraseGyroCalibrationFromNVM();
                     EraseAccelCalibrationFromNVM();
                     iCommandBuffer[3] = '~';
 		break;
 
-		case cmd_ERMC: // "ERMC" = erase magnetic calibration offset 0 bytes from Kinetis flash
+		case cmd_ERMC: // "ERMC" = erase magnetic calibration offset 0 bytes from non-volatile storage
                     EraseMagCalibrationFromNVM();
                     iCommandBuffer[3] = '~';
 		break;
 
-		case cmd_ERYC: // "ERYC" = erase gyro offset calibrationoffset 128 bytes from Kinetis flash
+		case cmd_ERYC: // "ERYC" = erase gyro offset calibrationoffset 128 bytes from non-volatile storage
                     EraseGyroCalibrationFromNVM();
                     iCommandBuffer[3] = '~';
 		break;
 
-		case cmd_ERGC: // "ERGC" = erase precision accelerometer calibration offset 192 bytesfrom Kinetis flash
+		case cmd_ERGC: // "ERGC" = erase precision accelerometer calibration offset 192 bytesfrom non-volatile storage
                     EraseAccelCalibrationFromNVM();
                     iCommandBuffer[3] = '~';
 		break;

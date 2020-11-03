@@ -79,10 +79,10 @@ extern "C" {
 #define FAST_LOOP_HZ    40  ///< Over Sample Ratio * FUSION_HZ when using no FIFO
 #define OVERSAMPLE_RATE FAST_LOOP_HZ / FUSION_HZ
 ///@}
-//#define F_USE_WIRELESS_UART     0x0000	///< 0x0001 to include, 0x0000 otherwise
-//#define F_USE_WIRED_UART        0x0000	///< 0x0002 to include, 0x0000 otherwise
+#define F_USE_WIRELESS_UART     0x0001	///< 0x0001 to include, 0x0000 otherwise
+#define F_USE_WIRED_UART        0x0002	///< 0x0002 to include, 0x0000 otherwise
 
-#define INCLUDE_DEBUG_FUNCTIONS // Comment this line to disable the ApplyPerturbation function
+//#define INCLUDE_DEBUG_FUNCTIONS // Comment this line to disable the ApplyPerturbation function
 
 
 #ifdef __cplusplus
