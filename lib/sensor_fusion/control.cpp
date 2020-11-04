@@ -9,9 +9,10 @@
 /*! \file control.cpp
     \brief Defines control sub-system
 
-    This file contains a UART implementation of the control subsystem.  The
-    command interpreter and streaming functions are contained in two separate
-    files.  So you can easily swap those out with only minor changes here.
+    Contains methods to output data and receive commands. The physical transport
+    is via either serial UART or WiFi, or both, depending on defines F_USE_WIRED_UART
+    and F_USE_WIRELESS_UART. The command interpreter is located in DecodeCommandBytes.c
+    The streaming functions that format the data into the output are in output_stream.c
 */
 #include <Arduino.h>
 #include <HardwareSerial.h>

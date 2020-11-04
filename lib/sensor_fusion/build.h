@@ -21,6 +21,9 @@
 extern "C" {
 #endif
 
+#include "fxos8700_driver.h"    //include the specific sensor IC(s) used 
+#include "fxas21002_driver.h"
+
 #define THISBUILD 720 ///< define build number sent in debug packet for display purposes only
 
 /// @name CoordinateSystemBitFields
@@ -37,7 +40,8 @@ extern "C" {
 ///@{
 /// @name SensorBitFields
 /// These bit-field values are used to declare which sensor types are used in the application.
-/// Change bit-field values to 0x0000 for any features NOT USED
+/// Change bit-field values to 0x0000 for any features NOT USED.
+//TODO - unhandled exception if trying to not use gyro (and possibly others)
 #define F_USING_ACCEL       0x0001 ///< nominally 0x0001 if an accelerometer is to be used, 0x0000 otherwise
 #define F_USING_MAG         0x0002 ///< nominally 0x0002 if an magnetometer  is to be used, 0x0000 otherwise
 #define F_USING_GYRO        0x0004 ///< nominally 0x0004 if a gyro           is to be used, 0x0000 otherwise
@@ -47,7 +51,7 @@ extern "C" {
 ///@}
 /// @name FusionSelectionBitFields
 /// These bit-field values are used to declare which sensor fusion algorithms are used
-/// in the application.  You can use more than one, altough they all run from the same data.
+/// in the application.  You can use more than one, although they all run from the same data.
 /// Change individual bit-field values to 0x0000 for any features NOT USED.
 ///@{
 #define F_1DOF_P_BASIC \
@@ -67,11 +71,6 @@ extern "C" {
 ///@}
 
 /// @name SensorParameters
-/// FIFO sizes effect the size of the sensor data structures.  ODR refers to "Output Data Rate"
-///@{
-#define ACCEL_FIFO_SIZE 32  ///< FXOS8700 (accel), MMA8652, FXLS8952 all have 32 element FIFO
-#define MAG_FIFO_SIZE   16  ///< FXOS8700 (mag), MAG3110 have no FIFO so equivalent to 1 element FIFO
-#define GYRO_FIFO_SIZE  32  ///< FXAX21000, FXAS21002 have 32 element FIFO
 #define ACCEL_ODR_HZ    200 ///< (int) requested accelerometer ODR Hz (over-rides MAG_ODR_HZ for FXOS8700)
 #define MAG_ODR_HZ      200 ///< (int) requested magnetometer ODR Hz (over-ridden by ACCEL_ODR_HZ for FXOS8700)
 #define GYRO_ODR_HZ     400 ///< (int) requested gyroscope ODR Hz

@@ -5,7 +5,8 @@
 #include <string>
 
 #include <WiFi.h>
-
+#include <WiFiClient.h>
+#include <WiFiAP.h>
 
 // Sensor Fusion Headers
 #include "sensor_fusion.h"      // top level magCal and sensor fusion interfaces
@@ -19,28 +20,12 @@
 
 #include "debug_print.h"  // provides ability to output debug messages via serial
 
-//TCP output
 // wifi config
-#include "wifi_credentials.h"
-  
-// ethernet config
-const IPAddress local_IP(192, 168, 1, 8);
-const IPAddress gateway(192, 168, 1, 1);
-const IPAddress subnet(255, 255, 255, 0);
-const IPAddress primaryDNS(8, 8, 8, 8);
-const IPAddress secondaryDNS(8, 8, 4, 4);
-
-// rs-server config
-const int serverPort = 699;  //TCP stream port
-
-// reading buffer config
-#define BUFFER_SIZE 1024
-  
-// global objects
-WiFiServer server;
-byte buff[BUFFER_SIZE];
-
-//end TCP 
+#include "wifi_credentials.h" //or you can just define the ssid and paasword as below
+// const char *ssid = "mySSID";
+// const char *password = "myPassword";
+WiFiServer server(23);  // for wifi server port 23 (telnet)
+WiFiClient client;
 
 #define DEBUG_OUTPUT_PIN GPIO_NUM_22
 
@@ -50,33 +35,6 @@ struct ControlSubsystem controlSubsystem;      ///< used for serial communicatio
 struct StatusSubsystem statusSubsystem;        ///< provides visual (usually LED) status indicator
 struct PhysicalSensor sensors[3];              ///< This implementation uses up to 3 sensors
 
-WiFiClient client;
-
-bool ConnectToWiFi(int max_wait_s) {
-  // setup WiFi connection to local network.
-  // Wait max_wait_s before abandoning attempt. If max_wait_s == 0 will not try
-  // to connect. Return true on connection, false otherwise.
-  if (max_wait_s > 0) {
-    uint32_t start_time = millis();
-    if (!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS)) {
-      debug_log("Failed to configure network settings");
-    }
-    WiFi.begin(ssid, password);
-    while ((WiFi.status() != WL_CONNECTED) &&
-           ((millis() - start_time) < (max_wait_s * 1000))) {
-      debug_log("connecting to WiFi network");
-      delay(500);
-    }
-    if (WiFi.status() == WL_CONNECTED) {
-      debug_log("connected to WiFi");
-      debug_log("IP adddr: ");
-      Serial.println(WiFi.localIP());
-      return true;
-    }
-  }
-  return false;  // either timed out, or wait time was <= 0 seconds
-}  // end ConnectToWiFi()
-
 void setup() {
   // put your setup code here, to run once:
 
@@ -85,24 +43,19 @@ void setup() {
     Serial.begin(BOARD_DEBUG_UART_BAUDRATE); //initialize serial UART
     delay(200);
 
+#if F_USE_WIRELESS_UART
     // init WiFi connection
-    if (ConnectToWiFi(2)) {
-      // start TCP stream server
-      server = WiFiServer(serverPort);
-      server.begin();
-      debug_log("server started");
+    WiFi.softAP(ssid, password);
+    IPAddress myIP = WiFi.softAPIP();
+    Serial.print("My AP IP address: ");
+    Serial.println(myIP);
+    server.begin(23);
+    Serial.print("TCP server started. Connect to ");
+    Serial.print(myIP);
+    Serial.println(" on port 23.");
+#endif
 
-      // wait for a client to connect
-      int t = 0;
-      while (!(client = server.available())) {
-        delay(100);
-        gpio_set_level(
-            DEBUG_OUTPUT_PIN, ++t % 2);  // toggle output pin each time through, for debugging
-      };
-      debug_log("client connected");
-    }
-
-   debug_log("waitasec...");  //delay not really necessary - gives me time to open a serial monitor
+   debug_log("waitasec...");  //delay not really necessary - gives time to open a serial monitor
    delay(1000);
 
   //initialize the I2C system at max clock rate supported by sensors
@@ -146,20 +99,30 @@ void loop() {
     unsigned long loop_interval_ms = 1000 / FUSION_HZ;
     int i = 0;
     while (true) {
+
+#if F_USE_WIRELESS_UART
+      if( !client ) {
+            client = server.available();   // listen for incoming TCP clients
+            if (client) {                    
+//            Serial.print("New Client on ");   //only use during debug - gets swamped by outgoing data
+//            Serial.println(client.localIP());
+            }
+      }
+#endif
       if ((millis() - last_call) > loop_interval_ms) {
         //run the fusion routines every 25 ms (default, can change this but don't
         //overrun the ability of the UART to keep up)
         last_call += loop_interval_ms;
 
         sfg.readSensors(&sfg, (uint16_t)sfg.loopcounter);  // Reads sensors, applies HAL and does
-                                   // averaging (if applicable)
-//      debug_log("read sensors");
+                                    // averaging (if applicable)
+  //      debug_log("read sensors");
         sfg.conditionSensorReadings(&sfg);  // magCal (magnetic calibration) is part of this
-//      debug_log("applied cal");
+  //      debug_log("applied cal");
         sfg.runFusion(&sfg);                // Run the actual fusion algorithms
-//      debug_log("fused");
+  //      debug_log("fused");
         sfg.applyPerturbation(&sfg);  // apply debug perturbation (for testing only)
-//      debug_log("applied perturbation");
+  //      debug_log("applied perturbation");
         sfg.loopcounter++;  // loop counter is used to "serialize" mag cal
                             // operations and blink LEDs to indicate status
         i = i + 1;
@@ -168,17 +131,16 @@ void loop() {
                         // correctly.
           sfg.updateStatus(
               &sfg);  // make pending status updates visible
-//        debug_log("updated status");
         }
 
         sfg.queueStatus(
             &sfg,
             NORMAL);  // assume NORMAL status for next pass through the loop
 
-//      debug_log("entering stream...");
+  //      debug_log("entering stream...");
         sfg.pControlSubsystem->stream(
             &sfg, sUARTOutputBuffer);  //Send stream data to the Sensor Fusion
-                                       // Toolbox (default) or whatever UART is connected to.
+                                        // Toolbox (default) or whatever UART is connected to.
         sfg.pControlSubsystem->readCommands(&sfg);
         gpio_set_level(
             DEBUG_OUTPUT_PIN, i % 2);  // toggle output pin each time through, for debugging

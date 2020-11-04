@@ -7,12 +7,12 @@
  */
 
 /** 
- * @file fxos8700.h
- * @brief The fxos8700.h file contains the register definitions for FXOS8700 sensor driver.
+ * @file fxos8700_registers.h
+ * @brief The fxos8700_registers.h file contains the register definitions for FXOS8700
  */
 
-#ifndef FXOS8700_H_
-#define FXOS8700_H_
+#ifndef FXOS8700_REGISTERS_H_
+#define FXOS8700_REGISTERS_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -3247,6 +3247,4 @@ typedef union {
 }
 #endif
 
-#endif /* FXOS8700_H_ */
-
-// STATUS :  0x00 
+#endif /* FXOS8700_REGISTERS_H_ */
