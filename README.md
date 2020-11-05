@@ -28,6 +28,8 @@ To use this library follow these steps (some untested - let me know of any chang
 - edit `/lib/sensor_fusion/board.h` to reflect your particular hardware. The I2C pins connecting your processor to your sensor ICs will likely be different, and you may also need to change the I2C addresses that the ICs are configured for.
 - compile and download to your processor
 
+The file`/lib/sensor_fusion/build.h` contains defines for various functionality, such as whether the software outputs its data via hardware serial UART or WiFi TCP connections, or both (default). Edit this file as desired, but note that not all combinations of features may be valid or been tested.
+
 ### NXP Sensor Toolbox
 The out-of-the-box software is configured to send data packets containing the sensor fusion results at a rate of 40 Hz over the processor's Serial UART interface (connected to the USB port on my WROVER development kit). These packets are formatted for NXP's **Sensor Fusion Toolbox** Windows application (available for download from NXP at no cost) which will display the data and can even be used to send commands back to the processor running the fusion algorithms. See the User's Guide under the Help tab of the Toolbox for details.
 
