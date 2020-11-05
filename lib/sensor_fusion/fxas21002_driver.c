@@ -15,7 +15,7 @@
 #include "sensor_drv.h"
 #include "sensor_io_i2c_sensesp.h" // Low level IS-SDK prototype driver, modified for use with SensESP
 #include "drivers.h"        // Device specific drivers supplied by NXP (can be replaced with user drivers)
-#include "fxas21002.h"
+#include "fxas21002_driver.h"
 
 // Includes support for pre-production FXAS21000 registers and constants which are not supported via IS-SDK
 #define FXAS21000_STATUS                0x00
@@ -28,8 +28,6 @@
 #define FXAS21000_WHO_AM_I_VALUE        0xD1    // engineering and production
 #define FXAS21000_COUNTSPERDEGPERSEC    20      // 1600dps range
 #define FXAS21002_COUNTSPERDEGPERSEC    16      // for 2000dps=32000 counts
-
-#define FXAS21002_GYRO_FIFO_SIZE  32	///< FXAX21000, FXAS21002 have 32 element FIFO
 
 #if F_USING_GYRO
 
@@ -223,15 +221,14 @@ int8_t FXAS21002_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
 // read FXAS21002 gyro over I2C
 int8_t FXAS21002_Read(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
 {
-    uint8_t     I2C_Buffer[6 * FXAS21002_GYRO_FIFO_SIZE]; // I2C read buffer
+    uint8_t     I2C_Buffer[6 * GYRO_FIFO_SIZE]; // I2C read buffer
     uint8_t      j;                              // scratch
     uint8_t     fifo_packet_count = 1;
     int32_t     status;
     int16_t     sample[3];
 
-    if(sensor->isInitialized != F_USING_GYRO)
-    {
-        return SENSOR_ERROR_INIT;
+     if (sensor->isInitialized != F_USING_GYRO) {
+      return SENSOR_ERROR_INIT;
     }
 
      // read the F_STATUS register (mapped to STATUS) and extract number of measurements available (lower 6 bits)

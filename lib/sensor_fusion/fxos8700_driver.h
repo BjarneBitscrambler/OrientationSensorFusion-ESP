@@ -7,12 +7,12 @@
  */
 
 /**
- * @file fxos8700_drv.h
- * @brief The fxos8700_drv.h file describes the fxos8700 driver interface and structures.
+ * @file fxos8700_driver.h
+ * @brief The fxos8700_driver.h file describes the fxos8700 driver interface and structures.
  */
 
-#ifndef FXOS8700_DRV_H_
-#define FXOS8700_DRV_H_
+#ifndef FXOS8700_DRiVER_H_
+#define FXOS8700_DRiVER_H_
 
 
 #ifdef __cplusplus
@@ -23,16 +23,17 @@ extern "C" {
 #include <stdint.h>
 
 /* ISSDK Includes */
-#include "fxos8700.h"
-#include "sensor_io_i2c_sensesp.h"
+#include "fxos8700_registers.h"
 #include "sensor_drv.h"
-//#include "sensor_io_spi.h"
-//#include "register_io_i2c.h"
+#include "sensor_io_i2c_sensesp.h"
 #include "register_io_spi.h"
 
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
+#define ACCEL_FIFO_SIZE  32	///< FXOS8700 (accel), MMA8652, FXLS8952 all have 32 element FIFO
+#define MAG_FIFO_SIZE 	  1	///< FXOS8700 (mag), MAG3110 have no FIFO so equivalent to 1 element FIFO
+
 /*!
  * @brief This defines the sensor specific information for SPI.
  */
@@ -247,4 +248,4 @@ void FXOS8700_SPI_WritePreprocess(void *pCmdOut, uint32_t offset, uint32_t size,
 }
 #endif
 
-#endif // FXOS8700_DRV_H_
+#endif // FXOS8700_DRiVER_H_

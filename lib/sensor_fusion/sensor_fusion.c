@@ -267,7 +267,7 @@ void processGyroData(SensorFusionGlobals *sfg)
 #endif
 /// readSensors traverses the linked list of physical sensors, calling the
 /// individual read functions one by one.
-/// This function is normally involved via the "sfg." global pointer.
+/// This function is normally invoked via the "sfg." global pointer.
 int8_t readSensors(
     SensorFusionGlobals *sfg,   ///< pointer to global sensor fusion data structure
     uint16_t read_loop_counter  ///< current loop counter (used for multirate processing)
@@ -294,7 +294,7 @@ int8_t readSensors(
 /// can be consumed by the sensor fusion engine.  This include sample averaging
 /// and (in the case of the gyro) integrations, applying hardware abstraction layers,
 /// and calibration functions.
-/// This function is normally involved via the "sfg." global pointer.
+/// This function is normally invoked via the "sfg." global pointer.
 void conditionSensorReadings(SensorFusionGlobals *sfg) {
 #if F_USING_ACCEL
     if (sfg->Accel.isEnabled) processAccelData(sfg);

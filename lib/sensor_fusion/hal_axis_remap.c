@@ -15,8 +15,7 @@
 
 	The present remapping is appropriate for the FXOS8700/FXAS21002C
 	sensor combination as found on the Adafruit breakout board.
-	***to be verified***  copied from 
-	FRDM_FXS_MULT2_B utilizing the FX0S8700 and FXAS21002 on the shield.
+	***to be verified***
 
 */
 
@@ -31,15 +30,15 @@ void ApplyAccelHAL(struct AccelSensor *Accel)
 	{
 		// apply HAL mapping to coordinate system used
 #if THISCOORDSYSTEM == NED
-		int16_t itmp16 = Accel->iGsFIFO[i][CHX];
-		Accel->iGsFIFO[i][CHX] = Accel->iGsFIFO[i][CHY];
-		Accel->iGsFIFO[i][CHY] = itmp16;
+		//no change needed for NED.
 #endif // NED
 #if THISCOORDSYSTEM == ANDROID
+	//the ANDROID transformation has not been confirmed
 		Accel->iGsFIFO[i][CHX] = -Accel->iGsFIFO[i][CHX];
 		Accel->iGsFIFO[i][CHY] = -Accel->iGsFIFO[i][CHY];
 #endif // Android
 #if (THISCOORDSYSTEM == WIN8)
+	//the Windows transformation has not been confirmed
 		Accel->iGsFIFO[i][CHZ] = -Accel->iGsFIFO[i][CHZ];
 #endif // Win8
 
@@ -58,10 +57,9 @@ void ApplyMagHAL(struct MagSensor *Mag)
 	{
 		// apply HAL mapping to coordinate system used
 #if THISCOORDSYSTEM == NED
-		int16_t itmp16 = Mag->iBsFIFO[i][CHX];
-		Mag->iBsFIFO[i][CHX] = -Mag->iBsFIFO[i][CHY];
-		Mag->iBsFIFO[i][CHY] = -itmp16;
-		Mag->iBsFIFO[i][CHZ] = -Mag->iBsFIFO[i][CHZ];
+//		Mag->iBsFIFO[i][CHX] = -Mag->iBsFIFO[i][CHX];
+//		Mag->iBsFIFO[i][CHY] = -Mag->iBsFIFO[i][CHY];
+//		Mag->iBsFIFO[i][CHZ] = -Mag->iBsFIFO[i][CHZ];
 #endif // NED
 #if THISCOORDSYSTEM == ANDROID
 		Mag->iBsFIFO[i][CHX] = -Mag->iBsFIFO[i][CHX];
@@ -86,10 +84,7 @@ void ApplyGyroHAL(struct GyroSensor *Gyro)
 	{
 		// apply HAL mapping to coordinate system used
 #if THISCOORDSYSTEM == NED
-		int16_t itmp16 = Gyro->iYsFIFO[i][CHX];
-		Gyro->iYsFIFO[i][CHX] = -Gyro->iYsFIFO[i][CHY];
-		Gyro->iYsFIFO[i][CHY] = -itmp16;
-		Gyro->iYsFIFO[i][CHZ] = -Gyro->iYsFIFO[i][CHZ];
+//		Gyro->iYsFIFO[i][CHZ] = -Gyro->iYsFIFO[i][CHZ];
 #endif // NED
 #if THISCOORDSYSTEM == ANDROID
 		Gyro->iYsFIFO[i][CHX] = -Gyro->iYsFIFO[i][CHX];

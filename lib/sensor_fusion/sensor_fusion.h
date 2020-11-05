@@ -191,9 +191,9 @@ struct PressureSensor
 struct AccelSensor
 {
 	uint8_t iWhoAmI;			///< sensor whoami
-        bool  isEnabled;                        ///< true if the device is sampling
+	bool  isEnabled;                        ///< true if the device is sampling
 	uint8_t iFIFOCount;			///< number of measurements read from FIFO
-        uint16_t iFIFOExceeded;                 ///< Number of samples received in excess of software FIFO size
+    uint16_t iFIFOExceeded;                 ///< Number of samples received in excess of software FIFO size
 	int16_t iGsFIFO[ACCEL_FIFO_SIZE][3];	///< FIFO measurements (counts)
         // End of common fields which can be referenced via FifoSensor union type
 	float fGs[3];			        ///< averaged measurement (g)
