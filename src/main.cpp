@@ -1,39 +1,35 @@
 #include <Arduino.h>
-#include <Wire.h>
-
 #include <sstream>
 #include <string>
-
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WiFiAP.h>
+#include <Wire.h>
 
 // Sensor Fusion Headers
-#include "sensor_fusion.h"      // top level magCal and sensor fusion interfaces
-#include "control.h"  	        // Command processing and data Streaming interface
-#include "status.h"   	        // Status indicator interface - application specific
-#include "drivers.h"  	        // NXP sensor drivers OR customer-supplied drivers
-
-// hardware-specific settings. Edit as needed for whatever board & sensors used.
-#include "board.h"
+#include "sensor_fusion.h"      // top level magCal and sensor fusion interfaces. Include 1st.
+#include "board.h"              // hardware-specific settings. 
+          //Edit as needed for whatever board & sensors used.
+#include "control.h"  	        // Command processing and data streaming interface
+#include "debug_print.h"        // provides ability to output debug messages via serial
+#include "drivers.h"  	        // hardware-specific drivers
 #include "sensor_io_i2c_sensesp.h"  //I2C interfaces for ESP platform
-
-#include "debug_print.h"  // provides ability to output debug messages via serial
+#include "status.h"   	        // Status indicator interface - application specific
 
 // wifi config
-#include "wifi_credentials.h" //or you can just define the ssid and paasword as below
-// const char *ssid = "mySSID";
-// const char *password = "myPassword";
-WiFiServer server(23);  // for wifi server port 23 (telnet)
-WiFiClient client;
+#define WIFI_STREAMING_PORT 23
+const char *ssid = "compass";
+const char *password = "northsouth";
+WiFiServer server(WIFI_STREAMING_PORT);  // use wifi server port 23 (telnet)
+WiFiClient client;  // TODO remove as global - is used in control.cpp
 
 #define DEBUG_OUTPUT_PIN GPIO_NUM_22
 
 // Sensor Fusion Global data structures
-SensorFusionGlobals sfg;                ///< This is the primary sensor fusion data structure
-struct ControlSubsystem controlSubsystem;      ///< used for serial communications
-struct StatusSubsystem statusSubsystem;        ///< provides visual (usually LED) status indicator
-struct PhysicalSensor sensors[3];              ///< This implementation uses up to 3 sensors
+SensorFusionGlobals sfg;                  //Primary sensor fusion data structure
+struct ControlSubsystem controlSubsystem; // provides serial communications
+struct StatusSubsystem statusSubsystem;   // provides visual (usually LED) status indicator
+struct PhysicalSensor sensors[3];         // this implementation uses up to 3 sensors
 
 void setup() {
   // put your setup code here, to run once:
@@ -55,8 +51,8 @@ void setup() {
     Serial.println(" on port 23.");
 #endif
 
-   debug_log("waitasec...");  //delay not really necessary - gives time to open a serial monitor
-   delay(1000);
+  debug_log("waitasec...");  //delay not really necessary - gives time to open a serial monitor
+  delay(1000);
 
   //initialize the I2C system at max clock rate supported by sensors
   Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
@@ -77,21 +73,24 @@ void setup() {
 
 // connect to the sensors we will be using.  Accelerometer and magnetometer are in same IC.
 #if F_USING_ACCEL || F_USING_MAG
-    sfg.installSensor(&sfg, &sensors[0], BOARD_ACCEL_MAG_I2C_ADDR, 1, NULL, NULL, FXOS8700_Init,  FXOS8700_Read);
-   debug_log("Accel/Mag connected");
+  sfg.installSensor(&sfg, &sensors[0], BOARD_ACCEL_MAG_I2C_ADDR, 1, NULL, NULL,
+                    FXOS8700_Init, FXOS8700_Read);
+  debug_log("Accel/Mag connected");
 #endif
 #if F_USING_GYRO
-    sfg.installSensor(&sfg, &sensors[1], BOARD_GYRO_I2C_ADDR, 1, NULL, NULL, FXAS21002_Init, FXAS21002_Read);
-   debug_log("Gyro connected");
+  sfg.installSensor(&sfg, &sensors[1], BOARD_GYRO_I2C_ADDR, 1, NULL, NULL,
+                    FXAS21002_Init, FXAS21002_Read);
+  debug_log("Gyro connected");
 #endif
 
-   sfg.initializeFusionEngine(&sfg);	        // Initialize sensors and magnetic calibration
-   debug_log("Fusion Engine OK");
+  sfg.initializeFusionEngine(
+      &sfg);  // Initialize sensors and magnetic calibration
+  debug_log("Fusion Engine OK");
 
-    sfg.setStatus(&sfg, NORMAL);                // Set status state to NORMAL
-   debug_log("Passing to main...");
-   delay(5000);
-}
+  sfg.setStatus(&sfg, NORMAL);  // Set status state to NORMAL
+  debug_log("Passing to main...");
+
+} // end setup()
 
 void loop() {
   // put your main code here, to run repeatedly:
@@ -99,23 +98,23 @@ void loop() {
     unsigned long loop_interval_ms = 1000 / FUSION_HZ;
     int i = 0;
     while (true) {
-
 #if F_USE_WIRELESS_UART
-      if( !client ) {
-            client = server.available();   // listen for incoming TCP clients
-            if (client) {                    
-//            Serial.print("New Client on ");   //only use during debug - gets swamped by outgoing data
-//            Serial.println(client.localIP());
-            }
+      if (!client) {
+        client = server.available();  // listen for incoming TCP clients
+        if (client) {
+          //            Serial.print("New Client on ");   //only use during
+          //            debug - gets swamped by outgoing data
+          //            Serial.println(client.localIP());
+        }
       }
 #endif
       if ((millis() - last_call) > loop_interval_ms) {
-        //run the fusion routines every 25 ms (default, can change this but don't
-        //overrun the ability of the UART to keep up)
+        // run the fusion routines every 25 ms (default, can change this but
+        // don't overrun the ability of the UART to keep up)
         last_call += loop_interval_ms;
 
-        sfg.readSensors(&sfg, (uint16_t)sfg.loopcounter);  // Reads sensors, applies HAL and does
-                                    // averaging (if applicable)
+        sfg.readSensors(
+            &sfg, (uint16_t)sfg.loopcounter);  // Reads sensors, applies HAL and                                               // does averaging (if applicable)
   //      debug_log("read sensors");
         sfg.conditionSensorReadings(&sfg);  // magCal (magnetic calibration) is part of this
   //      debug_log("applied cal");
@@ -125,10 +124,10 @@ void loop() {
   //      debug_log("applied perturbation");
         sfg.loopcounter++;  // loop counter is used to "serialize" mag cal
                             // operations and blink LEDs to indicate status
-        i = i + 1;
-        if (i >= 4) {   // Some status codes include a "blink" feature.  This loop
+
+        if (++i >= 4) {   // Some status code includes a "blink" feature.  This loop
           i = 0;        // should cycle at least four times for that to operate
-                        // correctly.
+                        // correctly. TODO - is this the best way?
           sfg.updateStatus(
               &sfg);  // make pending status updates visible
         }
@@ -147,4 +146,4 @@ void loop() {
       }
     }
     
-}
+} // end loop()
