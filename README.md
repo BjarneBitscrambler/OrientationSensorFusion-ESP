@@ -4,7 +4,7 @@ Contains source code for performing orientation sensor fusion. The code is based
 Information about test plans, results, to-do lists for the orientation sensors and software can be found on this repository's Wiki.
 
 ## Sensor
-The present software works with the NXP 9DOF sensor combination (magnetometer, accelerometer, gyroscope) consisting of FXOS8700 + FXAS21002 (e.g. Adafruit #3463 breakout board). Only the I2C interface has been implemented and tested; a SPI interface is possible with additional work and testing.
+The present software works with the NXP 9DOF sensor combination (magnetometer, accelerometer, gyroscope) consisting of FXOS8700 + FXAS21002 (e.g. *Adafruit #3463 breakout* board). Only the I2C interface has been implemented and tested; a SPI interface is possible with additional work and testing.
 
 ## Background
 The sensor is used with the Signal K / SensESP project (https://github.com/SignalK/SensESP) to provide orientation data (e.g. magnetic heading, roll, and pitch) on a vessel.
@@ -12,7 +12,7 @@ The sensor is used with the Signal K / SensESP project (https://github.com/Signa
 ## Where To Find...
 - test plans, data, results, etc are on [this project's Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki)
 - code for running NXP's version 7 sensor fusion is under the Code tab of this repository. It hasn't been integrated to work with the SensESP project yet.
-- code for orientation sensor fusion using Adafruit's AHRS port of NXP's version 4.2 algorithm is on the [Upstream](https://github.com/SignalK/SensESP) and [author's](https://github.com/BjarneBitscrambler/SensESP) project pages
+- code for orientation sensor fusion under the SensESP project (using Adafruit's AHRS port of NXP's version 4.2 algorithm) is on the [Upstream](https://github.com/SignalK/SensESP) and [author's](https://github.com/BjarneBitscrambler/SensESP) project pages
 
 ## Contributions
 Use the Issues and Pull Request tabs on this repository if you have suggestions or wish to contribute to this project.
@@ -32,6 +32,8 @@ The file`/lib/sensor_fusion/build.h` contains defines for various functionality,
 
 ### NXP Sensor Toolbox
 The out-of-the-box software is configured to send data packets containing the sensor fusion results at a rate of 40 Hz over the processor's Serial UART interface (connected to the USB port on my WROVER development kit). These packets are formatted for NXP's **Sensor Fusion Toolbox** Windows application (available for download from NXP at no cost) which will display the data and can even be used to send commands back to the processor running the fusion algorithms. See the User's Guide under the Help tab of the Toolbox for details.
+
+The **Toolbox** when working should show a graphic of a PCB that rotates on the screen in synchronization with motion of your own board. If there is no motion at all, then check that the data packets are arriving on the expected COM: port of your computer. A terminal program (like HyperTerminal or PuTTY) can help display traffic on a COM: port. If the **Toolbox** shows motion but it is jerky or reversed from the actual board motion, then likely one or more of your board's axes are not oriented according to how the fusion software expects. Different sensor board manufacturers will have placed the sensor ICs in orientations particular to their own needs.  The file `hal_axis_remap.c` is used to invert or swap axes as needed to conform to what the fusion algorithm expects. For more details, see that file, and also NXP's Application Note AN5017 (Coordinate Systems).
 
 ### WiFi Data Streaming
 Because testing an orientation sensor with a USB cable tethering it to your development computer is a pain, the software now also supports streaming the data over WiFi. In the `main.cpp setup()` code, a WiFi AP (Access Point) is started, which means the ESP processor will broadcast it's SSID and you should be able to connect to it with your development system, using the password you provide in `main.cpp`. Once a WiFi connection is established, you can open a TCP connection to port 23 of the ESP and the orientation data will then stream over your TCP connection.  A few hints:
