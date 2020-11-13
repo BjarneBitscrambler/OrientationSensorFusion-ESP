@@ -16,14 +16,14 @@
 #include "sensor_io_i2c_sensesp.h"  //I2C interfaces for ESP platform
 #include "status.h"   	        // Status indicator interface - application specific
 
-// wifi config
-#define WIFI_STREAMING_PORT 23
+// wifi config - using ESP as Access Point (AP)
 const char *ssid = "compass";
 const char *password = "northsouth";
+#define WIFI_STREAMING_PORT 23
 WiFiServer server(WIFI_STREAMING_PORT);  // use wifi server port 23 (telnet)
 WiFiClient client;  // TODO remove as global - is used in control.cpp
 
-#define DEBUG_OUTPUT_PIN GPIO_NUM_22
+#define DEBUG_OUTPUT_PIN GPIO_NUM_22  //pin that can be twiddled for debugging
 
 // Sensor Fusion Global data structures
 SensorFusionGlobals sfg;                  //Primary sensor fusion data structure
@@ -102,9 +102,8 @@ void loop() {
       if (!client) {
         client = server.available();  // listen for incoming TCP clients
         if (client) {
-          //            Serial.print("New Client on ");   //only use during
-          //            debug - gets swamped by outgoing data
-          //            Serial.println(client.localIP());
+          //Serial.print("New Client on ");   
+          //Serial.println(client.localIP());
         }
       }
 #endif
