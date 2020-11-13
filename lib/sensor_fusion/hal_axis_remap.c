@@ -48,9 +48,8 @@
   Gx swapped with Gy, then Gx,Gy,Gz inverted.
   Checked 2020-11-13.
 
-	The present remapping is appropriate for the FXOS8700/FXAS21002C
-	sensors on the Adafruit breakout board, with the NED coord system.
-	Accel-X, Mag-Y, Mag-Z, Gyro-Z all inverted. Checked 2020-11-06.
+	The present remapping is identical to the NXP FRDM-STBC-AGM01
+  breakout board using the FXOS8700/FXAS21002.
 */
 
 #include "sensor_fusion.h"  // top level magCal and sensor fusion interfaces
