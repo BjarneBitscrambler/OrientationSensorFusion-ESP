@@ -20,14 +20,14 @@
 
 #include "debug_print.h"  // provides ability to output debug messages via serial
 
-// wifi config
-#include "wifi_credentials.h" //or you can just define the ssid and paasword as below
-// const char *ssid = "mySSID";
-// const char *password = "myPassword";
-WiFiServer server(23);  // for wifi server port 23 (telnet)
-WiFiClient client;
+// wifi config - using ESP as Access Point (AP)
+const char *ssid = "compass";
+const char *password = "northsouth";
+#define WIFI_STREAMING_PORT 23
+WiFiServer server(WIFI_STREAMING_PORT);  // use wifi server port 23 (telnet)
+WiFiClient client;  // TODO remove as global - is used in control.cpp
 
-#define DEBUG_OUTPUT_PIN GPIO_NUM_22
+#define DEBUG_OUTPUT_PIN GPIO_NUM_22  //pin that can be twiddled for debugging
 
 // Sensor Fusion Global data structures
 SensorFusionGlobals sfg;                ///< This is the primary sensor fusion data structure
@@ -101,12 +101,12 @@ void loop() {
     while (true) {
 
 #if F_USE_WIRELESS_UART
-      if( !client ) {
-            client = server.available();   // listen for incoming TCP clients
-            if (client) {                    
-//            Serial.print("New Client on ");   //only use during debug - gets swamped by outgoing data
-//            Serial.println(client.localIP());
-            }
+      if (!client) {
+        client = server.available();  // listen for incoming TCP clients
+        if (client) {
+          //Serial.print("New Client on ");   
+          //Serial.println(client.localIP());
+        }
       }
 #endif
       if ((millis() - last_call) > loop_interval_ms) {
