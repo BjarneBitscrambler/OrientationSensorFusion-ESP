@@ -14,7 +14,7 @@
 
 #include "sensor_fusion.h"  // top level magCal and sensor fusion interfaces
 #include "control.h"        // Command/Streaming interface - application specific
-#include "debug.h"          // for test purposes
+#include "fusion_testing.h" // for test purposes
 #include "board.h"
 
 #define MAXPACKETRATEHZ 40  //rate at which data packets are sent (e.g. to Fusion Toolbox)

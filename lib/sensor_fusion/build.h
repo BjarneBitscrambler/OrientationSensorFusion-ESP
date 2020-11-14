@@ -10,7 +10,7 @@
     \brief Build configuration file
 
     This file contains only those parameters that directly relate to fusion
-    implementation choices.  Board dependencies are in hal.h.  Consult the
+    implementation choices.  Board dependencies are in board.h.  Consult the
     Sensor Fusion User Guide for guidance and details.
 */
 
@@ -20,9 +20,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "fxos8700_driver.h"    //include the specific sensor IC(s) used 
-#include "fxas21002_driver.h"
 
 #define THISBUILD 720 ///< define build number sent in debug packet for display purposes only
 

@@ -1,16 +1,17 @@
 /*
  * Copyright (c) 2015-2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright (c) 2016-2017 NXP
+ * Copyright (c) 2020 Bjarne Hansen
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  * 
- *  Modified by Bjarne Hansen 2020-10-24 for SensESP environment
+ *  Modified for Espressif ESP environment
  */
 
 /**
- * @file sensor_io_i2c_sensesp.h
- * @brief The sensor_io_i2c_sensesp.h file declares low-level interface functions for reading
+ * @file sensor_io_i2c_esp.h
+ * @brief The sensor_io_i2c_esp.h file declares low-level interface functions for reading
  *  and writing sensor registers using I2C.
  */
 
@@ -24,6 +25,11 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
+
+
+#ifndef I2C_ERROR_OK
+    #define I2C_ERROR_OK (0)  //not defined in ESP8266 Wire library, but is in the ESP32 version
+#endif
 
 /*******************************************************************************
  * API

@@ -25,7 +25,7 @@ extern "C" {
 /* ISSDK Includes */
 #include "fxos8700_registers.h"
 #include "sensor_drv.h"
-#include "sensor_io_i2c_sensesp.h"
+#include "sensor_io_i2c_esp.h"
 #include "register_io_spi.h"
 
 /*******************************************************************************

@@ -1,27 +1,28 @@
 /*
  * Copyright (c) 2015 - 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright (c) 2016-2017 NXP
+ * Copyright (c) 2020 Bjarne Hansen
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
- *  Modified by Bjarne Hansen 2020-10-24 for SensESP environment
+ *  Modified for Espressif ESP environment
  *  Fusion library requires methods to control and read from physical sensor ICs. These methods are
  *  found in files like FXAS21002.c and FXOS8700.c.  For example,
  *  driver_FXAS21002.c implements methods like FXAS21002_Init() using calls to Sensor_I2C_Write_List().
- *  This present file provides a Sensor_I2C_Write_List() that functions in SensESP environment.
+ *  This present file provides a Sensor_I2C_Write_List() that functions in the ESP environment.
  */
 
 /**
- * @file sensor_io_i2c_sensesp.c
- * @brief The sensor_io_i2c_sensesp.c file contains definitions for low-level interface functions
+ * @file sensor_io_i2c_esp.c
+ * @brief The sensor_io_i2c_esp.c file contains definitions for low-level interface functions
  *  for reading and writing data from/to sensor using I2C.
  */
 
 #include "Arduino.h"
 #include <Wire.h>
 #include "sensor_drv.h"
-#include "sensor_io_i2c_sensesp.h"
+#include "sensor_io_i2c_esp.h"
 
 /**************************************************************************/
 /*!
