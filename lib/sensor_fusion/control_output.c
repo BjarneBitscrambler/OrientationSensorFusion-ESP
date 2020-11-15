@@ -6,39 +6,32 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*! \file output_stream.c
-    \brief Implements streaming function for the status subsystem.  See status.h
-    Data packets are sent via serial interface, which can be a wired UART, Bluetooth,
-    socket via WiFi, etc.  Currently UART is only method fully implemented.
+/*! \file control_output.c
+    \brief Implements output streaming for the control & status subsystem.
+    Data is packaged up in format compatible with NXP Sensor Toolbox.
+    
 */
 
 #include "sensor_fusion.h"  // top level magCal and sensor fusion interfaces
 #include "control.h"        // Command/Streaming interface - application specific
-#include "debug.h"          // for test purposes
+#include "fusion_testing.h" // will include SensorPerturbations for test purposes
 #include "board.h"
+#include "build.h"
 
-#define MAXPACKETRATEHZ 40  //rate at which data packets are sent (e.g. to Fusion Toolbox)
-#define RATERESOLUTION 1000
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// UART packet drivers
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-// function appends a variable number of source bytes to a destimation buffer
-// for transmission as the bluetooth packet
-// bluetooth packets are delimited by inserting the special byte 0x7E at the start
+// OutputBufAppendItem() appends a variable number of source bytes to a destination buffer
+// for transmission as the output packet.
+// Output packets are delimited by inserting the special byte 0x7E at the start
 // and end of packets. this function must therefore handle the case of 0x7E appearing
 // as general data. this is done here with the substitutions:
 // a) replace 0x7E by 0x7D and 0x5E (one byte becomes two)
 // b) replace 0x7D by 0x7D and 0x5D (one byte becomes two)
-// the inverse mapping must be performed at the application receiving the bluetooth stream: ie:
+// the inverse mapping must be performed at the application receiving the output stream: ie:
 // replace 0x7D and 0x5E with 0x7E
 // replace 0x7D and 0x5D with 0x7D
-// NOTE: do not use this function to append the start and end bytes 0x7E to the bluetooth
+// NOTE: do not use this function to append the start and end bytes 0x7E to the output
 // buffer. instead add the start and end bytes 0x7E explicitly as in:
-
-// sUARTOutputBuffer[iByteCount++] = 0x7E;
-void sBufAppendItem(uint8_t *pDest, uint16_t *pIndex, uint8_t *pSource,
+// output_buf[iByteCount++] = 0x7E;
+void OutputBufAppendItem(uint8_t *pDest, uint16_t *pIndex, uint8_t *pSource,
                     uint16_t iBytesToCopy)
 {
     uint16_t    i;  // loop counter
@@ -68,18 +61,19 @@ void sBufAppendItem(uint8_t *pDest, uint16_t *pIndex, uint8_t *pSource,
     }
 
     return;
-}
+}//end OutputBufAppendItem()
 
-// utility function for sending int16_t zeros
-void sBufAppendZeros(uint8_t *pDest, uint16_t *pIndex, uint16_t numZeros) {
+// OutputBufAppendZeros() is a utility function for appending zeros
+void OutputBufAppendZeros(uint8_t *pDest, uint16_t *pIndex, uint16_t numZeros) {
     int16_t scratch16 = 0;
     uint16_t i;
     for (i=0; i<numZeros; i++) {
-        sBufAppendItem(pDest, pIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(pDest, pIndex, (uint8_t *) &scratch16, 2);
     }
-}
+}//end OutputBufAppendZeros()
+
 // utility function for reading common algorithm parameters
-void readCommon( SV_ptr data,
+void ReadCommonParams( SV_ptr data,
                  Quaternion *fq,
                  int16_t *iPhi,
                  int16_t *iThe,
@@ -94,15 +88,14 @@ void readCommon( SV_ptr data,
     *iThe = (int16_t) (10.0F * data->fThe);
     *iRho = (int16_t) (10.0F * data->fRho);
     *isystick = (uint16_t) (data->systick / 20);
-}
+}//end ReadCommonParams()
 
-// throttle back by fractional multiplier
-///    (OVERSAMPLE_RATIO * MAXPACKETRATEHZ) / SENSORFS
-uint16_t throttle()
+// Throttle back output stream by fractional multiplier
+bool Throttle()
 {
     static int32_t iThrottle = 0;
-    uint8_t skip;
-    // The UART (serial over USB and over Bluetooth)
+    bool skip;
+    // The UART (serial over USB and over WiFi / Bluetooth)
     // is limited to 115kbps which is more than adequate for the 31kbps
     // needed at the default 25Hz output rate but insufficient for 100Hz or
     // 200Hz output rates.  There is little point is providing output data
@@ -119,11 +112,12 @@ uint16_t throttle()
         skip = true;
     }
     return(skip);
-}
+}//end Throttle()
 
-// prepate packets to send, e.g. via Bluetooth, or UART to OpenSDA / USB
-void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
+// prepare packets to send, e.g. via Bluetooth, or UART to OpenSDA / USB
+void CreateOutgoingPackets(SensorFusionGlobals *sfg)
 {
+    uint8_t         *output_buf = sfg->pControlSubsystem->serial_out_buf;
     Quaternion      fq;                 // quaternion to be transmitted
     float           ftmp;               // scratch
     static uint32_t iTimeStamp = 0;     // 1MHz time stamp
@@ -149,8 +143,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
     iTimeStamp += 1000000 / FUSION_HZ;
 
 #if (MAXPACKETRATEHZ < FUSION_HZ)
-    uint8_t  skip_packet = throttle(); // possible UART bandwidth problem
-    if (skip_packet) return;  // need to skip packet transmission to avoid UART overrun
+    if (Throttle()) return;  // need to skip packet transmission to avoid UART overrun
 #endif
 
     // cache local copies of control flags so we don't have to keep dereferencing pointers below
@@ -162,6 +155,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
     AccelCalPacketOn = sfg->pControlSubsystem->AccelCalPacketOn;
 
     // zero the counter for bytes accumulated into the transmit buffer
+    sfg->pControlSubsystem->bytes_to_send = 0;
     iIndex = 0;
 
     // ************************************************************************
@@ -175,7 +169,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
     // Precision Accelerometer packet 8: range 0 to 46 = 47 bytes
     //
     // Total excluding intermittent packet 8 is:
-    // 152 bytes vs 256 bytes size of sUARTOutputBuffer
+    // 152 bytes vs 256 bytes size of output_buf
     // at 25Hz, data rate is 25*152 = 3800 bytes/sec = 38.0kbaud = 33% of 115.2kbaud
     // at 40Hz, data rate is 40*152 = 6080 bytes/sec = 60.8kbaud = 53% of 115.2kbaud
     // at 50Hz, data rate is 50*152 = 7600 bytes/sec = 76.0kbaud = 66% of 115.2kbaud
@@ -185,19 +179,19 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
     // this packet type is always transmitted
     // total size is 0 to 35 equals 36 bytes
     // ************************************************************************
-    // [0]: packet start byte (need a iIndex++ here since not using sBufAppendItem)
-    sUARTOutputBuffer[iIndex++] = 0x7E;
+    // [0]: packet start byte (need a iIndex++ here since not using OutputBufAppendItem)
+    output_buf[iIndex++] = 0x7E;
 
-    // [1]: packet type 1 byte (iIndex is automatically updated in sBufAppendItem)
+    // [1]: packet type 1 byte (iIndex is automatically updated in OutputBufAppendItem)
     tmpuint8_t = 0x01;
-    sBufAppendItem(sUARTOutputBuffer, &iIndex, &tmpuint8_t, 1);
+    OutputBufAppendItem(output_buf, &iIndex, &tmpuint8_t, 1);
 
     // [2]: packet number byte
-    sBufAppendItem(sUARTOutputBuffer, &iIndex, &iPacketNumber, 1);
+    OutputBufAppendItem(output_buf, &iIndex, &iPacketNumber, 1);
     iPacketNumber++;
 
     // [6-3]: 1MHz time stamp (4 bytes)
-    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &iTimeStamp, 4);
+    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &iTimeStamp, 4);
 
     // [12-7]: integer accelerometer data words (scaled to 8192 counts per g for PC GUI)
     // send non-zero data only if the accelerometer sensor is enabled and used by the selected quaternion
@@ -215,22 +209,22 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
                     if (scratch32 > 32767) scratch32 = 32767;
                     if (scratch32 < -32768) scratch32 = -32768;
                     scratch16 = (int16_t) (scratch32);
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);  //crashes here
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);  //crashes here
                     scratch32 = (sfg->Accel.iGc[CHY] * 8192) / sfg->Accel.iCountsPerg;
                     if (scratch32 > 32767) scratch32 = 32767;
                     if (scratch32 < -32768) scratch32 = -32768;
                     scratch16 = (int16_t) (scratch32);
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                     scratch32 = (sfg->Accel.iGc[CHZ] * 8192) / sfg->Accel.iCountsPerg;
                     if (scratch32 > 32767) scratch32 = 32767;
                     if (scratch32 < -32768) scratch32 = -32768;
                     scratch16 = (int16_t) (scratch32);
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 }else { //avoid divide-by-zero
                     scratch16 = 32767;
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 }
                 break;
 #endif // F_USING_ACCEL
@@ -238,12 +232,12 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
             case Q3G:
             default:
                 // accelerometer data is not used in currently selected algorithm so transmit zero
-                sBufAppendZeros(sUARTOutputBuffer, &iIndex, 3);
+                OutputBufAppendZeros(output_buf, &iIndex, 3);
                 break;
         }
      } else {
                 // accelerometer structure is not defined so transmit zero
-                sBufAppendZeros(sUARTOutputBuffer, &iIndex, 3);
+                OutputBufAppendZeros(output_buf, &iIndex, 3);
         }
     // [18-13]: integer calibrated magnetometer data words (already scaled to 10 count per uT for PC GUI)
     // send non-zero data only if the magnetometer sensor is enabled and used by the selected quaternion
@@ -257,16 +251,16 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
                 // magnetometer data is used for the selected quaternion so transmit
                 if( sfg->Mag.iCountsPeruT != 0 ) {
                     scratch16 = (int16_t) (sfg->Mag.iBc[CHX] * 10) / (sfg->Mag.iCountsPeruT);
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                     scratch16 = (int16_t) ((sfg->Mag.iBc[CHY] * 10) / sfg->Mag.iCountsPeruT);
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                     scratch16 = (int16_t) ((sfg->Mag.iBc[CHZ] * 10) / sfg->Mag.iCountsPeruT);
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 }else { //prevent divide-by-zero
                   scratch16 = 32767;
-                  sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
-                  sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
-                  sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);                  
+                  OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
+                  OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
+                  OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);                  
                 }
                 break;
 #endif
@@ -275,13 +269,13 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
             case Q3G:
             case Q6AG:
             default:
-                sBufAppendZeros(sUARTOutputBuffer, &iIndex, 3);
+                OutputBufAppendZeros(output_buf, &iIndex, 3);
                 break;
         }
     else
     {
         // magnetometer structure is not defined so transmit zero
-        sBufAppendZeros(sUARTOutputBuffer, &iIndex, 3);
+        OutputBufAppendZeros(output_buf, &iIndex, 3);
     }
 
     // [24-19]: uncalibrated gyro data words (scaled to 20 counts per deg/s for PC GUI)
@@ -298,16 +292,16 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
               // gyro data is used for the selected quaternion so transmit
                 if( sfg->Gyro.iCountsPerDegPerSec != 0 ) {
                     scratch16 = (int16_t) ((sfg->Gyro.iYs[CHX] * 20) / sfg->Gyro.iCountsPerDegPerSec);
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                     scratch16 = (int16_t) ((sfg->Gyro.iYs[CHY] * 20) / sfg->Gyro.iCountsPerDegPerSec);
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                     scratch16 = (int16_t) ((sfg->Gyro.iYs[CHZ] * 20) / sfg->Gyro.iCountsPerDegPerSec);
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 }else { //prevent divide-by-zero
                     scratch16 = 32767;
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
-                    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
+                    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 }
                 break;
 #endif
@@ -316,14 +310,14 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
             case Q6MA:
             default:
                 // gyro data is not used in currently selected algorithm so transmit zero
-                sBufAppendZeros(sUARTOutputBuffer, &iIndex, 3);
+                OutputBufAppendZeros(output_buf, &iIndex, 3);
                 break;
         }
     }
     else
     {
         // gyro structure is not defined so transmit zero
-        sBufAppendZeros(sUARTOutputBuffer, &iIndex, 3);
+        OutputBufAppendZeros(output_buf, &iIndex, 3);
     }
 
     // initialize default quaternion, flags byte, angular velocity and orientation
@@ -353,7 +347,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
             if (sfg->iFlags & F_3DOF_G_BASIC)
             {
                 flags |= 0x01;
-                readCommon((SV_ptr)&sfg->SV_3DOF_G_BASIC, &fq, &iPhi, &iThe, &iRho, iOmega, &isystick);
+                ReadCommonParams((SV_ptr)&sfg->SV_3DOF_G_BASIC, &fq, &iPhi, &iThe, &iRho, iOmega, &isystick);
             }
             break;
 #endif
@@ -362,7 +356,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
             if (sfg->iFlags & F_3DOF_B_BASIC)
             {
                 flags |= 0x06;
-                readCommon((SV_ptr)&sfg->SV_3DOF_B_BASIC, &fq, &iPhi, &iThe, &iRho, iOmega, &isystick);
+                ReadCommonParams((SV_ptr)&sfg->SV_3DOF_B_BASIC, &fq, &iPhi, &iThe, &iRho, iOmega, &isystick);
             }
             break;
 #endif
@@ -371,7 +365,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
             if (sfg->iFlags & F_3DOF_Y_BASIC)
             {
                 flags |= 0x03;
-                readCommon((SV_ptr)&sfg->SV_3DOF_Y_BASIC, &fq, &iPhi, &iThe, &iRho, iOmega, &isystick);
+                ReadCommonParams((SV_ptr)&sfg->SV_3DOF_Y_BASIC, &fq, &iPhi, &iThe, &iRho, iOmega, &isystick);
             }
             break;
 #endif
@@ -381,7 +375,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
             {
                 flags |= 0x02;
                 iDelta = (int16_t) (10.0F * sfg->SV_6DOF_GB_BASIC.fLPDelta);
-                readCommon((SV_ptr)&sfg->SV_6DOF_GB_BASIC, &fq, &iPhi, &iThe, &iRho, iOmega, &isystick);
+                ReadCommonParams((SV_ptr)&sfg->SV_6DOF_GB_BASIC, &fq, &iPhi, &iThe, &iRho, iOmega, &isystick);
             }
             break;
 #endif
@@ -390,7 +384,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
             if (sfg->iFlags & F_6DOF_GY_KALMAN)
             {
                 flags |= 0x04;
-                readCommon((SV_ptr)&sfg->SV_6DOF_GY_KALMAN, &fq, &iPhi, &iThe, &iRho, iOmega, &isystick);
+                ReadCommonParams((SV_ptr)&sfg->SV_6DOF_GY_KALMAN, &fq, &iPhi, &iThe, &iRho, iOmega, &isystick);
             }
             break;
 #endif
@@ -400,7 +394,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
              {
                 flags |= 0x08;
                 iDelta = (int16_t) (10.0F * sfg->SV_9DOF_GBY_KALMAN.fDeltaPl);
-                readCommon((SV_ptr)&sfg->SV_9DOF_GBY_KALMAN, &fq, &iPhi, &iThe, &iRho, iOmega, &isystick);
+                ReadCommonParams((SV_ptr)&sfg->SV_9DOF_GBY_KALMAN, &fq, &iPhi, &iThe, &iRho, iOmega, &isystick);
             }
             break;
 #endif
@@ -411,13 +405,13 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
 
     // [32-25]: scale the quaternion (30K = 1.0F) and add to the buffer
     scratch16 = (int16_t) (fq.q0 * 30000.0F);
-    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
     scratch16 = (int16_t) (fq.q1 * 30000.0F);
-    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
     scratch16 = (int16_t) (fq.q2 * 30000.0F);
-    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
     scratch16 = (int16_t) (fq.q3 * 30000.0F);
-    sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+    OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
 
     // set the coordinate system bits in flags from default NED (00)
 #if THISCOORDSYSTEM == ANDROID
@@ -429,14 +423,14 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
 #endif // THISCOORDSYSTEM
 
     // [33]: add the flags byte to the buffer
-    sBufAppendItem(sUARTOutputBuffer, &iIndex, &flags, 1);
+    OutputBufAppendItem(output_buf, &iIndex, &flags, 1);
 
     // [34]: add the shield (bits 7-5) and Kinetis (bits 4-0) byte
     tmpuint8_t = ((THIS_SHIELD & 0x07) << 5) | (THIS_BOARD & 0x1F);
-    sBufAppendItem(sUARTOutputBuffer, &iIndex, &tmpuint8_t, 1);
+    OutputBufAppendItem(output_buf, &iIndex, &tmpuint8_t, 1);
 
     // [35]: add the tail byte for the standard packet type 1
-    sUARTOutputBuffer[iIndex++] = 0x7E;
+    output_buf[iIndex++] = 0x7E;
 
     // ************************************************************************
     // Variable length debug packet type 2
@@ -445,25 +439,25 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
     if (DebugPacketOn)
     {
         // [0]: packet start byte
-        sUARTOutputBuffer[iIndex++] = 0x7E;
+        output_buf[iIndex++] = 0x7E;
 
         // [1]: packet type 2 byte
         tmpuint8_t = 0x02;
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, &tmpuint8_t, 1);
+        OutputBufAppendItem(output_buf, &iIndex, &tmpuint8_t, 1);
 
         // [2]: packet number byte
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, &iPacketNumber, 1);
+        OutputBufAppendItem(output_buf, &iIndex, &iPacketNumber, 1);
         iPacketNumber++;
 
         // [4-3] software version number
         scratch16 = THISBUILD;
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
 
         // [6-5] systick count / 20
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &isystick, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &isystick, 2);
 
         // [7 in practice but can be variable]: add the tail byte for the debug packet type 2
-        sUARTOutputBuffer[iIndex++] = 0x7E;
+        output_buf[iIndex++] = 0x7E;
     }
 
     // ************************************************************************
@@ -473,26 +467,26 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
     if (AngularVelocityPacketOn)
     {
         // [0]: packet start byte
-        sUARTOutputBuffer[iIndex++] = 0x7E;
+        output_buf[iIndex++] = 0x7E;
 
         // [1]: packet type 3 byte (angular velocity)
         tmpuint8_t = 0x03;
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, &tmpuint8_t, 1);
+        OutputBufAppendItem(output_buf, &iIndex, &tmpuint8_t, 1);
 
         // [2]: packet number byte
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, &iPacketNumber, 1);
+        OutputBufAppendItem(output_buf, &iIndex, &iPacketNumber, 1);
         iPacketNumber++;
 
         // [6-3]: time stamp (4 bytes)
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &iTimeStamp, 4);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &iTimeStamp, 4);
 
         // [12-7]: add the scaled angular velocity vector to the output buffer
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &iOmega[CHX], 2);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &iOmega[CHY], 2);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &iOmega[CHZ], 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &iOmega[CHX], 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &iOmega[CHY], 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &iOmega[CHZ], 2);
 
         // [13]: add the tail byte for the angular velocity packet type 3
-        sUARTOutputBuffer[iIndex++] = 0x7E;
+        output_buf[iIndex++] = 0x7E;
     }
 
     // ************************************************************************
@@ -502,26 +496,26 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
     if (RPCPacketOn)
     {
         // [0]: packet start byte
-        sUARTOutputBuffer[iIndex++] = 0x7E;
+        output_buf[iIndex++] = 0x7E;
 
         // [1]: packet type 4 byte (Euler angles)
         tmpuint8_t = 0x04;
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, &tmpuint8_t, 1);
+        OutputBufAppendItem(output_buf, &iIndex, &tmpuint8_t, 1);
 
         // [2]: packet number byte
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, &iPacketNumber, 1);
+        OutputBufAppendItem(output_buf, &iIndex, &iPacketNumber, 1);
         iPacketNumber++;
 
         // [6-3]: time stamp (4 bytes)
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &iTimeStamp, 4);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &iTimeStamp, 4);
 
         // [12-7]: add the angles (resolution 0.1 deg per count) to the transmit buffer
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &iPhi, 2);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &iThe, 2);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &iRho, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &iPhi, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &iThe, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &iRho, 2);
 
         // [13]: add the tail byte for the roll, pitch, compass angle packet type 4
-        sUARTOutputBuffer[iIndex++] = 0x7E;
+        output_buf[iIndex++] = 0x7E;
     }
 
     // ************************************************************************
@@ -534,30 +528,30 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
         if (sfg->pControlSubsystem->AltPacketOn && sfg->Pressure.iWhoAmI)
         {
             // [0]: packet start byte
-            sUARTOutputBuffer[iIndex++] = 0x7E;
+            output_buf[iIndex++] = 0x7E;
 
             // [1]: packet type 5 byte
             tmpuint8_t = 0x05;
-            sBufAppendItem(sUARTOutputBuffer, &iIndex, &tmpuint8_t, 1);
+            OutputBufAppendItem(output_buf, &iIndex, &tmpuint8_t, 1);
 
             // [2]: packet number byte
-            sBufAppendItem(sUARTOutputBuffer, &iIndex, &iPacketNumber, 1);
+            OutputBufAppendItem(output_buf, &iIndex, &iPacketNumber, 1);
             iPacketNumber++;
 
             // [6-3]: time stamp (4 bytes)
-            sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &iTimeStamp,
+            OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &iTimeStamp,
                            4);
 
             // [10-7]: altitude (4 bytes, metres times 1000)
             scratch32 = (int32_t) (sfg->SV_1DOF_P_BASIC.fLPH * 1000.0F);
-            sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch32, 4);
+            OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch32, 4);
 
             // [12-11]: temperature (2 bytes, deg C times 100)
             scratch16 = (int16_t) (sfg->SV_1DOF_P_BASIC.fLPT * 100.0F);
-            sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+            OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
 
             // [13]: add the tail byte for the altitude / temperature packet type 5
-            sUARTOutputBuffer[iIndex++] = 0x7E;
+            output_buf[iIndex++] = 0x7E;
         }
     }
 #endif
@@ -572,18 +566,18 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
     if (sfg->iFlags & F_USING_MAG)
     {
         // [0]: packet start byte
-        sUARTOutputBuffer[iIndex++] = 0x7E;
+        output_buf[iIndex++] = 0x7E;
 
         // [1]: packet type 6 byte
         tmpuint8_t = 0x06;
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, &tmpuint8_t, 1);
+        OutputBufAppendItem(output_buf, &iIndex, &tmpuint8_t, 1);
 
         // [2]: packet number byte
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, &iPacketNumber, 1);
+        OutputBufAppendItem(output_buf, &iIndex, &iPacketNumber, 1);
         iPacketNumber++;
 
         // [4-3]: number of active measurements in the magnetic buffer
-        sBufAppendItem(sUARTOutputBuffer, &iIndex,
+        OutputBufAppendItem(output_buf, &iIndex,
                        (uint8_t *) &(sfg->MagBuffer.iMagBufferCount), 2);
 
         // [6-5]: fit error (%) with resolution 0.01%
@@ -591,11 +585,11 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
             scratch16 = 32767;
         else
             scratch16 = (int16_t) (sfg->MagCal.fFitErrorpc * 100.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
 
         // [8-7]: geomagnetic field strength with resolution 0.1uT
         scratch16 = (int16_t) (sfg->MagCal.fB * 10.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
 
         // always calculate magnetic buffer row and column (low overhead and saves warnings)
         k = MagneticPacketID - 10;
@@ -611,13 +605,13 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
         {
             // use negative ID to indicate inactive magnetic buffer element
             scratch16 = -MagneticPacketID;
-            sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+            OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         }
         else
         {
             // use positive ID unchanged for variable or active magnetic buffer entry
             scratch16 = MagneticPacketID;
-            sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+            OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         }
 
         // [12-11]: int16_t: variable 1 to be transmitted this iteration
@@ -628,45 +622,45 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
             case 0:
                 // item 1: currently unused
                 scratch16 = 0;
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
 
                 // item 2: currently unused
                 scratch16 = 0;
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
 
                 // item 3: magnetic inclination angle with resolution 0.1 deg
                 scratch16 = iDelta;
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 break;
 
             case 1:
                 // items 1 to 3: hard iron components range -3276uT to +3276uT encoded with 0.1uT resolution
                 scratch16 = (int16_t) (sfg->MagCal.fV[CHX] * 10.0F);
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 scratch16 = (int16_t) (sfg->MagCal.fV[CHY] * 10.0F);
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 scratch16 = (int16_t) (sfg->MagCal.fV[CHZ] * 10.0F);
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 break;
 
             case 2:
                 // items 1 to 3: diagonal soft iron range -32. to +32. encoded with 0.001 resolution
                 scratch16 = (int16_t) (sfg->MagCal.finvW[CHX][CHX] * 1000.0F);
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 scratch16 = (int16_t) (sfg->MagCal.finvW[CHY][CHY] * 1000.0F);
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 scratch16 = (int16_t) (sfg->MagCal.finvW[CHZ][CHZ] * 1000.0F);
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 break;
 
             case 3:
                 // items 1 to 3: off-diagonal soft iron range -32. to +32. encoded with 0.001 resolution
                 scratch16 = (int16_t) (sfg->MagCal.finvW[CHX][CHY] * 1000.0F);
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 scratch16 = (int16_t) (sfg->MagCal.finvW[CHX][CHZ] * 1000.0F);
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 scratch16 = (int16_t) (sfg->MagCal.finvW[CHY][CHZ] * 1000.0F);
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
                 break;
 
             case 4:
@@ -676,16 +670,16 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
             case 8:
             case 9:
                 // cases 4 to 9 inclusive are for future expansion so transmit zeroes for now
-                sBufAppendZeros(sUARTOutputBuffer, &iIndex, 3);
+                OutputBufAppendZeros(output_buf, &iIndex, 3);
                 break;
 
             default:
                 // 10 and upwards: this handles the magnetic buffer elements
-                sBufAppendItem(sUARTOutputBuffer, &iIndex,
+                OutputBufAppendItem(output_buf, &iIndex,
                                (uint8_t *) &(sfg->MagBuffer.iBs[CHX][i][j]), 2);
-                sBufAppendItem(sUARTOutputBuffer, &iIndex,
+                OutputBufAppendItem(output_buf, &iIndex,
                                (uint8_t *) &(sfg->MagBuffer.iBs[CHY][i][j]), 2);
-                sBufAppendItem(sUARTOutputBuffer, &iIndex,
+                OutputBufAppendItem(output_buf, &iIndex,
                                (uint8_t *) &(sfg->MagBuffer.iBs[CHZ][i][j]), 2);
                 break;
         }
@@ -696,7 +690,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
             MagneticPacketID = 0;
 
         // [17]: add the tail byte for the magnetic packet type 6
-        sUARTOutputBuffer[iIndex++] = 0x7E;
+        output_buf[iIndex++] = 0x7E;
     }
 #endif
 
@@ -721,14 +715,14 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
         if ((quaternionPacketType == Q6AG) || (quaternionPacketType == Q9))
         {
             // [0]: packet start byte
-            sUARTOutputBuffer[iIndex++] = 0x7E;
+            output_buf[iIndex++] = 0x7E;
 
             // [1]: packet type 7 byte
             tmpuint8_t = 0x07;
-            sBufAppendItem(sUARTOutputBuffer, &iIndex, &tmpuint8_t, 1);
+            OutputBufAppendItem(output_buf, &iIndex, &tmpuint8_t, 1);
 
             // [2]: packet number byte
-            sBufAppendItem(sUARTOutputBuffer, &iIndex, &iPacketNumber, 1);
+            OutputBufAppendItem(output_buf, &iIndex, &iPacketNumber, 1);
             iPacketNumber++;
 
             // [4-3]: fzgErr[CHX] resolution scaled by 30000
@@ -742,7 +736,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
 #if F_9DOF_GBY_KALMAN
                 if (nine_axis_kalman)   scratch16 = (int16_t) (sfg->SV_9DOF_GBY_KALMAN.fZErr[i] * 30000.0F);
 #endif
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16,2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16,2);
             }
 
             // [10-9]: fgErrPl[CHX] resolution scaled by 30000
@@ -756,7 +750,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
 #if F_9DOF_GBY_KALMAN
                 if (nine_axis_kalman)   scratch16 = (int16_t) (sfg->SV_9DOF_GBY_KALMAN.fqgErrPl[i] * 30000.0F);
 #endif
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16,2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16,2);
             }
 
             // [16-15]: fzmErr[CHX] resolution scaled by 30000
@@ -770,7 +764,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
 #if F_9DOF_GBY_KALMAN
                 if (nine_axis_kalman)   scratch16 = (int16_t) (sfg->SV_9DOF_GBY_KALMAN.fZErr[i + 3] * 30000.0F);
 #endif
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
             }
 
             // [22-21]: fmErrPl[CHX] resolution scaled by 30000
@@ -784,7 +778,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
 #if F_9DOF_GBY_KALMAN
                 if (nine_axis_kalman)   scratch16 = (int16_t) (sfg->SV_9DOF_GBY_KALMAN.fqmErrPl[i] * 30000.0F);
 #endif
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
             }
 
             // [28-27]: fbPl[CHX] resolution 0.001 deg/sec
@@ -798,7 +792,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
 #if F_9DOF_GBY_KALMAN
                 if (nine_axis_kalman)   scratch16 = (int16_t) (sfg->SV_9DOF_GBY_KALMAN.fbPl[i] * 1000.0F);
 #endif
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
             }
 
             // [34-33]: fDeltaPl resolution 0.01deg
@@ -806,7 +800,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
 #if F_9DOF_GBY_KALMAN
             if (nine_axis_kalman)       scratch16 = (int16_t) (sfg->SV_9DOF_GBY_KALMAN.fDeltaPl * 100.0F);
 #endif
-            sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+            OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
 
             // [36-35]: fAccGl[CHX] resolution 1/8192 g
             // [38-37]: fAccGl[CHY] resolution 1/8192 g
@@ -826,7 +820,7 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
                 if (ftmp > 32767.0F)            scratch16 = 32767;
                 else if (ftmp < -32768.0F)      scratch16 = -32768;
                 else                            scratch16 = (int16_t) ftmp;
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
             }
 
             // [42-41]: fDisGl[CHX] resolution 0.01m
@@ -844,11 +838,11 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
                 if (ftmp > 32767.0F)            scratch16 = 32767;
                 else if (ftmp < -32768.0F)      scratch16 = -32768;
                 else                            scratch16 = (int16_t) ftmp;
-                sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+                OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
             }
 
             // [47]: add the tail byte for the Kalman packet type 7
-            sUARTOutputBuffer[iIndex++] = 0x7E;
+            output_buf[iIndex++] = 0x7E;
         }
     }   // end of check for Kalman packet
 #endif
@@ -861,20 +855,20 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
     // check to see which packet (if any) is to be transmitted
     if (AccelCalPacketOn != -1)
     {
-        // [0]: packet start byte (need a iIndex++ here since not using sBufAppendItem)
-        sUARTOutputBuffer[iIndex++] = 0x7E;
+        // [0]: packet start byte (need a iIndex++ here since not using OutputBufAppendItem)
+        output_buf[iIndex++] = 0x7E;
 
-        // [1]: packet type 8 byte (iIndex is automatically updated in sBufAppendItem)
+        // [1]: packet type 8 byte (iIndex is automatically updated in OutputBufAppendItem)
         tmpuint8_t = 0x08;
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, &tmpuint8_t, 1);
+        OutputBufAppendItem(output_buf, &iIndex, &tmpuint8_t, 1);
 
         // [2]: packet number byte
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, &iPacketNumber, 1);
+        OutputBufAppendItem(output_buf, &iIndex, &iPacketNumber, 1);
         iPacketNumber++;
 
         // [3]: AccelCalPacketOn in range 0-11 denotes stored location and MAXORIENTATIONS denotes transmit
         // precision accelerometer calibration on power on before any measurements have been obtained.
-        sBufAppendItem(sUARTOutputBuffer, &iIndex,
+        OutputBufAppendItem(output_buf, &iIndex,
                        (uint8_t *) &(AccelCalPacketOn), 1);
 
         // [9-4]: stored accelerometer measurement fGs (scaled to 8192 counts per g)
@@ -882,78 +876,77 @@ void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer)
             (AccelCalPacketOn < MAX_ACCEL_CAL_ORIENTATIONS))
         {
             scratch16 = (int16_t) (sfg->AccelBuffer.fGsStored[AccelCalPacketOn][CHX] * 8192.0F);
-            sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+            OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
             scratch16 = (int16_t) (sfg->AccelBuffer.fGsStored[AccelCalPacketOn][CHY] * 8192.0F);
-            sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+            OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
             scratch16 = (int16_t) (sfg->AccelBuffer.fGsStored[AccelCalPacketOn][CHZ] * 8192.0F);
-            sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+            OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         }
         else
         {
             // transmit zero bytes since this is the power on or reset transmission of the precision calibration
-            sBufAppendZeros(sUARTOutputBuffer, &iIndex, 3);
+            OutputBufAppendZeros(output_buf, &iIndex, 3);
         }
 
         // [15-10]: precision accelerometer offset vector fV (g scaled by 32768.0)
         scratch16 = (int16_t) (sfg->AccelCal.fV[CHX] * 32768.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         scratch16 = (int16_t) (sfg->AccelCal.fV[CHY] * 32768.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         scratch16 = (int16_t) (sfg->AccelCal.fV[CHZ] * 32768.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
 
         // [21-16]: precision accelerometer inverse gain matrix diagonal finvW - 1.0 (scaled by 10000.0)
         scratch16 = (int16_t) ((sfg->AccelCal.finvW[CHX][CHX] - 1.0F) * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         scratch16 = (int16_t) ((sfg->AccelCal.finvW[CHY][CHY] - 1.0F) * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         scratch16 = (int16_t) ((sfg->AccelCal.finvW[CHZ][CHZ] - 1.0F) * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
 
         // [27-22]: precision accelerometer inverse gain matrix off-diagonal finvW (scaled by 10000)
         scratch16 = (int16_t) (sfg->AccelCal.finvW[CHX][CHY] * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         scratch16 = (int16_t) (sfg->AccelCal.finvW[CHX][CHZ] * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         scratch16 = (int16_t) (sfg->AccelCal.finvW[CHY][CHZ] * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
 
         // [33-28]: precision accelerometer rotation matrix diagonal fR0 (scaled by 10000)
         scratch16 = (int16_t) (sfg->AccelCal.fR0[CHX][CHX] * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         scratch16 = (int16_t) (sfg->AccelCal.fR0[CHY][CHY] * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         scratch16 = (int16_t) (sfg->AccelCal.fR0[CHZ][CHZ] * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
 
         // [45-34]: precision accelerometer inverse rotation matrix off-diagonal fR0 (scaled by 10000)
         scratch16 = (int16_t) (sfg->AccelCal.fR0[CHX][CHY] * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         scratch16 = (int16_t) (sfg->AccelCal.fR0[CHX][CHZ] * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         scratch16 = (int16_t) (sfg->AccelCal.fR0[CHY][CHX] * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         scratch16 = (int16_t) (sfg->AccelCal.fR0[CHY][CHZ] * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         scratch16 = (int16_t) (sfg->AccelCal.fR0[CHZ][CHX] * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
         scratch16 = (int16_t) (sfg->AccelCal.fR0[CHZ][CHY] * 10000.0F);
-        sBufAppendItem(sUARTOutputBuffer, &iIndex, (uint8_t *) &scratch16, 2);
+        OutputBufAppendItem(output_buf, &iIndex, (uint8_t *) &scratch16, 2);
 
         // [46]: add the tail byte for the packet type 8
-        sUARTOutputBuffer[iIndex++] = 0x7E;
+        output_buf[iIndex++] = 0x7E;
 
         // disable future packets of this type until a new measurement has been obtained
         sfg->pControlSubsystem->AccelCalPacketOn = -1;
     }
 #endif  // F_USING_ACCEL
     // ********************************************************************************
-    // all packets have now been constructed in the output buffer so now transmit.
+    // all packets have now been constructed in the output buffer.
     // The final iIndex++ gives the number of bytes to transmit which is one more than
-    // the last index in the buffer. this function is non-blocking
+    // the last index in the buffer.
     // ********************************************************************************
+    sfg->pControlSubsystem->bytes_to_send = iIndex;
 
-    sfg->pControlSubsystem->write(sfg->pControlSubsystem, sUARTOutputBuffer,
-                                  iIndex);
     return;
 }

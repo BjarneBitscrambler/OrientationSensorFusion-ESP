@@ -1,19 +1,24 @@
 #include <Arduino.h>
 #include <sstream>
 #include <string>
-#include <WiFi.h>
+#ifdef ESP8266
+  #include <ESP8266WiFi.h>
+  #include <ESP8266WiFiAP.h>
+#endif
+#ifdef ESP32
+  #include <WiFi.h>
+  #include <WiFiAP.h>
+#endif
 #include <WiFiClient.h>
-#include <WiFiAP.h>
 #include <Wire.h>
 
 // Sensor Fusion Headers
 #include "sensor_fusion.h"      // top level magCal and sensor fusion interfaces. Include 1st.
-#include "board.h"              // hardware-specific settings. 
-          //Edit as needed for whatever board & sensors used.
+#include "board.h"              // hardware-specific settings. Edit as needed for board & sensors.
 #include "control.h"  	        // Command processing and data streaming interface
 #include "debug_print.h"        // provides ability to output debug messages via serial
 #include "drivers.h"  	        // hardware-specific drivers
-#include "sensor_io_i2c_sensesp.h"  //I2C interfaces for ESP platform
+#include "sensor_io_i2c_esp.h"  //I2C interfaces for ESP platform
 #include "status.h"   	        // Status indicator interface - application specific
 
 // wifi config - using ESP as Access Point (AP)
@@ -23,7 +28,15 @@ const char *password = "northsouth";
 WiFiServer server(WIFI_STREAMING_PORT);  // use wifi server port 23 (telnet)
 WiFiClient client;  // TODO remove as global - is used in control.cpp
 
-#define DEBUG_OUTPUT_PIN GPIO_NUM_22  //pin that can be twiddled for debugging
+//pin that can be twiddled for debugging
+#ifdef ESP8266
+  //ESP8266 has different nomenclature for its GPIO pins and directions
+  #define DEBUG_OUTPUT_PIN 13
+  #define GPIO_MODE_OUTPUT OUTPUT
+#endif
+#ifdef ESP32
+  #define DEBUG_OUTPUT_PIN GPIO_NUM_22  
+#endif
 
 // Sensor Fusion Global data structures
 SensorFusionGlobals sfg;                  //Primary sensor fusion data structure
@@ -34,7 +47,7 @@ struct PhysicalSensor sensors[3];         // this implementation uses up to 3 se
 void setup() {
   // put your setup code here, to run once:
 
-    gpio_set_direction(DEBUG_OUTPUT_PIN, GPIO_MODE_OUTPUT);
+    pinMode(DEBUG_OUTPUT_PIN, GPIO_MODE_OUTPUT);
 
     Serial.begin(BOARD_DEBUG_UART_BAUDRATE); //initialize serial UART
     delay(200);
@@ -51,7 +64,8 @@ void setup() {
     Serial.println(" on port 23.");
 #endif
 
-  debug_log("waitasec...");  //delay not really necessary - gives time to open a serial monitor
+  debug_log("waitasec...");  
+  //delay not really necessary - gives time to open a serial monitor
   delay(1000);
 
   //initialize the I2C system at max clock rate supported by sensors
@@ -119,8 +133,10 @@ void loop() {
   //      debug_log("applied cal");
         sfg.runFusion(&sfg);                // Run the actual fusion algorithms
   //      debug_log("fused");
-        sfg.applyPerturbation(&sfg);  // apply debug perturbation (for testing only)
-  //      debug_log("applied perturbation");
+        // Serial.printf(" Algo took %ld us\n", sfg.SV_9DOF_GBY_KALMAN.systick);
+        sfg.applyPerturbation(
+            &sfg);  // apply debug perturbation (if testing mode enabled)
+                    //      debug_log("applied perturbation");
         sfg.loopcounter++;  // loop counter is used to "serialize" mag cal
                             // operations and blink LEDs to indicate status
 
@@ -135,12 +151,12 @@ void loop() {
             &sfg,
             NORMAL);  // assume NORMAL status for next pass through the loop
 
-  //      debug_log("entering stream...");
-        sfg.pControlSubsystem->stream(
-            &sfg, sUARTOutputBuffer);  //Send stream data to the Sensor Fusion
-                                        // Toolbox (default) or whatever UART is connected to.
+        //Make and send data to the Sensor Fusion Toolbox or whatever UART is connected to.
+        sfg.pControlSubsystem->stream(&sfg);  //create the output packet  
+        sfg.pControlSubsystem->write(sfg.pControlSubsystem);  //send the output packet
+
         sfg.pControlSubsystem->readCommands(&sfg);
-        gpio_set_level(
+        digitalWrite(
             DEBUG_OUTPUT_PIN, i % 2);  // toggle output pin each time through, for debugging
       }
     }

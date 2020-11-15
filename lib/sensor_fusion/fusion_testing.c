@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*! \file debug.c
+/*! \file fusion_testing.c  (used to be debug.h - name conflict with EEPROM lib)
     \brief ApplyPerturbation function used to analyze dynamic performance
 
     The ApplyPerturbation function applies a user-specified step function to
@@ -23,9 +23,9 @@
     So those filters are not operating as they would in the normal world.
 */
 
+#include <stdlib.h>
 #include "sensor_fusion.h"
 #include "control.h"
-#include "stdlib.h"
 #include "build.h"
 
 /// The ApplyPerturbation function applies a user-specified step function to

@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 
-// Standard includes that everyone needs
+// Standard includes
 #include "math.h"
 #include "stdbool.h"
 #include "stdio.h"
@@ -30,6 +30,7 @@ extern "C" {
 
 
 #include "hal_issdk.h"                  // Hardware Abstraction Layer board hardware-specific functions
+#include "board.h"						// Hardware-specific details (e.g. particular sensor ICs)
 #include "build.h"                      // This is where the build parameters are defined
 #include "magnetic.h"                   // Magnetic calibration functions/structures
 #include "precisionAccelerometer.h"     // Accel calibration functions/structures

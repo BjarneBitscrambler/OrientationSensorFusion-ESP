@@ -1,9 +1,16 @@
 
+/*
+ * Copyright (c) 2020, Bjarne Hansen
+ * All rights reserved.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 /*! \file calibration_storage.c
     \brief Provides functions to store calibration to NVM
 
     Written for use on Arduino-Espressif environment where EEPROM library available.
-	Bjarne Hansen  2020-10-26
+    
 */
 #include <stdio.h>
 #include <EEPROM.h>
@@ -32,6 +39,19 @@
 	#error insufficient space allocated for calibration buffer
 #endif
 
+#ifdef ESP8266
+// define a replacement for EEPROM.readBytes(), which is only available in the
+// ESP32 library
+void EepromReadBytes(int start_loc, void *buffer, int num_bytes);
+void EepromReadBytes(int start_loc, void *buffer, int num_bytes) {
+  uint8_t *ptr = (uint8_t *)buffer;
+  for (int i = 0; i < num_bytes; i++) {
+    ptr[i] = EEPROM.read(i + start_loc);    //read single bytes at a time
+  }
+  return;  // EEPROM.read() doesn't return errors, so neither do we
+}//end EepromReadBytes()
+#endif
+
 //fetch the Magnetic calibration values from non-volatile memory.
 //If cal values are unavailable, returns false. If successful, returns true.
 bool GetMagCalibrationFromNVM( float *cal_values ) {
@@ -39,17 +59,20 @@ bool GetMagCalibrationFromNVM( float *cal_values ) {
       return false;
     }
 #if F_USING_MAG
-    //header of each calibration block type, containing 
+    //header of each calibration block type contains 
     //magic value if valid calibration has been previously stored.
-
     EEPROM.begin(
-        CALIBRATION_STORAGE_SIZE_BYTES);  // access chunk of emulated EEPROM
-    
+        CALIBRATION_STORAGE_SIZE_BYTES);  // access chunk of emulated EEPROM    
     //check for the expected header - if not found, then calibration invalid
-    //this code is a bit hacky: can't use an arbitrary # of bytes in header.
-    uint8_t buf_magic[CALIBRATION_BUF_MAGNETIC_HDR_SIZE];	
+    uint8_t buf_magic[CALIBRATION_BUF_MAGNETIC_HDR_SIZE];
+#ifdef ESP8266
+    EepromReadBytes(CALIBRATION_BUF_MAGNETIC_START, buf_magic,
+                    CALIBRATION_BUF_MAGNETIC_HDR_SIZE);
+#endif
+#ifdef ESP32
     EEPROM.readBytes(CALIBRATION_BUF_MAGNETIC_START, buf_magic,
                      CALIBRATION_BUF_MAGNETIC_HDR_SIZE);
+#endif
     uint32_t magic_value = CALIBRATION_BUF_MAGNETIC_HDR_MAGIC;
     uint8_t *pSrc = (uint8_t *)&magic_value;
     for (int i = 0; i < CALIBRATION_BUF_MAGNETIC_HDR_SIZE; i++) {
@@ -58,12 +81,17 @@ bool GetMagCalibrationFromNVM( float *cal_values ) {
       }
       ++pSrc;
     }
-
     //read the valid calibration into provided destination
+#ifdef ESP8266
+    EepromReadBytes(
+        CALIBRATION_BUF_MAGNETIC_START + CALIBRATION_BUF_MAGNETIC_HDR_SIZE,
+        cal_values, CALIBRATION_BUF_MAGNETIC_VAL_SIZE);
+#endif
+#ifdef ESP32
     EEPROM.readBytes(
         CALIBRATION_BUF_MAGNETIC_START + CALIBRATION_BUF_MAGNETIC_HDR_SIZE,
         cal_values, CALIBRATION_BUF_MAGNETIC_VAL_SIZE);
-
+#endif
     EEPROM.end();
     return true;
 #endif  // if F_USING_MAG
@@ -75,16 +103,20 @@ bool GetGyroCalibrationFromNVM( float *cal_values ) {
       return false;
     }
 #if F_USING_GYRO
-    //header of each calibration block type, containing 
+    //header of each calibration block type contains 
     //magic value if valid calibration has been previously stored.
     EEPROM.begin(
-        CALIBRATION_STORAGE_SIZE_BYTES);  // access chunk of emulated EEPROM
-    
+        CALIBRATION_STORAGE_SIZE_BYTES);  // access chunk of emulated EEPROM    
     //check for the expected header - if not found, then calibration invalid
-    //this code is a bit hacky: can't use an arbitrary # of bytes in header.
-    uint8_t buf_magic[CALIBRATION_BUF_GYRO_HDR_SIZE];	
+    uint8_t buf_magic[CALIBRATION_BUF_GYRO_HDR_SIZE];
+#ifdef ESP8266
+    EepromReadBytes(CALIBRATION_BUF_GYRO_START, buf_magic,
+                    CALIBRATION_BUF_GYRO_HDR_SIZE);
+#endif
+#ifdef ESP32
     EEPROM.readBytes(CALIBRATION_BUF_GYRO_START, buf_magic,
                      CALIBRATION_BUF_GYRO_HDR_SIZE);
+#endif
     uint32_t magic_value = CALIBRATION_BUF_GYRO_HDR_MAGIC;
     uint8_t *pSrc = (uint8_t *)&magic_value;
     for (int i = 0; i < CALIBRATION_BUF_GYRO_HDR_SIZE; i++) {
@@ -93,12 +125,15 @@ bool GetGyroCalibrationFromNVM( float *cal_values ) {
       }
       ++pSrc;
     }
-
     //read the valid calibration into provided destination
-    EEPROM.readBytes(
-        CALIBRATION_BUF_GYRO_START + CALIBRATION_BUF_GYRO_HDR_SIZE,
-        cal_values, CALIBRATION_BUF_GYRO_VAL_SIZE);
-
+#ifdef ESP8266
+    EepromReadBytes(CALIBRATION_BUF_GYRO_START + CALIBRATION_BUF_GYRO_HDR_SIZE,
+                    cal_values, CALIBRATION_BUF_GYRO_VAL_SIZE);
+#endif
+#ifdef ESP32
+    EEPROM.readBytes(CALIBRATION_BUF_GYRO_START + CALIBRATION_BUF_GYRO_HDR_SIZE,
+                     cal_values, CALIBRATION_BUF_GYRO_VAL_SIZE);
+#endif
     EEPROM.end();
     return true;
 #endif  // if F_USING_GYRO
@@ -110,16 +145,21 @@ bool GetAccelCalibrationFromNVM( float *cal_values ) {
       return false;
     }
 #if F_USING_ACCEL
-    //header of each calibration block type, containing 
+    //header of each calibration block type contains
     //magic value if valid calibration has been previously stored.
     EEPROM.begin(
         CALIBRATION_STORAGE_SIZE_BYTES);  // access chunk of emulated EEPROM
     
     //check for the expected header - if not found, then calibration invalid
-    //this code is a bit hacky: can't use an arbitrary # of bytes in header.
-    uint8_t buf_magic[CALIBRATION_BUF_ACCEL_HDR_SIZE];	
+    uint8_t buf_magic[CALIBRATION_BUF_ACCEL_HDR_SIZE];
+#ifdef ESP8266
+    EepromReadBytes(CALIBRATION_BUF_ACCEL_START, buf_magic,
+                     CALIBRATION_BUF_ACCEL_HDR_SIZE);
+#endif
+#ifdef ESP32
     EEPROM.readBytes(CALIBRATION_BUF_ACCEL_START, buf_magic,
                      CALIBRATION_BUF_ACCEL_HDR_SIZE);
+#endif
     uint32_t magic_value = CALIBRATION_BUF_ACCEL_HDR_MAGIC;
     uint8_t *pSrc = (uint8_t *)&magic_value;
     for (int i = 0; i < CALIBRATION_BUF_ACCEL_HDR_SIZE; i++) {
@@ -128,12 +168,17 @@ bool GetAccelCalibrationFromNVM( float *cal_values ) {
       }
       ++pSrc;
     }
-
     //read the valid calibration into provided destination
+#ifdef ESP8266
+    EepromReadBytes(
+        CALIBRATION_BUF_ACCEL_START + CALIBRATION_BUF_ACCEL_HDR_SIZE,
+        cal_values, CALIBRATION_BUF_ACCEL_VAL_SIZE);
+#endif
+#ifdef ESP32
     EEPROM.readBytes(
         CALIBRATION_BUF_ACCEL_START + CALIBRATION_BUF_ACCEL_HDR_SIZE,
         cal_values, CALIBRATION_BUF_ACCEL_VAL_SIZE);
-
+#endif
     EEPROM.end();
     return true;
 #endif  // if F_USING_ACCEL

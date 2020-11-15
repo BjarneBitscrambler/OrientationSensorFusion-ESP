@@ -13,7 +13,7 @@
 */
 
 #include "sensor_fusion.h"              // Sensor fusion structures and types
-#include "sensor_io_i2c_sensesp.h"      // Functions for I2C reading/writing
+#include "sensor_io_i2c_esp.h"      // Functions for I2C reading/writing
 #include "fxos8700_registers.h"         // describes the FXOS8700 register definitions and bit masks
 #include "fxos8700_driver.h"            // 
 #include "drivers.h"                    // Device specific drivers supplied by NXP (can be replaced with user drivers)

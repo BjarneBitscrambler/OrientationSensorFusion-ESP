@@ -10,7 +10,7 @@
     \brief Build configuration file
 
     This file contains only those parameters that directly relate to fusion
-    implementation choices.  Board dependencies are in hal.h.  Consult the
+    implementation choices.  Board dependencies are in board.h.  Consult the
     Sensor Fusion User Guide for guidance and details.
 */
 
@@ -20,9 +20,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "fxos8700_driver.h"    //include the specific sensor IC(s) used 
-#include "fxas21002_driver.h"
 
 #define THISBUILD 720 ///< define build number sent in debug packet for display purposes only
 
@@ -77,7 +74,12 @@ extern "C" {
 #define FUSION_HZ       40  ///< (int) actual rate of fusion algorithm execution and sensor FIFO reads
 #define FAST_LOOP_HZ    40  ///< Over Sample Ratio * FUSION_HZ when using no FIFO
 #define OVERSAMPLE_RATE FAST_LOOP_HZ / FUSION_HZ
-///@}
+
+// Output data rate parameters
+#define MAXPACKETRATEHZ 40  //max rate at which data packets can practically be sent (e.g. to Fusion Toolbox)
+#define RATERESOLUTION 1000 //When throttling back on output rate, this is the resolution in ms
+
+//Specify which output method(s) to use for sending serial data packets and receiving commands
 #define F_USE_WIRELESS_UART     0x0001	///< 0x0001 to include, 0x0000 otherwise
 #define F_USE_WIRED_UART        0x0002	///< 0x0002 to include, 0x0000 otherwise
 
