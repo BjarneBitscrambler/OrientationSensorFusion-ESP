@@ -9,17 +9,19 @@
 /*! \file control.h
     \brief Defines control sub-system
 
-   Each sensor fusion application will probably have its own set of functions
+   Each sensor fusion application will have its own set of functions
    to control the fusion process and report results.  This file defines the
    programming interface that should be followed in order for the fusion functions
    to operate correctly out of the box.  The actual command interpreter is
    defined separately in DecodeCommandBytes.c.  The output streaming function
-   is defined in output_stream.c. Via these three files, the NXP Sensor Fusion
+   is defined in control_stream.c. Via these three files, the NXP Sensor Fusion
    Library provides a default set of functions which are compatible with the
    Sensor Fusion Toolbox.  Use of the toolbox is highly recommended at least
    during initial development, as it provides many useful debug features.
    The NXP development team will typically require use of the toolbox as a
    pre-requisite for providing software support.
+   Data packets are sent via serial interface, which can be a wired UART, Bluetooth,
+    socket via WiFi, etc.  Currently UART & WiFi are implemented.
 */
 
 // Requires sensor_fusion.h to occur first in the #include stackup
@@ -35,9 +37,9 @@ extern "C" {
 /// "write" "stream" and "readCommands" provide three control functions visible at the main()
 /// level.  These typedefs define the structure of those calls.
 ///@{
-typedef int8_t (writePort_t) (struct ControlSubsystem *pComm, uint8_t buffer[], uint16_t nbytes);
+typedef int8_t (writePort_t) (struct ControlSubsystem *pComm);
 typedef int8_t (readCommand_t) (SensorFusionGlobals *sfg);
-typedef void (streamData_t)(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer);
+typedef void (streamData_t)(SensorFusionGlobals *sfg);
 ///@}
 
 /// \brief The ControlSubsystem encapsulates command and data streaming functions.
@@ -53,9 +55,11 @@ typedef struct ControlSubsystem {
 	volatile uint8_t RPCPacketOn;			///< flag to enable roll, pitch, compass packet
 	volatile uint8_t AltPacketOn;			///< flag to enable altitude packet
 	volatile int8_t  AccelCalPacketOn;              ///< variable used to coordinate accelerometer calibration
-	writePort_t      *write;                        ///< function to write output packet buffer to the serial stream(s)
+    uint8_t         *serial_out_buf;        //buffer containing the output stream
+    uint16_t        bytes_to_send;          //how many bytes waiting to go out
+	writePort_t      *write;                        ///< function to write output buffer to the serial putput(s)
     readCommand_t    *readCommands;                 //< function to check for incoming commands and process them
-    streamData_t     *stream;                       ///< function to create data packets for output
+    streamData_t     *stream;                       ///< function to create output data packets and place in buffer
 } ControlSubsystem;
 
 int8_t initializeControlPort(ControlSubsystem *pComm);  ///< Call this once to initialize structures, ports, etc.
@@ -63,7 +67,7 @@ int8_t initializeControlPort(ControlSubsystem *pComm);  ///< Call this once to i
 // Located in output_stream.c:
 /// Called once per fusion cycle to stream information required by the NXP Sensor Fusion Toolbox.
 /// Packet protocols are defined in the NXP Sensor Fusion for Kinetis Product Development Kit User Guide.
-void CreateAndSendPackets(SensorFusionGlobals *sfg, uint8_t *sUARTOutputBuffer);
+void CreateOutgoingPackets(SensorFusionGlobals *sfg);
 
 // Located in DecodeCommandBytes.c:
 /// This function is responsible for decoding commands sent by the NXP Sensor Fusion Toolbox and setting
@@ -73,10 +77,6 @@ void DecodeCommandBytes(SensorFusionGlobals *sfg, uint8_t input_buffer[], uint16
 
 /// Utility function used to place data in output buffer about to be transmitted via UART
 void sBufAppendItem(uint8_t *pDest, uint16_t *pIndex, uint8_t *pSource, uint16_t iBytesToCopy);
-
-// externals
-extern uint8_t sUARTOutputBuffer[256];                  ///< main output buffer defined in control.cpp
-
 
 #ifdef __cplusplus
 }

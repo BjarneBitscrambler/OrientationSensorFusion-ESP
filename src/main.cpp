@@ -149,10 +149,10 @@ void loop() {
             &sfg,
             NORMAL);  // assume NORMAL status for next pass through the loop
 
-  //      debug_log("entering stream...");
-        sfg.pControlSubsystem->stream(
-            &sfg, sUARTOutputBuffer);  //Send stream data to the Sensor Fusion
-                                        // Toolbox (default) or whatever UART is connected to.
+        //Make and send data to the Sensor Fusion Toolbox or whatever UART is connected to.
+        sfg.pControlSubsystem->stream(&sfg);  //create the output packet  
+        sfg.pControlSubsystem->write(sfg.pControlSubsystem);  //send the output packet
+
         sfg.pControlSubsystem->readCommands(&sfg);
         digitalWrite(
             DEBUG_OUTPUT_PIN, i % 2);  // toggle output pin each time through, for debugging

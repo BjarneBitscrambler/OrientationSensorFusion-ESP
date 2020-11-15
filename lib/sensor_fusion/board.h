@@ -16,9 +16,13 @@
 #ifndef _BOARD_H_
 #define _BOARD_H_
 
+#if defined(__cplusplus)
+extern "C" {
+#endif /* __cplusplus */
+
 #ifdef ESP8266
 // #include "Arduino.h" has definitions for following, but if full Arduino.h is included, then some other defines
-// like PI in sensor_fusion.h will clash.
+// like PI in sensor_fusion.h will clash. Also get errors if Arduino.h is inside extern "C" {} brackets.
     #ifndef HIGH
         #define HIGH (0x01)
     #endif
@@ -29,11 +33,6 @@
         #define OUTPUT (0x01)
     #endif
 #endif
-
-#if defined(__cplusplus)
-extern "C" {
-#endif /* __cplusplus */
-
 #ifdef ESP32
     //#include "Arduino.h" //Can use this instead (which includes the *_hal_gpio), but then some other
     // constants get defined too (like PI) which clash with defines in sensor_fusion.h

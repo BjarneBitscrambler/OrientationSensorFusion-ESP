@@ -26,88 +26,64 @@
 #include "control.h"
 #include "build.h"
 
-#define CONTROL_BAUDRATE        115200  ///< Baudrate to be used for serial communications
-
-typedef int32_t status_t;   //from fsl_common.h
-
 // global structures
-uint8_t           sUARTOutputBuffer[256];             // larger than the nominal 124 byte size for outgoing packets
+uint8_t           sUARTOutputBuffer[256];  // larger than the nominal 124 byte size for outgoing packets
 
 typedef enum {
     HardwareSerial,
     WiFiSerial
 } UART_Type;
 
+//TODO - can start WiFi client in initializeControlPort() instead of global
 extern WiFiClient client; //defined in main.cpp
 
-// Blocking function to write a single byte to a specified UART
-void myUART_WriteByte(const UART_Type base, uint8_t data) {
-  switch (base) {
-    case HardwareSerial:
-      Serial.write(data);
-      break;
-    case WiFiSerial:
-      break;
-    default:
-      break;
-  }
-}  // end myUART_WriteByte()
-
-// Blocking function to write multiple bytes to a specified output: a UART
-//  or a TCP socket.
-// TODO - we could interleave these for faster aggregate speed, rather than
-//  waiting for each to finish.
+// Blocking function to write multiple bytes to specified output(s): a UART
+//  or a TCP socket, as specified in build.h
 // On ESP32, hardware UART has internal FIFO of length 0x7f, and once the
 // bytes to be written are all in the FIFO, this routine returns. Actual
 // sending of the data may take a while longer...
-void myUART_WriteBytes(const UART_Type base, uint8_t *data, uint16_t byte_count) {
-    uint16_t bytes_left = byte_count;
-    int bytes_to_write;
-  switch (base) {
-    case HardwareSerial:
-      while (bytes_left > 0) {
-        bytes_to_write = Serial.availableForWrite();
-        if( bytes_to_write > bytes_left ) {
-          bytes_to_write = bytes_left;
-        }
-        Serial.write(&(data[byte_count - bytes_left]), bytes_to_write);
-        bytes_left -= bytes_to_write;
-      };
-      break;
-    case WiFiSerial:
-      if (client.connected()) {
-          // send data to wifi TCP socket
-          uint16_t num_bytes_sent = 0;
-          while (bytes_left > 0) {
-            num_bytes_sent = client.write(&(data[byte_count - bytes_left]), bytes_left);
-            bytes_left -= num_bytes_sent;
-          }
-        } else {
-          client.stop();
-        }
-      break;
-    default:
-      break;
-  }
-}  // end myUART_WriteByte()
-
-// Blocking function pipes specified buffer to both output UARTS
-int8_t writeControlPort(ControlSubsystem *pComm, uint8_t buffer[], uint16_t nbytes)
+int8_t SendSerialBytesOut(ControlSubsystem *pComm)
 {  
+    //track the number of bytes separately and run wired/wireless output in parallel
 #if F_USE_WIRED_UART
-        myUART_WriteBytes(HardwareSerial, buffer, nbytes);
+    uint16_t bytes_left_wired = pComm->bytes_to_send;
+#else
+    uint16_t bytes_left_wired = 0;
 #endif
 #if F_USE_WIRELESS_UART
-        myUART_WriteBytes(WiFiSerial, buffer, nbytes);
+    uint16_t bytes_left_wireless = pComm->bytes_to_send;
+#else
+    uint16_t bytes_left_wireless = 0;
 #endif
+    int bytes_to_write_wired;
+
+    while ((bytes_left_wired > 0) || (bytes_left_wireless > 0)) {
+      if (bytes_left_wired > 0) {
+        bytes_to_write_wired = Serial.availableForWrite();
+        if( bytes_to_write_wired > bytes_left_wired ) {
+          bytes_to_write_wired = bytes_left_wired;
+        }
+        //write() won't return until all requested are sent, so only ask for what there's room for
+        Serial.write(&(pComm->serial_out_buf[pComm->bytes_to_send - bytes_left_wired]), bytes_to_write_wired);
+        bytes_left_wired -= bytes_to_write_wired;
+      };
+      if (client.connected() && (bytes_left_wireless > 0)) {
+        // send data to wifi TCP socket.  write() returns actual # queued, which may be less than requested.
+          bytes_left_wireless -= client.write(&(pComm->serial_out_buf[pComm->bytes_to_send - bytes_left_wireless]), bytes_left_wireless);
+      }else if( !client.connected()) {
+        client.stop();
+        bytes_left_wireless = 0;  //don't bother trying to send any remaining bytes
+      }
+    }//end while() there are unsent bytes
+    pComm->bytes_to_send = 0;
     return (0);
-}
+}//end SendSerialBytesOut()
 
 // Check for incoming commands, which are sequences of ASCII text,
 // arriving on either hardware UART or TCP socket. Send them to
 // function for decoding, as defined in DecodeCommandBytes.c
-// Don't distinguish between which path the commands arrive by, 
-// as it is unlikely one would have multiple sources at any one time.
+// Doesn't distinguish between which path the commands arrive by, 
+// as it is unlikely one would have multiple simultaneous sources.
 int8_t ReceiveIncomingCommands(SensorFusionGlobals *sfg)
 {
     uint8_t     data;
@@ -124,7 +100,7 @@ int8_t ReceiveIncomingCommands(SensorFusionGlobals *sfg)
     }
 
     return 0;
-}
+}//end ReceiveIncomingCommands()
 
 /// Initialize the control subsystem and all related hardware
 int8_t initializeControlPort(
@@ -141,8 +117,9 @@ int8_t initializeControlPort(
         pComm->RPCPacketOn = true;                  // transmit roll, pitch, compass packet
         pComm->AltPacketOn = false;                 // Altitude packet
         pComm->AccelCalPacketOn = false;
-        pComm->write = writeControlPort;
-        pComm->stream = CreateAndSendPackets;
+        pComm->serial_out_buf = sUARTOutputBuffer;
+        pComm->write = SendSerialBytesOut;
+        pComm->stream = CreateOutgoingPackets;
         pComm->readCommands = ReceiveIncomingCommands;
 
         return (0);
@@ -151,4 +128,4 @@ int8_t initializeControlPort(
     {
         return (1);
     }
-}
+}//end initializeControlPort()

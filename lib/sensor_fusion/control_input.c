@@ -6,8 +6,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*! \file DecodeCommandBytes.c
-    \brief Command interpreter which interfaces to the Sensor Fusion Toolbox
+/*! \file control_input.c
+    \brief Command interpreter which interfaces to the Sensor Fusion Toolbox.
+    Commands sent from the Toolbox (e.g. Save Calibration) are interpreted and acted on.
 */
 
 #include "sensor_fusion.h"

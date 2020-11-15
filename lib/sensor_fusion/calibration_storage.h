@@ -13,7 +13,8 @@ extern "C" {
 #endif
   
 /*! \file calibration_storage.h
-    \brief Provides functions to store calibration to NVM
+    \brief Provides functions to store calibration to NVM, which
+     on ESP devices is provided by EEPROM.
 */
 bool GetMagCalibrationFromNVM( float *cal_values );
 bool GetGyroCalibrationFromNVM( float *cal_values );
