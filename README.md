@@ -44,6 +44,8 @@ Because testing an orientation sensor with a USB cable tethering it to your deve
 
 I did earlier try having the ESP connect as a client to our WiFi router, rather than acting as an AP itself. Unfortunately, this caused delays in delivery of the streamed traffic that would intermittently freeze the Sensor Toolbox (another symptom was performing a `ping` from the development computer to the ESP - trip times sometimes exceeded 1000 ms when going through the router).  So, using the ESP as an AP was better for the timeliness of data delivery, on my hardware.
 
+Using WiFi (even when ESP is acting as AP) *does* introduce noticeable lag in the Toolbox graphic response, compared to when wired via USB. It looks like about a 200 ms lag on my system.
+
 ### Additional Debugging
 You can use the GPIO output that toggles each time through the data collection and sending loop to confirm whether your ESP is collecting and transmitting data regularly. Using the default software, the output should toggle every 25 ms (i.e. a 20 Hz square wave). See `main.cpp` for details.
 
