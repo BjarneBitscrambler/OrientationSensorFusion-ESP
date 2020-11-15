@@ -23,9 +23,9 @@
     So those filters are not operating as they would in the normal world.
 */
 
+#include <stdlib.h>
 #include "sensor_fusion.h"
 #include "control.h"
-#include "stdlib.h"
 #include "build.h"
 
 /// The ApplyPerturbation function applies a user-specified step function to

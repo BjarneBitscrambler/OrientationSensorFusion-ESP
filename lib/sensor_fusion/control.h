@@ -76,7 +76,7 @@ void CreateOutgoingPackets(SensorFusionGlobals *sfg);
 void DecodeCommandBytes(SensorFusionGlobals *sfg, uint8_t input_buffer[], uint16_t nbytes);
 
 /// Utility function used to place data in output buffer about to be transmitted via UART
-void sBufAppendItem(uint8_t *pDest, uint16_t *pIndex, uint8_t *pSource, uint16_t iBytesToCopy);
+void OutputBufAppendItem(uint8_t *pDest, uint16_t *pIndex, uint8_t *pSource, uint16_t iBytesToCopy);
 
 #ifdef __cplusplus
 }

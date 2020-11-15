@@ -133,8 +133,10 @@ void loop() {
   //      debug_log("applied cal");
         sfg.runFusion(&sfg);                // Run the actual fusion algorithms
   //      debug_log("fused");
-        sfg.applyPerturbation(&sfg);  // apply debug perturbation (for testing only)
-  //      debug_log("applied perturbation");
+        // Serial.printf(" Algo took %ld us\n", sfg.SV_9DOF_GBY_KALMAN.systick);
+        sfg.applyPerturbation(
+            &sfg);  // apply debug perturbation (if testing mode enabled)
+                    //      debug_log("applied perturbation");
         sfg.loopcounter++;  // loop counter is used to "serialize" mag cal
                             // operations and blink LEDs to indicate status
 
