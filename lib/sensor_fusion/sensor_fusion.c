@@ -9,16 +9,13 @@
 /*! \file sensor_fusion.c
     \brief The sensor_fusion.c file implements the top level programming interface
 */
-
-/* Including needed modules to compile this module/procedure */
 #include <stdio.h>
+
 #include "sensor_fusion.h"
-#include "magnetic.h"
-#include "drivers.h"
-#include "sensor_drv.h"
-#include "status.h"
+
 #include "control.h"
 #include "fusion.h"
+#include "status.h"
 
 /// Poor man's inheritance for status subsystem setStatus command
 /// This function is normally involved via the "sfg." global pointer.
@@ -111,9 +108,8 @@ int8_t installSensor(
                      initializeSensor_t *initialize,    ///< pointer to sensor initialization function
                      readSensor_t *read)        ///< pointer to sensor read function
 {
-    if (sfg && pSensor /*&& bus_driver */ && initialize && read)
+    if (sfg && pSensor && initialize && read)
     {
-        pSensor->bus_driver = bus_driver;
     /* was  pSensor->deviceInfo.deviceInstance = busInfo->deviceInstance;
         pSensor->deviceInfo.functionParam = busInfo->functionParam;
         pSensor->deviceInfo.idleFunction = busInfo->idleFunction;
@@ -129,11 +125,6 @@ int8_t installSensor(
                                                 // loading them into the sensor fusion input structures.  Also KDSK-based.
         pSensor->addr = addr;                   // I2C address if applicable
         pSensor->schedule = schedule;
-        pSensor->slaveParams.pReadPreprocessFN = NULL;  // SPI-specific parameters get overwritten later if used
-        pSensor->slaveParams.pWritePreprocessFN = NULL;
-        pSensor->slaveParams.pTargetSlavePinID = NULL;
-        pSensor->slaveParams.spiCmdLen = 0;
-        pSensor->slaveParams.ssActiveValue = 0;
         // Now add the new sensor at the head of the linked list
         pSensor->next = sfg->pSensors;
         sfg->pSensors = pSensor;
@@ -144,6 +135,7 @@ int8_t installSensor(
         return (1);
     }
 }
+
 // The initializeSensors function traverses the linked list of physical sensor
 // types and calls the initialization function for each one.
 int8_t initializeSensors(SensorFusionGlobals *sfg)
@@ -197,13 +189,13 @@ void processAccelData(SensorFusionGlobals *sfg)
     return;
 }
 #endif
+
 #if F_USING_MAG
 void processMagData(SensorFusionGlobals *sfg)
 {
     int32_t iSum[3];		        // channel sums
     int16_t i, j;			        // counters
 
-    // printf("ProcessingMagData()\n");
     if (sfg->Mag.iFIFOExceeded > 0) {
       sfg->setStatus(sfg, SOFT_FAULT);
     }
@@ -235,6 +227,7 @@ void processMagData(SensorFusionGlobals *sfg)
     return;
 }
 #endif
+
 #if F_USING_GYRO
 void processGyroData(SensorFusionGlobals *sfg)
 {
@@ -265,13 +258,14 @@ void processGyroData(SensorFusionGlobals *sfg)
     return;
 }
 #endif
+
 /// readSensors traverses the linked list of physical sensors, calling the
 /// individual read functions one by one.
 /// This function is normally invoked via the "sfg." global pointer.
 int8_t readSensors(
     SensorFusionGlobals *sfg,   ///< pointer to global sensor fusion data structure
     uint16_t read_loop_counter  ///< current loop counter (used for multirate processing)
-)
+    ) 
 {
     struct PhysicalSensor  *pSensor;
     int8_t          s;
@@ -290,6 +284,7 @@ int8_t readSensors(
     if (status==SENSOR_ERROR_INIT) sfg->setStatus(sfg, HARD_FAULT);  // Never returns
     return (status);
 }
+
 /// conditionSensorReadings() transforms raw software FIFO readings into forms that
 /// can be consumed by the sensor fusion engine.  This include sample averaging
 /// and (in the case of the gyro) integrations, applying hardware abstraction layers,
@@ -352,6 +347,7 @@ void zeroArray(StatusSubsystem *pStatus, void* data, uint16_t size, uint16_t num
     return;
   }
 }
+
 /// Function to clear FIFO at the end of each fusion computation
 void clearFIFOs(SensorFusionGlobals *sfg) {
   // We only clear FIFOs if the sensors are enabled.  This allows us
@@ -521,6 +517,7 @@ void conditionSample(int16_t sample[3])
     if (sample[CHY] == -32768) sample[CHY]++;
     if (sample[CHZ] == -32768) sample[CHZ]++;
 }
+
 void addToFifo(union FifoSensor *sensor, uint16_t maxFifoSize, int16_t sample[3])
 {
   // Note that FifoSensor is a union of GyroSensor, MagSensor and AccelSensor.

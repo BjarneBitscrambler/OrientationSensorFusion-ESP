@@ -21,7 +21,7 @@
 
 #include "Arduino.h"
 #include <Wire.h>
-#include "sensor_drv.h"
+#include "driver_sensors_types.h"
 #include "sensor_io_i2c_esp.h"
 
 /**************************************************************************/
@@ -135,8 +135,7 @@ Wire:::endTransmission() ->
 */
 
 //The interface function to write register data from list to a sensor.
-int8_t Sensor_I2C_Write_List(ARM_DRIVER_I2C *pCommDrv,
-                         registerDeviceInfo_t *devInfo, uint16_t peripheralAddress,
+int8_t Sensor_I2C_Write_List(registerDeviceInfo_t *devInfo, uint16_t peripheralAddress,
                          const registerwritelist_t *pRegWriteList) {
   // Validate handle
   if (pRegWriteList == NULL) {
@@ -168,7 +167,7 @@ int8_t Sensor_I2C_Write_List(ARM_DRIVER_I2C *pCommDrv,
 //  location and number of bytes in pReadList.
 // Iterate through pReadList until number of bytes requested == 0
 // Data is placed sequentially starting at pOutBuffer.
-int32_t Sensor_I2C_Read(ARM_DRIVER_I2C *pCommDrv, registerDeviceInfo_t *devInfo,
+int32_t Sensor_I2C_Read(registerDeviceInfo_t *devInfo,
                         uint16_t peripheralAddress,
                         const registerReadlist_t *pReadList,
                         uint8_t *pOutBuffer) {
@@ -195,8 +194,7 @@ int32_t Sensor_I2C_Read(ARM_DRIVER_I2C *pCommDrv, registerDeviceInfo_t *devInfo,
   return SENSOR_ERROR_NONE;
 }  // end Sensor_I2C_Read()
 
-int32_t Sensor_I2C_Read_Register(ARM_DRIVER_I2C *pCommDrv, 
-                          registerDeviceInfo_t *devInfo, 
+int32_t Sensor_I2C_Read_Register(registerDeviceInfo_t *devInfo, 
                           uint16_t peripheralAddress, 
                           uint8_t offset,
                           uint8_t length,

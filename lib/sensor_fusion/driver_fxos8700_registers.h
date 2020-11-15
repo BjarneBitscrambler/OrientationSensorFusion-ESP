@@ -7,12 +7,12 @@
  */
 
 /** 
- * @file fxos8700_registers.h
- * @brief The fxos8700_registers.h file contains the register definitions for FXOS8700
+ * @file driver_fxos8700_registers.h
+ * @brief Contains the register definitions for FXOS8700
  */
 
-#ifndef FXOS8700_REGISTERS_H_
-#define FXOS8700_REGISTERS_H_
+#ifndef DRIVER_FXOS8700_REGISTERS_H_
+#define DRIVER_FXOS8700_REGISTERS_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -3247,4 +3247,4 @@ typedef union {
 }
 #endif
 
-#endif /* FXOS8700_REGISTERS_H_ */
+#endif /* DRIVER_FXOS8700_REGISTERS_H_ */

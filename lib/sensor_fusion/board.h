@@ -40,8 +40,8 @@ extern "C" {
 #endif
 
 // Specify the specific sensor IC(s) used 
-#include "fxos8700_driver.h"
-#include "fxas21002_driver.h"
+#include "driver_fxos8700.h"
+#include "driver_fxas21002.h"
 
 // Board name and type, passed in packets to Sensor Toolbox.  
 // Suspect these fields are only informational. 

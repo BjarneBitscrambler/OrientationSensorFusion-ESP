@@ -23,19 +23,18 @@ extern "C" {
 #endif
 
 // Standard includes
-#include "math.h"
-#include "stdbool.h"
-#include "stdio.h"
-#include "stdint.h"
-
+#include <math.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 
 #include "hal_issdk.h"                  // Hardware Abstraction Layer board hardware-specific functions
 #include "board.h"						// Hardware-specific details (e.g. particular sensor ICs)
 #include "build.h"                      // This is where the build parameters are defined
+#include "driver_sensors_types.h"		// Typedefs for the sensor hardware
 #include "magnetic.h"                   // Magnetic calibration functions/structures
 #include "precisionAccelerometer.h"     // Accel calibration functions/structures
 #include "orientation.h"                // Functions for manipulating orientations
-#include "register_io_spi.h"			// Support for SPI interface devices (not currently used)
 #include "matrix.h"  					// Matrix math
 
 /// the quaternion type to be transmitted
@@ -130,13 +129,11 @@ typedef int8_t (installSensor_t) (
     struct PhysicalSensor *sensor,      ///< SF Structure to store sensor configuration
     uint16_t addr,                      ///< I2C address or SPI_ADDR
     uint16_t schedule,                  ///< Specifies sampling interval
-    void *bus_driver,                   ///< I2C or SPI handle
+    void *bus_driver,                   ///< I2C handle
     registerDeviceInfo_t *busInfo,      ///< information required for bus power management
     initializeSensor_t *initialize,     ///< SF Sensor Initialization Function pointer
     readSensor_t *read                  ///< SF Sensor Read Function pointer
 );
-#define SPI_ADDR 0x00   // Use SPI_ADDR as the address parameter to the installSensor function for SPI-based sensors.
-                        // 0x00 is reserved for I2C General Call, and will therefore never occur for any sensor type
 
 typedef void   (initializeFusionEngine_t) 	(struct SensorFusionGlobals *sfg);
 typedef void   (runFusion_t) 			(struct SensorFusionGlobals *sfg);
@@ -154,11 +151,9 @@ typedef void   (ssUpdateStatus_t) 		(struct StatusSubsystem *pStatus);
 /// time driver installation.
 struct PhysicalSensor {
         registerDeviceInfo_t deviceInfo;        ///< I2C device context
-	void *bus_driver;  			///< should be of type (ARM_DRIVER_I2C* for I2C-based sensors, ARM_DRIVER_SPI* for SPI)
         registerDeviceInfo_t *busInfo;          ///< information required for bus power management
 	uint16_t addr;  			///< I2C address if applicable
         uint16_t isInitialized;                 ///< Bitfields to indicate sensor is active (use SensorBitFields from build.h)
-        spiSlaveSpecificParams_t slaveParams;   ///< SPI specific parameters.  Not used for I2C.
 	struct PhysicalSensor *next;		///< pointer to next sensor in this linked list
         uint16_t schedule;                      ///< Parameter to control sensor sampling rate
 	initializeSensor_t *initialize;  	///< pointer to function to initialize sensor using the supplied drivers

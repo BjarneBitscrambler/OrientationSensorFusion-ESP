@@ -12,11 +12,11 @@
     
 */
 
-#include "sensor_fusion.h"  // top level magCal and sensor fusion interfaces
-#include "control.h"        // Command/Streaming interface - application specific
-#include "fusion_testing.h" // will include SensorPerturbations for test purposes
+#include "sensor_fusion.h"  // top level sensor fusion interfaces
 #include "board.h"
 #include "build.h"
+#include "control.h"        // Command/Streaming interface - application specific
+#include "fusion_testing.h" // will include SensorPerturbations for test purposes
 
 // OutputBufAppendItem() appends a variable number of source bytes to a destination buffer
 // for transmission as the output packet.

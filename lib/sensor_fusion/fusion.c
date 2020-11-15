@@ -22,9 +22,9 @@
 #include "orientation.h"
 #include "matrix.h"
 #include "approximations.h"
-#include "drivers.h"
 #include "control.h"
 #include "calibration_storage.h"
+#include "driver_sensors.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // intialization functions for the sensor fusion algorithms

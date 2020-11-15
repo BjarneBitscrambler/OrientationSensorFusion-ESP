@@ -13,10 +13,10 @@
 */
 
 #include "sensor_fusion.h"              // Sensor fusion structures and types
-#include "sensor_io_i2c_esp.h"      // Functions for I2C reading/writing
-#include "fxos8700_registers.h"         // describes the FXOS8700 register definitions and bit masks
-#include "fxos8700_driver.h"            // 
-#include "drivers.h"                    // Device specific drivers supplied by NXP (can be replaced with user drivers)
+#include "driver_fxos8700.h"            // FXOS8700 hardware interface
+#include "driver_fxos8700_registers.h"  // describes the FXOS8700 register definitions and bit masks
+#include "sensor_io_i2c_esp.h"          //I2C interface methods
+
 
 // Command definition to read the WHO_AM_I value.
 const registerReadlist_t    FXOS8700_WHO_AM_I_READ[] =
@@ -134,7 +134,7 @@ int8_t FXOS8700_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
     int32_t status;
     uint8_t reg;
 
-    status = Sensor_I2C_Read_Register(sensor->bus_driver, &sensor->deviceInfo, sensor->addr, FXOS8700_WHO_AM_I, 1, &reg);
+    status = Sensor_I2C_Read_Register(&sensor->deviceInfo, sensor->addr, FXOS8700_WHO_AM_I, 1, &reg);
 
     if (status==SENSOR_ERROR_NONE) {
 #if F_USING_ACCEL
@@ -159,7 +159,7 @@ int8_t FXOS8700_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
 
     // Configure and start the fxos8700 sensor.  This does multiple register writes
     // (see FXOS8700_Initialization definition above)
-    status = Sensor_I2C_Write_List(sensor->bus_driver, &sensor->deviceInfo, sensor->addr, FXOS8700_Initialization );
+    status = Sensor_I2C_Write_List(&sensor->deviceInfo, sensor->addr, FXOS8700_Initialization );
     sensor->isInitialized = F_USING_ACCEL | F_USING_MAG;
 #if F_USING_ACCEL
     sfg->Accel.isEnabled = true;
@@ -187,7 +187,7 @@ int8_t FXOS8700_ReadAccData(struct PhysicalSensor *sensor, SensorFusionGlobals *
 
     // read the F_STATUS register (mapped to STATUS) and extract number of
     // measurements available (lower 6 bits)
-    status = Sensor_I2C_Read(sensor->bus_driver, &sensor->deviceInfo,
+    status = Sensor_I2C_Read(&sensor->deviceInfo,
                              sensor->addr, FXOS8700_F_STATUS_READ, I2C_Buffer);
     if (status == SENSOR_ERROR_NONE) {
 #ifdef SIMULATOR_MODE
@@ -220,7 +220,7 @@ int8_t FXOS8700_ReadAccData(struct PhysicalSensor *sensor, SensorFusionGlobals *
         FXOS8700_DATA_READ[0].numBytes = 6 * fifo_packet_count;
         fifo_packet_count = 0;
       }
-      status = Sensor_I2C_Read(sensor->bus_driver, &sensor->deviceInfo,
+      status = Sensor_I2C_Read(&sensor->deviceInfo,
                                sensor->addr, FXOS8700_DATA_READ, I2C_Buffer);
       if (status == SENSOR_ERROR_NONE) {
         for (j = 0; j < FXOS8700_DATA_READ[0].numBytes; j+=6) {
@@ -254,7 +254,7 @@ int8_t FXOS8700_ReadMagData(struct PhysicalSensor *sensor, SensorFusionGlobals *
     // read the six sequential magnetometer output bytes
     FXOS8700_DATA_READ[0].readFrom = FXOS8700_M_OUT_X_MSB;
     FXOS8700_DATA_READ[0].numBytes = 6;
-    status =  Sensor_I2C_Read(sensor->bus_driver, &sensor->deviceInfo, sensor->addr, FXOS8700_DATA_READ, I2C_Buffer );
+    status =  Sensor_I2C_Read(&sensor->deviceInfo, sensor->addr, FXOS8700_DATA_READ, I2C_Buffer );
     if (status==SENSOR_ERROR_NONE) {
         // place the 6 bytes read into the magnetometer structure
         sample[CHX] = (I2C_Buffer[0] << 8) | I2C_Buffer[1];
@@ -304,7 +304,7 @@ int8_t FXOS8700_Idle(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
 {
     int32_t     status;
     if(sensor->isInitialized == (F_USING_ACCEL|F_USING_MAG)) {
-        status = Sensor_I2C_Write_List(sensor->bus_driver, &sensor->deviceInfo, sensor->addr, FXOS8700_FULL_IDLE );
+        status = Sensor_I2C_Write_List(&sensor->deviceInfo, sensor->addr, FXOS8700_FULL_IDLE );
         sensor->isInitialized = 0;
 #if F_USING_ACCEL
         sfg->Accel.isEnabled = false;

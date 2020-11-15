@@ -26,6 +26,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "driver_sensors_types.h"
 
 #ifndef I2C_ERROR_OK
     #define I2C_ERROR_OK (0)  //not defined in ESP8266 Wire library, but is in the ESP32 version
@@ -34,10 +35,6 @@ extern "C" {
 /*******************************************************************************
  * API
  ******************************************************************************/
-/**
-\brief Access structure of the I2C Driver. Copied from Driver_I2C.h, and pruned
-*/
-#define ARM_DRIVER_I2C void     //used to be a struct - now unused
 
 //TODO put these in a class
 bool I2CReadByte(uint8_t address, uint8_t reg, uint8_t *destination);
@@ -55,8 +52,7 @@ bool I2CWriteBytes(uint8_t address, uint8_t reg, const uint8_t *value,
  *
  *  @return      returns the execution status of the operation using ::ESensorErrors
  */
-int8_t Sensor_I2C_Write_List(ARM_DRIVER_I2C *pCommDrv,
-                         registerDeviceInfo_t *devInfo,
+int8_t Sensor_I2C_Write_List(registerDeviceInfo_t *devInfo,
                          uint16_t slaveAddress,
                          const registerwritelist_t *pRegWriteList);
 
@@ -71,14 +67,12 @@ int8_t Sensor_I2C_Write_List(ARM_DRIVER_I2C *pCommDrv,
  *
  *  @return      returns the execution status of the operation using ::ESensorErrors
  */
-int32_t Sensor_I2C_Read(ARM_DRIVER_I2C *pCommDrv,
-                        registerDeviceInfo_t *devInfo,
+int32_t Sensor_I2C_Read(registerDeviceInfo_t *devInfo,
                         uint16_t slaveAddress,
                         const registerReadlist_t *pReadList,
                         uint8_t *pOutBuffer);
 
-int32_t Sensor_I2C_Read_Register(ARM_DRIVER_I2C *pCommDrv,
-                          registerDeviceInfo_t *devInfo,
+int32_t Sensor_I2C_Read_Register(registerDeviceInfo_t *devInfo,
                           uint16_t peripheralAddress, uint8_t offset,
                           uint8_t length, uint8_t *pOutBuffer);
 

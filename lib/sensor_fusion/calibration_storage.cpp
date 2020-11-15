@@ -13,10 +13,12 @@
     
 */
 #include <stdio.h>
+
 #include <EEPROM.h>
-#include "debug_print.h"
+
 #include "sensor_fusion.h"
 #include "calibration_storage.h"
+#include "debug_print.h"
 
 #define CALIBRATION_STORAGE_SIZE_BYTES 256
 #define CALIBRATION_BUF_MAGNETIC_START 0

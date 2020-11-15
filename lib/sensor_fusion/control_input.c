@@ -12,9 +12,10 @@
 */
 
 #include "sensor_fusion.h"
+#include "calibration_storage.h"
 #include "control.h"
 #include "fusion.h"
-#include "calibration_storage.h"
+
 // All commands for the command interpreter are exactly 4 characters long.
 // The command interpeter converts the incoming packet to a 32-bit integer, which is then
 // the index into a large switch statement for processing commands.

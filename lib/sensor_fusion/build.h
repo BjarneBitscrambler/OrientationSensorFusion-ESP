@@ -23,6 +23,9 @@ extern "C" {
 
 #define THISBUILD 720 ///< define build number sent in debug packet for display purposes only
 
+// print debug messages to serial output. Set to 1 to enable, 0 to disable
+#define ENABLE_DEBUG_LOG 1
+
 /// @name CoordinateSystemBitFields
 /// These defines determine the frame of reference (x, y, z axes and Euler angles) standard
 /// to be used for a particular build.  Change THISCOORDSYSTEM to whichever of NED, ANDROID

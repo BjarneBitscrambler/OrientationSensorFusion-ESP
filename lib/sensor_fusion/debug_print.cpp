@@ -5,10 +5,11 @@
 */
 
 #include <HardwareSerial.h>
+#include "build.h"
 #include "debug_print.h"
 
+#if (ENABLE_DEBUG_LOG == 1)
 void debug_log(const char* str) {
-#if ENABLE_DEBUG_LOG == 1
    Serial.println(str);
-#endif
 }
+#endif

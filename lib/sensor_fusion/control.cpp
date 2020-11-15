@@ -11,8 +11,8 @@
 
     Contains methods to output data and receive commands. The physical transport
     is via either serial UART or WiFi, or both, depending on defines F_USE_WIRED_UART
-    and F_USE_WIRELESS_UART. The command interpreter is located in DecodeCommandBytes.c
-    The streaming functions that format the data into the output are in output_stream.c
+    and F_USE_WIRELESS_UART. The command interpreter is located in control_input.c
+    The streaming functions that format the data into the output are in control_output.c
 */
 #include <Arduino.h>
 #include <HardwareSerial.h>
@@ -22,9 +22,9 @@
 #ifdef ESP32
   #include <WiFi.h>
 #endif
-#include "sensor_fusion.h"
-#include "control.h"
+#include "sensor_fusion.h" // Requires sensor_fusion.h to occur first in the #include stackup
 #include "build.h"
+#include "control.h"
 
 // global structures
 uint8_t           sUARTOutputBuffer[256];  // larger than the nominal 124 byte size for outgoing packets

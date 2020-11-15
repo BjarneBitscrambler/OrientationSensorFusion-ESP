@@ -7,21 +7,16 @@
  */
 
 /** 
- * @file fxas21002_driver.h
+ * @file driver_fxas21002.h
  * @brief Contains the fxas21002 sensor register definitions and its bit mask.
 */
 
-#ifndef FXAS21002_DRIVER_H_
-#define FXAS21002_DRIVER_H_
+#ifndef DRIVER_FXAS21002_H_
+#define DRIVER_FXAS21002_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- **  FXAS21002 I2C Address
- */
-#define   FXAS21002_I2C_ADDRESS     0x20
 
 #define GYRO_FIFO_SIZE  32	///< FXAX21000, FXAS21002 have 32 element FIFO
 
@@ -862,4 +857,4 @@ typedef union {
 }
 #endif
 
-#endif /* FXAS21002_DRIVER_H_ */ 
+#endif /* DRIVER_FXAS21002_H_ */ 

@@ -13,8 +13,8 @@
    to control the fusion process and report results.  This file defines the
    programming interface that should be followed in order for the fusion functions
    to operate correctly out of the box.  The actual command interpreter is
-   defined separately in DecodeCommandBytes.c.  The output streaming function
-   is defined in control_stream.c. Via these three files, the NXP Sensor Fusion
+   defined separately in control_input.c.  The output streaming function
+   is defined in control_output.c. Via these three files, the NXP Sensor Fusion
    Library provides a default set of functions which are compatible with the
    Sensor Fusion Toolbox.  Use of the toolbox is highly recommended at least
    during initial development, as it provides many useful debug features.
@@ -24,10 +24,8 @@
     socket via WiFi, etc.  Currently UART & WiFi are implemented.
 */
 
-// Requires sensor_fusion.h to occur first in the #include stackup
 #ifndef _CONTROL_H_
 #define _CONTROL_H_
-
 
 #ifdef __cplusplus
 extern "C" {

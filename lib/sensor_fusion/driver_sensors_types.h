@@ -7,20 +7,19 @@
  */
 
 /**
- * @file sensor_drv.h
- * @brief The sensor_drv.h file contains sensor state and error definitions.
+ * @file driver_sensors_types.h
+ * @brief The driver_sensors_types.h file contains sensor state structs and error definitions.
  */
 
-#ifndef _SENSOR_DRV_H
-#define _SENSOR_DRV_H
+#ifndef _DRIVER_SENSORS_TYPES_H
+#define _DRIVER_SENSORS_TYPES_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stddef.h>
 #include <stdint.h>
-#include <stdbool.h>
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -105,4 +104,4 @@ typedef struct
 }
 #endif
 
-#endif //_SENSOR_DRV_H
+#endif //_DRIVER_SENSORS_TYPES_H

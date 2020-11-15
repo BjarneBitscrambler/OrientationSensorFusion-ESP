@@ -15,9 +15,10 @@
 // Sensor Fusion Headers
 #include "sensor_fusion.h"      // top level magCal and sensor fusion interfaces. Include 1st.
 #include "board.h"              // hardware-specific settings. Edit as needed for board & sensors.
+#include "build.h"
 #include "control.h"  	        // Command processing and data streaming interface
 #include "debug_print.h"        // provides ability to output debug messages via serial
-#include "drivers.h"  	        // hardware-specific drivers
+#include "driver_sensors.h"     // hardware-specific drivers
 #include "sensor_io_i2c_esp.h"  //I2C interfaces for ESP platform
 #include "status.h"   	        // Status indicator interface - application specific
 
@@ -131,7 +132,11 @@ void loop() {
   //      debug_log("read sensors");
         sfg.conditionSensorReadings(&sfg);  // magCal (magnetic calibration) is part of this
   //      debug_log("applied cal");
+        digitalWrite(
+            DEBUG_OUTPUT_PIN, 0);  // toggle output pin each time through, for debugging
         sfg.runFusion(&sfg);                // Run the actual fusion algorithms
+        digitalWrite(
+            DEBUG_OUTPUT_PIN, 1);  // toggle output pin each time through, for debugging
   //      debug_log("fused");
         // Serial.printf(" Algo took %ld us\n", sfg.SV_9DOF_GBY_KALMAN.systick);
         sfg.applyPerturbation(
@@ -156,8 +161,8 @@ void loop() {
         sfg.pControlSubsystem->write(sfg.pControlSubsystem);  //send the output packet
 
         sfg.pControlSubsystem->readCommands(&sfg);
-        digitalWrite(
-            DEBUG_OUTPUT_PIN, i % 2);  // toggle output pin each time through, for debugging
+//        digitalWrite(
+//            DEBUG_OUTPUT_PIN, i % 2);  // toggle output pin each time through, for debugging
       }
     }
     

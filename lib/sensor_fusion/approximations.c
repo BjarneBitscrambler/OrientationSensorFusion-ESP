@@ -15,9 +15,9 @@
     are included in Application Note AN5015: Trigonometry Approximations
 */
 
-#include "math.h"
-#include "stdlib.h"
-#include "stdint.h"
+#include <math.h>
+#include <stdlib.h>
+#include <stdint.h>
 
 #include "approximations.h"
 

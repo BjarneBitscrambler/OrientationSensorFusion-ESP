@@ -11,9 +11,11 @@
 extern "C" {
 #endif
 
-#define ENABLE_DEBUG_LOG 1
-
+#if (ENABLE_DEBUG_LOG == 1)
 void debug_log(const char* str);
+#else
+    #define debug_log(x) 
+#endif
 
 #ifdef __cplusplus
 }

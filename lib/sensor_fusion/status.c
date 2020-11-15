@@ -17,7 +17,7 @@
 
 #include "board.h"              // KSDK HAL
 #include "sensor_fusion.h"      // Sensor fusion structures and functions
-#include "drivers.h"            // Common driver header file
+#include "driver_sensors.h"     // hardware-specific drivers
 #include "status.h"             // Header for this .c file
 
 // bit-field definitions
