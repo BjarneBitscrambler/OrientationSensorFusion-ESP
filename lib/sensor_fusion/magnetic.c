@@ -13,12 +13,13 @@
     making any adjustment to the lower level magnetic calibration functions
     defined in this file.
 */
+#include <math.h>
+#include <stdbool.h>
+#include <stdint.h>
 
 #include "sensor_fusion.h"
-#include "math.h"
-#include "stdlib.h"
-#include "time.h"
 #include "calibration_storage.h"
+#include "magnetic.h"
 
 #if F_USING_MAG
 // function resets the magnetometer buffer and magnetic calibration

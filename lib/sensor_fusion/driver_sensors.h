@@ -39,42 +39,14 @@ typedef struct PhysicalSensor PhysicalSensor;
 /// in that package.  The read() function is responsible for reading those same
 /// sensors and moving the results into the standard structures contained within
 /// the SensorFusionGlobals object.
-///@{
-//int8_t MPL3115_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXOS8700_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXAS21002_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-/*int8_t MMA8652_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXLS8952_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t MAG3110_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t MMA8451_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXLS8471Q_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXLS8962_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXLS8972_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-*/
-//int8_t MPL3115_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+
 int8_t FXOS8700_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXAS21002_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-/*int8_t MMA8652_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXLS8952_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t MAG3110_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t MMA8451_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXLS8471Q_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXLS8962_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXLS8972_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-*/
-//int8_t MPL3115_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+
 int8_t FXOS8700_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXAS21002_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-/*int8_t MMA8652_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXLS8952_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t MAG3110_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t MMA8451_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXLS8471Q_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXLS8962_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXLS8972_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-*/
-///@}
-
 
 #ifdef __cplusplus
 }

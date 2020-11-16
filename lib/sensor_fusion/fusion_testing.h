@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*! \file debug.h
+/*! \file fusion_testing.h
     \brief ApplyPerturbation function used to analyze dynamic performance
 
     The ApplyPerturbation function applies a user-specified step function to
@@ -16,14 +16,14 @@
 */
 
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef FUSION_TESTING_H
+#define FUSION_TESTING_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// prototypes for functions defined in debug.c
+// prototypes for functions defined in fusion_testing.c
 void ApplyPerturbation(SensorFusionGlobals *sfg);
 
 
@@ -31,4 +31,4 @@ void ApplyPerturbation(SensorFusionGlobals *sfg);
 }
 #endif
 
-#endif // #ifndef DEBUG_H
+#endif // #ifndef FUSION_TESTING_H

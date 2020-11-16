@@ -15,6 +15,7 @@
 
 #include "control.h"
 #include "fusion.h"
+#include "hal_timer.h"                  // Hardware Abstraction Layer timer functions
 #include "status.h"
 
 /// Poor man's inheritance for status subsystem setStatus command
@@ -463,11 +464,10 @@ void initializeFusionEngine(SensorFusionGlobals *sfg)
     struct ControlSubsystem    *pComm;
     pComm = sfg->pControlSubsystem;
 
-    // configure the 24 bit downwards ARM systick timer and wait 50ms=CORE_SYSTICK_HZ / 20 clock ticks
-    // to avoid a race condition between Kinetis and the sensors after power on.
-    ARM_systick_enable();
-    // wait 50ms to avoid a race condition with sensors at power on
-    ARM_systick_delay_ms(CORE_SYSTICK_HZ, 50);
+    // Configure the systick timer and wait 50ms to avoid a race condition
+    // with the sensors after power on (legacy NXP code - unsure if needed)
+    // SystickTimerConfigure(); unneeded with ESP processors
+    SystickDelayMillis(50);
 
     sfg->setStatus(sfg, INITIALIZING);
     status = initializeSensors(sfg);

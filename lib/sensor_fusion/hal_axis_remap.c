@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright (c) 2016-2017 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -46,7 +46,7 @@
   Ax swapped with Ay.  
   Mx swapped with My, then Mx,My,Mz inverted.  
   Gx swapped with Gy, then Gx,Gy,Gz inverted.
-  Checked 2020-11-13.
+  Checked 2020-11-13. Valid for NED: haven't checked other coord systems.
 
 	The present remapping is identical to the NXP FRDM-STBC-AGM01
   breakout board using the FXOS8700/FXAS21002.
@@ -66,9 +66,6 @@ void ApplyAccelHAL(struct AccelSensor *Accel) {
 		itmp16 = Accel->iGsFIFO[i][CHX];
 		Accel->iGsFIFO[i][CHX] = Accel->iGsFIFO[i][CHY];
 		Accel->iGsFIFO[i][CHY] = itmp16;
-//    Accel->iGsFIFO[i][CHX] = -Accel->iGsFIFO[i][CHX];
-//    Accel->iGsFIFO[i][CHY] = -Accel->iGsFIFO[i][CHY];
-//    Accel->iGsFIFO[i][CHZ] = -Accel->iGsFIFO[i][CHZ];
 #endif  // NED
 #if THISCOORDSYSTEM == ANDROID
     // the ANDROID transformation has not been confirmed
@@ -93,15 +90,10 @@ void ApplyMagHAL(struct MagSensor *Mag) {
     Mag->iBsFIFO[i][CHX] = -Mag->iBsFIFO[i][CHY];
 		Mag->iBsFIFO[i][CHY] = -itmp16;
 		Mag->iBsFIFO[i][CHZ] = -Mag->iBsFIFO[i][CHZ];
-//    Mag->iBsFIFO[i][CHX] = -Mag->iBsFIFO[i][CHX];
-//    Mag->iBsFIFO[i][CHY] = -Mag->iBsFIFO[i][CHY];
-//    Mag->iBsFIFO[i][CHZ] = -Mag->iBsFIFO[i][CHZ];
 #endif  // NED
 #if THISCOORDSYSTEM == ANDROID
 #endif  // Android
 #if THISCOORDSYSTEM == WIN8
-		Mag->iBsFIFO[i][CHX] = -Mag->iBsFIFO[i][CHX];
-		Mag->iBsFIFO[i][CHY] = -Mag->iBsFIFO[i][CHY];
 #endif
 	} // end of loop over FIFO count
 	return;
@@ -120,15 +112,10 @@ void ApplyGyroHAL(struct GyroSensor *Gyro) {
 		Gyro->iYsFIFO[i][CHX] = -Gyro->iYsFIFO[i][CHY];
 		Gyro->iYsFIFO[i][CHY] = -itmp16;
 		Gyro->iYsFIFO[i][CHZ] = -Gyro->iYsFIFO[i][CHZ];
-//    Gyro->iYsFIFO[i][CHX] = -Gyro->iYsFIFO[i][CHX];
-//    Gyro->iYsFIFO[i][CHY] = -Gyro->iYsFIFO[i][CHY];
-//    Gyro->iYsFIFO[i][CHZ] = -Gyro->iYsFIFO[i][CHZ];
 #endif  // NED
 #if THISCOORDSYSTEM == ANDROID
 #endif  // Android
 #if THISCOORDSYSTEM == WIN8
-		Gyro->iYsFIFO[i][CHX] = -Gyro->iYsFIFO[i][CHX];
-		Gyro->iYsFIFO[i][CHY] = -Gyro->iYsFIFO[i][CHY];
 #endif // Win8
 
 	} // end of loop over FIFO count

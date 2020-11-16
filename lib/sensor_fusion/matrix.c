@@ -12,10 +12,9 @@
     Contains functions for basic manipulation of 3x3 matrices
 */
 
-#include "stdio.h"
+#include <stdbool.h>
+#include <stdint.h>
 #include "math.h"
-#include "stdlib.h"
-#include "time.h"
 
 #include "sensor_fusion.h"
 #include "matrix.h"

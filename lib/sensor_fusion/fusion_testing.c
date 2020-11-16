@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*! \file fusion_testing.c  (used to be debug.h - name conflict with EEPROM lib)
+/*! \file fusion_testing.c  (used to be debug.h: name conflict with EEPROM lib)
     \brief ApplyPerturbation function used to analyze dynamic performance
 
     The ApplyPerturbation function applies a user-specified step function to

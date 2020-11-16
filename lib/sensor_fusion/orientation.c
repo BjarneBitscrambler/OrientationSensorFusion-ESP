@@ -19,15 +19,10 @@
     includes functions for manipulating quaternions.
 */
 
-#include "stdio.h"
-#include "math.h"
-#include "stdlib.h"
-#include "time.h"
-#include "string.h"
+#include <math.h>
 
 #include "sensor_fusion.h"
 #include "orientation.h"
-#include "fusion.h"
 #include "matrix.h"
 #include "approximations.h"
 

@@ -28,14 +28,13 @@ extern "C" {
 #include <stdint.h>
 #include <stdio.h>
 
-#include "hal_issdk.h"                  // Hardware Abstraction Layer board hardware-specific functions
 #include "board.h"						// Hardware-specific details (e.g. particular sensor ICs)
 #include "build.h"                      // This is where the build parameters are defined
 #include "driver_sensors_types.h"		// Typedefs for the sensor hardware
 #include "magnetic.h"                   // Magnetic calibration functions/structures
-#include "precisionAccelerometer.h"     // Accel calibration functions/structures
-#include "orientation.h"                // Functions for manipulating orientations
 #include "matrix.h"  					// Matrix math
+#include "orientation.h"                // Functions for manipulating orientations
+#include "precisionAccelerometer.h"     // Accel calibration functions/structures
 
 /// the quaternion type to be transmitted
 typedef enum quaternion {
@@ -477,8 +476,8 @@ typedef struct SensorFusionGlobals
 #endif
 #if     F_USING_ACCEL
 	struct AccelSensor 	Accel;                  ///< accelerometer storage
-	struct AccelCalibration AccelCal;              ///< structures for accel calibration
-	struct AccelBuffer AccelBuffer;                ///< storage for points used for calibration
+	AccelCalibration AccelCal;              ///< structures for accel calibration
+	AccelBuffer AccelBuffer;                ///< storage for points used for calibration
 #endif
 #if     F_USING_MAG
 	struct MagSensor 	Mag;                    ///< magnetometer storage

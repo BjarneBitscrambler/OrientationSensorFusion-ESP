@@ -6,18 +6,17 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include <stdio.h>
-#include "sensor_fusion.h"
-#include "fusion.h"
-#include "calibration_storage.h"
-
 /*! \file precisionAccelerometer.c
     \brief Implements accelerometer calibration routines
 */
 
+#include "sensor_fusion.h"
+#include "precisionAccelerometer.h"
+#include "calibration_storage.h"
+
 // function resets the accelerometer buffer and accelerometer calibration
-void fInitializeAccelCalibration(struct AccelCalibration *pthisAccelCal,
-                                 struct AccelBuffer *pthisAccelBuffer,
+void fInitializeAccelCalibration(AccelCalibration *pthisAccelCal,
+                                 AccelBuffer *pthisAccelBuffer,
                                  volatile int8_t *AccelCalPacketOn)
 {
     int8_t  i,
@@ -65,8 +64,8 @@ void fInitializeAccelCalibration(struct AccelCalibration *pthisAccelCal,
     return;
 }
 
-void fUpdateAccelBuffer(struct AccelCalibration *pthisAccelCal,
-                        struct AccelBuffer *pthisAccelBuffer,
+void fUpdateAccelBuffer( AccelCalibration *pthisAccelCal,
+                         AccelBuffer *pthisAccelBuffer,
                         struct AccelSensor *pthisAccel, volatile int8_t *AccelCalPacketOn)
 {
     int16_t i;          // loop counter
@@ -118,7 +117,7 @@ void fUpdateAccelBuffer(struct AccelCalibration *pthisAccelCal,
 
 // function maps the accelerometer data fGs (g) onto precision calibrated and de-rotated data fGc (g), iGc (counts)
 void fInvertAccelCal(struct AccelSensor *pthisAccel,
-                     struct AccelCalibration *pthisAccelCal)
+                     AccelCalibration *pthisAccelCal)
 {
     // local variables
     float   ftmp[3];    // temporary array
@@ -156,8 +155,8 @@ void fInvertAccelCal(struct AccelSensor *pthisAccel,
 }
 
 // function runs the precision accelerometer calibration
-void fRunAccelCalibration(struct AccelCalibration *pthisAccelCal,
-                          struct AccelBuffer *pthisAccelBuffer,
+void fRunAccelCalibration(AccelCalibration *pthisAccelCal,
+                          AccelBuffer *pthisAccelBuffer,
                           struct AccelSensor *pthisAccel)
 {
     float   fGc0[3];        // calibrated but not de-rotated measurement 0
@@ -214,8 +213,8 @@ void fRunAccelCalibration(struct AccelCalibration *pthisAccelCal,
 }
 
 // calculate the 4 element calibration from the available measurements
-void fComputeAccelCalibration4(struct AccelBuffer *pthisAccelBuffer,
-                               struct AccelCalibration *pthisAccelCal,
+void fComputeAccelCalibration4(AccelBuffer *pthisAccelBuffer,
+                               AccelCalibration *pthisAccelCal,
                                struct AccelSensor *pthisAccel)
 {
     int32_t   i,
@@ -329,8 +328,8 @@ void fComputeAccelCalibration4(struct AccelBuffer *pthisAccelBuffer,
 }
 
 // calculate the 7 element calibration from the available measurements
-void fComputeAccelCalibration7(struct AccelBuffer *pthisAccelBuffer,
-                               struct AccelCalibration *pthisAccelCal,
+void fComputeAccelCalibration7(AccelBuffer *pthisAccelBuffer,
+                               AccelCalibration *pthisAccelCal,
                                struct AccelSensor *pthisAccel)
 {
     int32_t   i,
@@ -423,8 +422,8 @@ void fComputeAccelCalibration7(struct AccelBuffer *pthisAccelBuffer,
 }
 
 // calculate the 10 element calibration from the available measurements
-void fComputeAccelCalibration10(struct AccelBuffer *pthisAccelBuffer,
-                                struct AccelCalibration *pthisAccelCal,
+void fComputeAccelCalibration10(AccelBuffer *pthisAccelBuffer,
+                                AccelCalibration *pthisAccelCal,
                                 struct AccelSensor *pthisAccel)
 {
     int32_t   i,

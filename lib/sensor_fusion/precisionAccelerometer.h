@@ -17,12 +17,14 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
 /// calibration constants
 #define ACCEL_CAL_AVERAGING_SECS	2		///< calibration measurement averaging period (s)
 #define MAX_ACCEL_CAL_ORIENTATIONS	12		///< number of stored precision accelerometer measurements
 
 /// accelerometer measurement buffer
-typedef struct AccelBuffer
+typedef struct 
 {
 	float fGsStored[MAX_ACCEL_CAL_ORIENTATIONS][3];	///< uncalibrated accelerometer measurements (g)
 	float fSumGs[3];				///< averaging sum for current storage location
@@ -32,7 +34,7 @@ typedef struct AccelBuffer
 } AccelBuffer;
 
 /// precision accelerometer calibration structure
-typedef struct AccelCalibration
+typedef struct 
 {
 	// start of elements stored in flash memory
 	float fV[3];					///< offset vector (g)
@@ -52,44 +54,44 @@ struct AccelSensor;  // actual typedef is located in sensor_fusion_types.h
 // function prototypes for functions in precisionAcclerometer.c
 /// Initialize the accelerometer calibration functions
 void fInitializeAccelCalibration(
-    struct AccelCalibration *pthisAccelCal,             ///< Accelerometer calibration parameter structure
-    struct AccelBuffer *pthisAccelBuffer,               ///< Buffer of measurements used as input to the accel calibration functions
+    AccelCalibration *pthisAccelCal,             ///< Accelerometer calibration parameter structure
+    AccelBuffer *pthisAccelBuffer,               ///< Buffer of measurements used as input to the accel calibration functions
     volatile int8_t *AccelCalPacketOn                   ///< Used to coordinate calibration sample storage and communications
 );
 /// Update the buffer used to store samples used for accelerometer calibration.
 void fUpdateAccelBuffer(
-    struct AccelCalibration *pthisAccelCal,             ///< Accelerometer calibration parameter structure
-    struct AccelBuffer *pthisAccelBuffer,               ///< Buffer of measurements used as input to the accel calibration functions
+    AccelCalibration *pthisAccelCal,             ///< Accelerometer calibration parameter structure
+    AccelBuffer *pthisAccelBuffer,               ///< Buffer of measurements used as input to the accel calibration functions
     struct AccelSensor* pthisAccel,                     ///< Pointer to the accelerometer input/state structure
     volatile int8_t *AccelCalPacketOn                   ///< Used to coordinate calibration sample storage and communications
 );
 /// function maps the accelerometer data fGs (g) onto precision calibrated and de-rotated data fGc (g), iGc (counts)
 void fInvertAccelCal(
     struct AccelSensor *pthisAccel,                     ///< Pointer to the accelerometer input/state structure
-    struct AccelCalibration *pthisAccelCal              ///< Accelerometer calibration parameter structure
+    AccelCalibration *pthisAccelCal              ///< Accelerometer calibration parameter structure
 );
 /// function runs the precision accelerometer calibration
 void fRunAccelCalibration(
-    struct AccelCalibration *pthisAccelCal,             ///< Accelerometer calibration parameter structure
-    struct AccelBuffer *pthisAccelBuffer,               ///< Buffer of measurements used as input to the accel calibration functions
+    AccelCalibration *pthisAccelCal,             ///< Accelerometer calibration parameter structure
+    AccelBuffer *pthisAccelBuffer,               ///< Buffer of measurements used as input to the accel calibration functions
     struct AccelSensor* pthisAccel                      ///< Pointer to the accelerometer input/state structure
 );
 /// calculate the 4 element calibration from the available measurements
 void fComputeAccelCalibration4(
-    struct AccelBuffer *pthisAccelBuffer,               ///< Buffer of measurements used as input to the accel calibration functions
-    struct AccelCalibration *pthisAccelCal,             ///< Accelerometer calibration parameter structure
+    AccelBuffer *pthisAccelBuffer,               ///< Buffer of measurements used as input to the accel calibration functions
+    AccelCalibration *pthisAccelCal,             ///< Accelerometer calibration parameter structure
     struct AccelSensor* pthisAccel                      ///< Pointer to the accelerometer input/state structure
 );
 /// calculate the 7 element calibration from the available measurements
 void fComputeAccelCalibration7(
-    struct AccelBuffer *pthisAccelBuffer,               ///< Buffer of measurements used as input to the accel calibration functions
-    struct AccelCalibration *pthisAccelCal,             ///< Accelerometer calibration parameter structure
+    AccelBuffer *pthisAccelBuffer,               ///< Buffer of measurements used as input to the accel calibration functions
+    AccelCalibration *pthisAccelCal,             ///< Accelerometer calibration parameter structure
     struct AccelSensor* pthisAccel                      ///< Pointer to the accelerometer input/state structure
 );
 /// calculate the 10 element calibration from the available measurements
 void fComputeAccelCalibration10(
-    struct AccelBuffer *pthisAccelBuffer,               ///< Buffer of measurements used as input to the accel calibration functions
-    struct AccelCalibration *pthisAccelCal,             ///< Accelerometer calibration parameter structure
+    AccelBuffer *pthisAccelBuffer,               ///< Buffer of measurements used as input to the accel calibration functions
+    AccelCalibration *pthisAccelCal,             ///< Accelerometer calibration parameter structure
     struct AccelSensor* pthisAccel                      ///< Pointer to the accelerometer input/state structure
 );
 

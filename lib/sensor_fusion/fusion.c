@@ -13,18 +13,15 @@
     \brief Lower level sensor fusion interface
 */
 
-#include "stdio.h"
-#include "math.h"
-#include "stdlib.h"
+#include <math.h>
 
 #include "sensor_fusion.h"
-#include "fusion.h"
-#include "orientation.h"
-#include "matrix.h"
 #include "approximations.h"
-#include "control.h"
 #include "calibration_storage.h"
-#include "driver_sensors.h"
+#include "fusion.h"
+#include "hal_timer.h"                  // Hardware Abstraction Layer timer functions
+#include "matrix.h"
+#include "orientation.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // intialization functions for the sensor fusion algorithms
@@ -83,9 +80,9 @@ void fFuseSensors(struct SV_1DOF_P_BASIC *pthisSV_1DOF_P_BASIC,
 #if F_1DOF_P_BASIC
     if (pthisSV_1DOF_P_BASIC)
     {
-        ARM_systick_start_ticks(&(pthisSV_1DOF_P_BASIC->systick));
+        SystickStartCount(&(pthisSV_1DOF_P_BASIC->systick));
         fRun_1DOF_P_BASIC(pthisSV_1DOF_P_BASIC, pthisPressure);
-        pthisSV_1DOF_P_BASIC->systick = ARM_systick_elapsed_ticks(pthisSV_1DOF_P_BASIC->systick);
+        pthisSV_1DOF_P_BASIC->systick = SystickElapsedMicros(pthisSV_1DOF_P_BASIC->systick);
     }
 #endif
 
@@ -93,9 +90,9 @@ void fFuseSensors(struct SV_1DOF_P_BASIC *pthisSV_1DOF_P_BASIC,
 #if F_3DOF_G_BASIC
     if (pthisSV_3DOF_G_BASIC)
     {
-        ARM_systick_start_ticks(&(pthisSV_3DOF_G_BASIC->systick));
+        SystickStartCount(&(pthisSV_3DOF_G_BASIC->systick));
         fRun_3DOF_G_BASIC(pthisSV_3DOF_G_BASIC, pthisAccel);
-        pthisSV_3DOF_G_BASIC->systick = ARM_systick_elapsed_ticks(pthisSV_3DOF_G_BASIC->systick);
+        pthisSV_3DOF_G_BASIC->systick = SystickElapsedMicros(pthisSV_3DOF_G_BASIC->systick);
     }
 #endif
 
@@ -103,9 +100,9 @@ void fFuseSensors(struct SV_1DOF_P_BASIC *pthisSV_1DOF_P_BASIC,
 #if F_3DOF_B_BASIC
     if (pthisSV_3DOF_B_BASIC)
     {
-        ARM_systick_start_ticks(&(pthisSV_3DOF_B_BASIC->systick));
+        SystickStartCount(&(pthisSV_3DOF_B_BASIC->systick));
         fRun_3DOF_B_BASIC(pthisSV_3DOF_B_BASIC, pthisMag);
-        pthisSV_3DOF_B_BASIC->systick = ARM_systick_elapsed_ticks(pthisSV_3DOF_B_BASIC->systick);
+        pthisSV_3DOF_B_BASIC->systick = SystickElapsedMicros(pthisSV_3DOF_B_BASIC->systick);
     }
 #endif
 
@@ -113,9 +110,9 @@ void fFuseSensors(struct SV_1DOF_P_BASIC *pthisSV_1DOF_P_BASIC,
 #if F_3DOF_Y_BASIC
     if (pthisSV_3DOF_Y_BASIC)
     {
-        ARM_systick_start_ticks(&(pthisSV_3DOF_Y_BASIC->systick));
+        SystickStartCount(&(pthisSV_3DOF_Y_BASIC->systick));
         fRun_3DOF_Y_BASIC(pthisSV_3DOF_Y_BASIC, pthisGyro);
-        pthisSV_3DOF_Y_BASIC->systick = ARM_systick_elapsed_ticks(pthisSV_3DOF_Y_BASIC->systick);
+        pthisSV_3DOF_Y_BASIC->systick = SystickElapsedMicros(pthisSV_3DOF_Y_BASIC->systick);
     }
 #endif
 
@@ -123,9 +120,9 @@ void fFuseSensors(struct SV_1DOF_P_BASIC *pthisSV_1DOF_P_BASIC,
 #if F_6DOF_GB_BASIC
     if (pthisSV_6DOF_GB_BASIC)
     {
-        ARM_systick_start_ticks(&(pthisSV_6DOF_GB_BASIC->systick));
+        SystickStartCount(&(pthisSV_6DOF_GB_BASIC->systick));
         fRun_6DOF_GB_BASIC(pthisSV_6DOF_GB_BASIC, pthisMag, pthisAccel);
-        pthisSV_6DOF_GB_BASIC->systick = ARM_systick_elapsed_ticks(pthisSV_6DOF_GB_BASIC->systick);
+        pthisSV_6DOF_GB_BASIC->systick = SystickElapsedMicros(pthisSV_6DOF_GB_BASIC->systick);
     }
 #endif
 
@@ -133,9 +130,9 @@ void fFuseSensors(struct SV_1DOF_P_BASIC *pthisSV_1DOF_P_BASIC,
 #if F_6DOF_GY_KALMAN
     if (pthisSV_6DOF_GY_KALMAN)
     {
-        ARM_systick_start_ticks(&(pthisSV_6DOF_GY_KALMAN->systick));
+        SystickStartCount(&(pthisSV_6DOF_GY_KALMAN->systick));
         fRun_6DOF_GY_KALMAN(pthisSV_6DOF_GY_KALMAN, pthisAccel, pthisGyro);
-        pthisSV_6DOF_GY_KALMAN->systick = ARM_systick_elapsed_ticks(pthisSV_6DOF_GY_KALMAN->systick);
+        pthisSV_6DOF_GY_KALMAN->systick = SystickElapsedMicros(pthisSV_6DOF_GY_KALMAN->systick);
     }
 #endif
 
@@ -143,10 +140,10 @@ void fFuseSensors(struct SV_1DOF_P_BASIC *pthisSV_1DOF_P_BASIC,
 #if F_9DOF_GBY_KALMAN
     if (pthisSV_9DOF_GBY_KALMAN)
     {
-        ARM_systick_start_ticks(&(pthisSV_9DOF_GBY_KALMAN->systick));
+        SystickStartCount(&(pthisSV_9DOF_GBY_KALMAN->systick));
         fRun_9DOF_GBY_KALMAN(pthisSV_9DOF_GBY_KALMAN, pthisAccel, pthisMag,
                              pthisGyro, pthisMagCal);
-        pthisSV_9DOF_GBY_KALMAN->systick = ARM_systick_elapsed_ticks(pthisSV_9DOF_GBY_KALMAN->systick);
+        pthisSV_9DOF_GBY_KALMAN->systick = SystickElapsedMicros(pthisSV_9DOF_GBY_KALMAN->systick);
     }
 #endif
     return;
