@@ -19,7 +19,7 @@
 #include "control.h"  	        // Command processing and data streaming interface
 #include "debug_print.h"        // provides ability to output debug messages via serial
 #include "driver_sensors.h"     // hardware-specific drivers
-#include "sensor_io_i2c_esp.h"  //I2C interfaces for ESP platform
+#include "hal_i2c.h"            //I2C interfaces for ESP platform
 #include "status.h"   	        // Status indicator interface - application specific
 
 // wifi config - using ESP as Access Point (AP)
@@ -88,12 +88,12 @@ void setup() {
 
 // connect to the sensors we will be using.  Accelerometer and magnetometer are in same IC.
 #if F_USING_ACCEL || F_USING_MAG
-  sfg.installSensor(&sfg, &sensors[0], BOARD_ACCEL_MAG_I2C_ADDR, 1, NULL, NULL,
+  sfg.installSensor(&sfg, &sensors[0], BOARD_ACCEL_MAG_I2C_ADDR, 1, NULL,
                     FXOS8700_Init, FXOS8700_Read);
   debug_log("Accel/Mag connected");
 #endif
 #if F_USING_GYRO
-  sfg.installSensor(&sfg, &sensors[1], BOARD_GYRO_I2C_ADDR, 1, NULL, NULL,
+  sfg.installSensor(&sfg, &sensors[1], BOARD_GYRO_I2C_ADDR, 1, NULL,
                     FXAS21002_Init, FXAS21002_Read);
   debug_log("Gyro connected");
 #endif

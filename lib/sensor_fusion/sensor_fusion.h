@@ -128,7 +128,6 @@ typedef int8_t (installSensor_t) (
     struct PhysicalSensor *sensor,      ///< SF Structure to store sensor configuration
     uint16_t addr,                      ///< I2C address or SPI_ADDR
     uint16_t schedule,                  ///< Specifies sampling interval
-    void *bus_driver,                   ///< I2C handle
     registerDeviceInfo_t *busInfo,      ///< information required for bus power management
     initializeSensor_t *initialize,     ///< SF Sensor Initialization Function pointer
     readSensor_t *read                  ///< SF Sensor Read Function pointer
@@ -438,6 +437,7 @@ struct SV_COMMON {
 	float fOmega[3];			///< average angular velocity (deg/s)
 	int32_t systick;			///< systick timer;
 };
+
 typedef struct SV_COMMON *SV_ptr;
 
 /// \brief The top level fusion structure
@@ -603,9 +603,7 @@ void ApplyGyroHAL(
 /// prior fusion results which is then "released" in the next fusion cycle.
 /// When used in conjuction with the NXP Sensor Fusion Toolbox, this provides
 /// a visual indication of the dynamic behavior of the library. ApplyPerturbation()
-/// is defined in debug.c.
-
-// The following function is defined in debug.c:
+/// is defined in fusion_testing.c.
 applyPerturbation_t ApplyPerturbation;
 
 #ifdef __cplusplus

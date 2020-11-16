@@ -10,13 +10,13 @@
     \brief Application-specific status subsystem
 
     Applications may change how they choose to display status information.
-    The default implementation here uses LEDs on NXP Freedom boards.
+    The default implementation here uses LEDs.
     You may swap out implementations as long as the "Required" methods and states
     are retained.
 */
 
-#include "board.h"              // KSDK HAL
 #include "sensor_fusion.h"      // Sensor fusion structures and functions
+#include "board.h"              
 #include "driver_sensors.h"     // hardware-specific drivers
 #include "status.h"             // Header for this .c file
 
@@ -56,8 +56,6 @@ void ssSetStatusNow(StatusSubsystem *pStatus, fusion_status_t status)
     uint8_t RGB = N;
 
     // This is where we actually change the visual indicator
-    // We are not using the blue LED because it is not available on some
-    // board combinations.
     switch (status)
     {
         case INITIALIZING:      // solid GREEN
@@ -174,18 +172,16 @@ void initializeStatusSubsystem(StatusSubsystem *pStatus)
     pStatus->toggle = false;
 
     /* Un-gate the port clocks */
-    CLOCK_EnableClock(RED_LED.clockName);
-    CLOCK_EnableClock(GREEN_LED.clockName);
+    //CLOCK_EnableClock(RED_LED.clockName);
+    //CLOCK_EnableClock(GREEN_LED.clockName);
     //CLOCK_EnableClock(BLUE_LED.clockName);
-#ifndef CPU_LPC54114J256BD64_cm4
-    // Not needed for the LPC54114 (done elsewhere)
     // Led pin mux Configuration
-    PORT_SetPinMux(BOARD_LED_RED_GPIO_PORT, BOARD_LED_RED_GPIO_PIN,
+    /*PORT_SetPinMux(BOARD_LED_RED_GPIO_PORT, BOARD_LED_RED_GPIO_PIN,
                    kPORT_MuxAsGpio);
     PORT_SetPinMux(BOARD_LED_GREEN_GPIO_PORT, BOARD_LED_GREEN_GPIO_PIN,
-                   kPORT_MuxAsGpio);
-#endif
+                   kPORT_MuxAsGpio); */
     /* set initial values */
     LED_RED_INIT(LOGIC_LED_OFF);
     LED_GREEN_INIT(LOGIC_LED_OFF);
+    LED_BLUE_INIT(LOGIC_LED_OFF);
 }

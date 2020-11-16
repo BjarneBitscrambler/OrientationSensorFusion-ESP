@@ -10,13 +10,13 @@
  */
 
 /**
- * @file sensor_io_i2c_esp.h
- * @brief The sensor_io_i2c_esp.h file declares low-level interface functions for reading
+ * @file hal_i2c.h
+ * @brief The hal_i2c.h file declares low-level interface functions for reading
  *  and writing sensor registers using I2C.
  */
 
-#ifndef __SENSOR_IO_I2C_SENSESP_H
-#define __SENSOR_IO_I2C_SENSESP_H
+#ifndef __HAL_I2C_H
+#define __HAL_I2C_H
 
 
 #ifdef __cplusplus
@@ -82,4 +82,4 @@ int32_t Sensor_I2C_Read_Register(registerDeviceInfo_t *devInfo,
 #endif
 
                           
-#endif /* __SENSOR_IO_I2C_SENSESP_H */
+#endif /* __HAL_I2C_H */

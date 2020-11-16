@@ -15,7 +15,7 @@
 
 #include "control.h"
 #include "fusion.h"
-#include "hal_timer.h"                  // Hardware Abstraction Layer timer functions
+#include "hal_timer.h"
 #include "status.h"
 
 /// Poor man's inheritance for status subsystem setStatus command
@@ -104,7 +104,6 @@ int8_t installSensor(
                      struct PhysicalSensor *pSensor,    ///< pointer to structure describing physical sensor
                      uint16_t addr,             ///< I2C address for sensor (if applicable)
                      uint16_t schedule,         ///< Sensor is read each time loop_count % schedule == 0
-                     void *bus_driver,          ///< ISSDK sensor bus driver (usually KSDK I2C bus)
                      registerDeviceInfo_t *busInfo, ///< information required for bus power management
                      initializeSensor_t *initialize,    ///< pointer to sensor initialization function
                      readSensor_t *read)        ///< pointer to sensor read function

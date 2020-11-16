@@ -14,15 +14,15 @@
  */
 
 /**
- * @file sensor_io_i2c_esp.c
- * @brief The sensor_io_i2c_esp.c file contains definitions for low-level interface functions
+ * @file hal_i2c.c
+ * @brief The hal_i2c.c file contains definitions for low-level interface functions
  *  for reading and writing data from/to sensor using I2C.
  */
 
 #include "Arduino.h"
 #include <Wire.h>
 #include "driver_sensors_types.h"
-#include "sensor_io_i2c_esp.h"
+#include "hal_i2c.h"
 
 /**************************************************************************/
 /*!
