@@ -1,0 +1,31 @@
+Following is a list of the source code files for the Fusion Library, and their [purpose:
+   approximations.c, .h    Trigonometry functions that execute faster than standard math lib.
+   board.h                 Defines and macros to adapt to a given hardware board (e.g. LED pins)
+   build.h                 Defines to select particular fusion options / algorithms.
+   calibration_storage.*   functions to store calibration to NVM
+   control.*               functions for outputting data and reacting to input ReceiveIncomingCommands
+   control_input.c         input command interpreter
+   control_output.c        output data formatter   
+   debug_print.*           function debug_print() that outputs to serial port. En/Disable using #define ENABLE_DEBUG_LOG
+   driver_fxas21002.*      hardware interface for FXAS21002 gyroscope
+   driver_fxos8700_registers.h   Register definitions for FXOS8700
+   driver_fxos8700.*       hardware interface for FXOS870 magnetometer & accelerometer
+   driver_sensors.h        Prototypes for driver level methods, which are defined in hardware-specific files (e.g. driver_fxos8700.*)
+   driver_sensors_types.h  Sensor state structs and error definitions
+   fusion_testing.*        Function for testing step-response of algorithm. Use INCLUDE_DEBUG_FUNCTIONS in build.h to enable.
+   fusion.*                Low-level fusion algorithms
+   hal_axis_remap.c        Transforms hardware sensors physical X,Y,Z axes into chosen coordinate system.
+   hal_i2c.*               I2C functions
+   hal_timer.*             Timer functions for performance benchmarking.
+   magnetic.*              Functions for magnetic calibration
+   matrix.*                Functions for matrix math
+   orientation.*           Functions to convert between various coordinate systems. Functions for manipulating quaternions.
+   precisionAccelerometer.* Accelerometer calibration routines.
+   sensor_fusion.h         Set of data structures used by fusion library. Should be #included first among library .h files
+   sensor_fusion.c         Top-level programming interface (e.g. functions called by main)
+   status.*                Functions that display system status, using LEDs.
+
+The ones that would be expected to change when using different hardware are the hal_*.* files, board.h, and build.h.  As well, sensor IC driver files will be needed, patterned on the existing driver_fxos8700.* and driver_fxas21002.* files. calibration_storage.* may need changing, depending on how non-volatile memory functions on the different hardware.
+
+Depending on your application, changes to control*.*, build.h, and status.* would be needed.
+
