@@ -71,7 +71,7 @@ void initSensorFusionGlobals(SensorFusionGlobals *sfg,
     sfg->systick_Spare = 0;                   // systick counter for counts spare waiting for timing interrupt
     sfg->iPerturbation = 0;                   // no perturbation to be applied
     sfg->installSensor = installSensor;       // function for installing a new sensor into the structures
-    sfg->initializeFusionEngine = initializeFusionEngine;   // function for installing a new sensor into the structures
+    sfg->initializeFusionEngine = initializeFusionEngine;   // initializes fusion variables
     sfg->readSensors = readSensors;           // function for reading a sensor
     sfg->runFusion = runFusion;               // function for running fusion algorithms
     sfg->applyPerturbation = ApplyPerturbation; // function used for step function testing
@@ -98,7 +98,7 @@ void initSensorFusionGlobals(SensorFusionGlobals *sfg,
 }
 /// installSensor is used to instantiate a physical sensor driver into the
 /// sensor fusion system.
-/// This function is normally involved via the "sfg." global pointer.
+/// This function is normally invoked via the "sfg." global pointer.
 int8_t installSensor(
                      SensorFusionGlobals *sfg,  ///< top level fusion structure
                      struct PhysicalSensor *pSensor,    ///< pointer to structure describing physical sensor
@@ -120,9 +120,9 @@ int8_t installSensor(
         pSensor->deviceInfo.idleFunction = NULL;
 
         pSensor->initialize = initialize;       // The initialization function is responsible for putting the sensor
-                                                // into the proper mode for sensor fusion.  It is normally KSDK-based.
+                                                // into the proper mode for sensor fusion.
         pSensor->read = read;                   // The read function is responsible for taking sensor readings and
-                                                // loading them into the sensor fusion input structures.  Also KDSK-based.
+                                                // loading them into the sensor fusion input structures.
         pSensor->addr = addr;                   // I2C address if applicable
         pSensor->schedule = schedule;
         // Now add the new sensor at the head of the linked list
@@ -456,7 +456,7 @@ void runFusion(SensorFusionGlobals *sfg)
 
 /// This function is responsible for initializing the system prior to starting
 /// the main fusion loop.
-/// This function is normally involved via the "sfg." global pointer.
+/// This function is normally invoked via the "sfg." global pointer.
 void initializeFusionEngine(SensorFusionGlobals *sfg)
 {
     int16_t status = 0;

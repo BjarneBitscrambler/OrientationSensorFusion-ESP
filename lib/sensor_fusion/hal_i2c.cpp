@@ -32,23 +32,6 @@
 /**************************************************************************/
 bool I2CReadByte(byte address, byte reg, byte *destination) {
   return I2CReadBytes(address, reg, destination, 1);
-  /*  if (NULL == destination) {
-      return false;
-    }
-    bool success = true;
-    Wire.beginTransmission(address);
-    if (!Wire.write(reg)) {
-      success = false;
-    }
-    Wire.endTransmission(false);
-    if (success && (1 == Wire.requestFrom(address, (uint8_t)1))) {
-        *destination = Wire.read();
-    } else {
-      success = false;
-    }
-    return success;
-    */
-
 }  // end ReadByte()
 
 /**************************************************************************/

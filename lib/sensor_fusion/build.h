@@ -83,8 +83,8 @@ extern "C" {
 #define RATERESOLUTION 1000 //When throttling back on output rate, this is the resolution in ms
 
 //Specify which output method(s) to use for sending serial data packets and receiving commands
-#define F_USE_WIRELESS_UART     0x0001	///< 0x0001 to include, 0x0000 otherwise
-#define F_USE_WIRED_UART        0x0002	///< 0x0002 to include, 0x0000 otherwise
+#define F_USE_WIRELESS_UART     0x0000	///< 0x0001 to include, 0x0000 otherwise
+#define F_USE_WIRED_UART        0x0000	///< 0x0002 to include, 0x0000 otherwise
 
 //#define INCLUDE_DEBUG_FUNCTIONS // Comment this line to disable the ApplyPerturbation function
 

@@ -13,6 +13,7 @@
 #include <Wire.h>
 
 // Sensor Fusion Headers
+//#include "sensor_fusion_class.h"
 #include "sensor_fusion.h"      // top level magCal and sensor fusion interfaces. Include 1st.
 #include "board.h"              // hardware-specific settings. Edit as needed for board & sensors.
 #include "build.h"
@@ -74,6 +75,8 @@ void setup() {
   Wire.setClock( 400000 ); //in ESP8266 library, can't set clock in same call that sets pins
   debug_log("I2C initted");
 
+//  auto sensor_fusion = new SensorFusion(PIN_I2C_SDA, PIN_I2C_SCL);
+
   // initialize Sensor Fusion
   initializeControlPort(&controlSubsystem);  // configure pins and ports for the
                                              // control sub-system
@@ -86,7 +89,11 @@ void setup() {
       &controlSubsystem);  // Initialize sensor fusion structures
   debug_log("SFG OK");
 
+
 // connect to the sensors we will be using.  Accelerometer and magnetometer are in same IC.
+//  sensor_fusion->InstallSensor(BOARD_ACCEL_MAG_I2C_ADDR,
+//                               SensorType::kMagnetometerAccelerometer);
+
 #if F_USING_ACCEL || F_USING_MAG
   sfg.installSensor(&sfg, &sensors[0], BOARD_ACCEL_MAG_I2C_ADDR, 1, NULL,
                     FXOS8700_Init, FXOS8700_Read);
@@ -110,6 +117,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
     unsigned long last_call = millis();
+    unsigned long last_print = millis();
     unsigned long loop_interval_ms = 1000 / FUSION_HZ;
     int i = 0;
     while (true) {
@@ -139,17 +147,22 @@ void loop() {
             DEBUG_OUTPUT_PIN, 1);  // toggle output pin each time through, for debugging
   //      debug_log("fused");
         // Serial.printf(" Algo took %ld us\n", sfg.SV_9DOF_GBY_KALMAN.systick);
+        if ((millis() - last_print) > 1000) {
+          Serial.printf("%lu,%f,%f\n", millis(), sfg.SV_9DOF_GBY_KALMAN.fdeltat,
+                        sfg.SV_9DOF_GBY_KALMAN.fRhoPl);
+          last_print += 1000;
+        }
         sfg.applyPerturbation(
             &sfg);  // apply debug perturbation (if testing mode enabled)
                     //      debug_log("applied perturbation");
         sfg.loopcounter++;  // loop counter is used to "serialize" mag cal
                             // operations and blink LEDs to indicate status
 
-        if (++i >= 4) {   // Some status code includes a "blink" feature.  This loop
-          i = 0;        // should cycle at least four times for that to operate
-                        // correctly. TODO - is this the best way?
-          sfg.updateStatus(
-              &sfg);  // make pending status updates visible
+        if (++i >=
+            4) {  // Some status code includes a "blink" feature.  This loop
+          i = 0;  // should cycle at least four times for that to operate
+                  // correctly. TODO - is this the best way?
+          sfg.updateStatus(&sfg);  // make pending status updates visible
         }
 
         sfg.queueStatus(
