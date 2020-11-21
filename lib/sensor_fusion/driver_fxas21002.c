@@ -238,7 +238,7 @@ int8_t FXAS21002_Read(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
         fifo_packet_count = I2C_Buffer[0] & FXAS21002_F_STATUS_F_CNT_MASK ;
 #endif
         // return if there are no measurements in the FIFO.
-        // this will only occur when the FAST_LOOP_HZ equals or exceeds GYRO_ODR_HZ
+        // this will only occur when the calling frequency equals or exceeds GYRO_ODR_HZ
         if (fifo_packet_count == 0) return(SENSOR_ERROR_READ);
     } else {
       return (status);

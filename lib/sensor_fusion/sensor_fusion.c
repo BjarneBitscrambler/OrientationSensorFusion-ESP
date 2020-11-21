@@ -264,7 +264,7 @@ void processGyroData(SensorFusionGlobals *sfg)
 /// This function is normally invoked via the "sfg." global pointer.
 int8_t readSensors(
     SensorFusionGlobals *sfg,   ///< pointer to global sensor fusion data structure
-    uint16_t read_loop_counter  ///< current loop counter (used for multirate processing)
+    uint8_t read_loop_counter  ///< current loop counter (used for multirate processing)
     ) 
 {
     struct PhysicalSensor  *pSensor;

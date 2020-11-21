@@ -64,6 +64,10 @@ extern "C" {
 #define BOARD_ACCEL_MAG_I2C_ADDR    FXOS8700_I2C_ADDRESS
 #define BOARD_GYRO_I2C_ADDR         FXAS21002C_I2C_ADDRESS
 
+#define GYRO_FIFO_SIZE  32	///< FXAX21000, FXAS21002 have 32 element FIFO
+#define ACCEL_FIFO_SIZE  32	///< FXOS8700 (accel), MMA8652, FXLS8952 all have 32 element FIFO
+#define MAG_FIFO_SIZE 	  1	///< FXOS8700 (mag), MAG3110 have no FIFO so equivalent to 1 element FIFO
+
 // Board LED mappings for ESP32 WROVER-KIT
 #define LOGIC_LED_ON  1U
 #define LOGIC_LED_OFF 0U

@@ -18,8 +18,6 @@
 extern "C" {
 #endif
 
-#define GYRO_FIFO_SIZE  32	///< FXAX21000, FXAS21002 have 32 element FIFO
-
 /**
  **
  ** @brief The FXAS21002 Sensor Register  Map.

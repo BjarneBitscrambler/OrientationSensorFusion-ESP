@@ -21,14 +21,11 @@ extern "C" {
 
 #include <stdint.h>
 
-#include "driver_sensors.h"
 #include "driver_sensors_types.h"
 
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-#define ACCEL_FIFO_SIZE  32	///< FXOS8700 (accel), MMA8652, FXLS8952 all have 32 element FIFO
-#define MAG_FIFO_SIZE 	  1	///< FXOS8700 (mag), MAG3110 have no FIFO so equivalent to 1 element FIFO
 
 /*!
  * @brief This defines the sensor specific information for I2C.
@@ -70,6 +67,7 @@ typedef struct
 /*******************************************************************************
  * APIs
  ******************************************************************************/
+//TODO - can toss the Idle functions
 
 /*! @brief       The interface function to initialize the sensor.
  *  @details     This function initializes the sensor and sensor handle.

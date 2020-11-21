@@ -15,7 +15,8 @@
 #include "sensor_fusion.h"              // Sensor fusion structures and types
 #include "driver_fxos8700.h"            // FXOS8700 hardware interface
 #include "driver_fxos8700_registers.h"  // describes the FXOS8700 register definitions and bit masks
-#include "hal_i2c.h"                    //I2C interface methods
+#include "driver_sensors.h"             // prototypes for *_Init() and *_Read() methods
+#include "hal_i2c.h"                    // I2C interface methods
 
 
 // Command definition to read the WHO_AM_I value.
@@ -125,10 +126,22 @@ const registerwritelist_t   FXOS8700_Initialization[] =
 #define FXOS8700_COUNTSPERG     8192        //assumes +/-4 g range on accelerometer
 #define FXOS8700_COUNTSPERUT    10
 
-// All sensor drivers and initialization functions have the same prototype
+// All sensor drivers and initialization functions have a similar prototype
 // sensor = pointer to linked list element used by the sensor fusion subsystem to specify required sensors
-
 // sfg = pointer to top level data structure for sensor fusion
+
+int8_t FXOS8700_Accel_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg) {
+    //Use the same init function for both magnetometer and accelererometer - it will
+    //end up being called twice, but that's OK
+    //TODO - can move the accel stuff in here, and mag stuff following...
+  return FXOS8700_Init(sensor, sfg);
+}
+int8_t FXOS8700_Mag_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg) {
+    //Use the same init function for both magnetometer and accelererometer - it will
+    //end up being called twice, but that's OK
+  return FXOS8700_Init(sensor, sfg);
+}
+
 int8_t FXOS8700_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
 {
     int32_t status;
@@ -172,7 +185,7 @@ int8_t FXOS8700_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
 }
 
 #if F_USING_ACCEL
-int8_t FXOS8700_ReadAccData(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
+int8_t FXOS8700_Accel_Read(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
 {
     uint8_t                     I2C_Buffer[6 * ACCEL_FIFO_SIZE];    // I2C read buffer
     int32_t                     status;         // I2C transaction status
@@ -196,7 +209,7 @@ int8_t FXOS8700_ReadAccData(struct PhysicalSensor *sensor, SensorFusionGlobals *
       fifo_packet_count = I2C_Buffer[0] & FXOS8700_F_STATUS_F_CNT_MASK;
 #endif
       // return if there are no measurements in the sensor FIFO.
-      // this will only occur when the FAST_LOOP_HZ equals or exceeds
+      // this will only occur when the calling frequency equals or exceeds
       // ACCEL_ODR_HZ
       if (fifo_packet_count == 0) {
         return (SENSOR_ERROR_READ);
@@ -240,7 +253,7 @@ int8_t FXOS8700_ReadAccData(struct PhysicalSensor *sensor, SensorFusionGlobals *
 
 #if F_USING_MAG
 // read FXOS8700 magnetometer over I2C
-int8_t FXOS8700_ReadMagData(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
+int8_t FXOS8700_Mag_Read(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
 {
     uint8_t                     I2C_Buffer[6];  // I2C read buffer
     int32_t                     status;         // I2C transaction status
@@ -274,11 +287,11 @@ int8_t FXOS8700_Read(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
     int8_t  sts1 = 0;
     int8_t  sts2 = 0;
 #if F_USING_ACCEL
-        sts1 = FXOS8700_ReadAccData(sensor, sfg);
+        sts1 = FXOS8700_Accel_Read(sensor, sfg);
 #endif
 
 #if F_USING_MAG
-        sts2 = FXOS8700_ReadMagData(sensor, sfg);
+        sts2 = FXOS8700_Mag_Read(sensor, sfg);
 #endif
 
     if (sts1)

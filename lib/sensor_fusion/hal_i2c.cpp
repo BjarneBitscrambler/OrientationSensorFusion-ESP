@@ -182,6 +182,7 @@ int32_t Sensor_I2C_Read_Register(registerDeviceInfo_t *devInfo,
                           uint8_t offset,
                           uint8_t length,
                           uint8_t *pOutBuffer) {
+  //TODO - can toss the devInfo parameter, or use it for peripheralAddr
   if(I2CReadBytes((byte)peripheralAddress, (byte)offset, pOutBuffer,
                       (int)length) )
   { return SENSOR_ERROR_NONE;

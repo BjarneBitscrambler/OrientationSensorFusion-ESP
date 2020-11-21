@@ -32,16 +32,26 @@ typedef struct PhysicalSensor PhysicalSensor;
 /// @name Sensor Interface Prototypes
 /// Each physical sensor must be provided with one initialization function
 /// and one "read" function.  These must be installed by the user using the
-/// installSensor method defined in SensorFusionGlobals.  By "physical sensor",
-/// we mean either individual sensor type (such as a 3-axis accelerometer) or
-/// a combo-sensor such as the NXP FXOS8700 6-axis accel plus mag.  The init()
+/// installSensor method defined in SensorFusionGlobals.  A "physical sensor",
+/// can mean either individual sensor type (such as a 3-axis accelerometer) or
+/// a combo-sensor such as the NXP FXOS8700 6-axis accel plus mag. In the 
+/// latter case, both the accel and mag readings will be made in the same call.
+/// On the other hand, if you need the sensor modes read at different rates, 
+/// then define a separate *_Read() function for each mode. This might be
+/// prefered if, for example, the magnetometer doesn't have a FIFO whereas the 
+/// the accelerometer on the same IC does and so the accelerometer can be read
+/// in bursts less often than the magnetometer. The init()
 /// function for each sensor is responsible for initializing all sensors contained
 /// in that package.  The read() function is responsible for reading those same
 /// sensors and moving the results into the standard structures contained within
 /// the SensorFusionGlobals object.
+int8_t FXOS8700_Accel_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+int8_t FXOS8700_Mag_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXOS8700_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXAS21002_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 
+int8_t FXOS8700_Accel_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+int8_t FXOS8700_Mag_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXOS8700_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXAS21002_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 

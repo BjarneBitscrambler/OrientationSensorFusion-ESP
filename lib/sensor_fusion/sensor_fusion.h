@@ -121,7 +121,7 @@ typedef int8_t (readSensor_t) (
 ) ;
 typedef int8_t (readSensors_t) (
     struct SensorFusionGlobals *sfg,
-    uint16_t read_loop_counter
+    uint8_t read_loop_counter
 ) ;
 typedef int8_t (installSensor_t) (
     struct SensorFusionGlobals *sfg,    ///< Global data structure pointer
@@ -153,7 +153,7 @@ struct PhysicalSensor {
 	uint16_t addr;  			///< I2C address if applicable
         uint16_t isInitialized;                 ///< Bitfields to indicate sensor is active (use SensorBitFields from build.h)
 	struct PhysicalSensor *next;		///< pointer to next sensor in this linked list
-        uint16_t schedule;                      ///< Parameter to control sensor sampling rate
+        uint8_t schedule;                      ///< Parameter to control sensor sampling rate
 	initializeSensor_t *initialize;  	///< pointer to function to initialize sensor using the supplied drivers
 	readSensor_t *read;			///< pointer to function to read sensor using the supplied drivers
 };
