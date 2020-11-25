@@ -84,8 +84,17 @@ void setup() {
   //create our fusion engine instance
   sensor_fusion = new SensorFusion(PIN_I2C_SDA, PIN_I2C_SCL);
 
-  //call with NULL if not needing a particular stream, or call with no args
-  if( ! sensor_fusion->InitializeControlSubsystem(&Serial, &tcp_client) ) {
+  //Fusion system creates a data packet of sensor readings and algorithm results
+  //formatted for the NXP Sensor Toolbox program. If this is desired then call
+  //InitializeControlSubsystem() with pointer to a serial stream (e.g. &Serial)
+  //that has been initialized earlier in main (>115200 baud recommended).
+  //Output can also be directed to a TCP client connecting on port 23 - if this
+  //is desired, second parameter to InitializeControlSubsystem() is the 
+  //pointer to the WiFiClient object.  Pass a NULL for stream(s)
+  //aren't needed, or just call InitializeControlSubsystem() with no parameters.
+  //Note: to use the streams, the appropriate #define has to be set in build.h  
+//  if( ! sensor_fusion->InitializeControlSubsystem(&Serial, &tcp_client) ) {
+  if( ! sensor_fusion->InitializeControlSubsystem(NULL, &tcp_client) ) {
     debug_log("trouble initting Output and Control system");
   }
 
@@ -107,7 +116,6 @@ void setup() {
   sensor_fusion->InitializeFusionEngine();
   debug_log("Fusion Engine OK");
 
-
 } // end setup()
 
 void loop() {
@@ -120,6 +128,7 @@ void loop() {
     //advantage of this feature, adjust the constants like kLoopsPerMagRead
     //in sensor_fusion_class.h
     const unsigned long kLoopIntervalMs = 1000 / LOOP_RATE_HZ;
+    const unsigned long kPrintIntervalMs = 250;
 
     unsigned long last_loop_time = millis();
     unsigned long last_print_time = millis();
@@ -145,14 +154,24 @@ void loop() {
         sensor_fusion->RunFusion();
 
         //create and send output if fusion has produced new data
-        sensor_fusion->ProduceOutput();
+        sensor_fusion->ProduceToolboxOutput();
 
         //process any incoming commands
         sensor_fusion->ProcessCommands();
-
-        if ((millis() - last_print_time) > 1000) {
-          last_print_time += 1000;
-//          Serial.printf("%lu,%f\n\r", millis(),sensor_fusion->GetHeadingDegrees());
+        
+        if ((millis() - last_print_time) > kPrintIntervalMs) {
+          last_print_time += kPrintIntervalMs;
+          Serial.printf("%lu,\t%03.1f, %02.1f, %02.1f,\t%03.0f, %03.0f, %03.0f,\t%01.2f, %01.2f, %01.2f\n\r", millis(),
+                        sensor_fusion->GetHeadingDegrees(),
+                        sensor_fusion->GetPitchDegrees(),
+                        sensor_fusion->GetRollDegrees(),
+                        sensor_fusion->GetTurnRateDegPerS(),
+                        sensor_fusion->GetPitchRateDegPerS(),
+                        sensor_fusion->GetRollRateDegPerS(),
+                        sensor_fusion->GetAccelXGees(),
+                        sensor_fusion->GetAccelYGees(),
+                        sensor_fusion->GetAccelZGees()
+                        );
         }
 
 //        sfg.applyPerturbation(

@@ -106,7 +106,7 @@ void SensorFusion::RunFusion(void) {
 
 }  // end RunFusion()
 
-void SensorFusion::ProduceOutput(void) {
+void SensorFusion::ProduceToolboxOutput(void) {
   // Make & send data to Sensor Fusion Toolbox or whatever UART is
   // connected to.
   if (loops_per_fuse_counter_ == 1) {       // only run if fusion has happened
@@ -114,14 +114,35 @@ void SensorFusion::ProduceOutput(void) {
     sfg_->pControlSubsystem->write(sfg_);   // send output packet
   }
 
-}  // end ProduceOutput()
+}  // end ProduceToolboxOutput()
 
 void SensorFusion::ProcessCommands(void) {
         //process any incoming commands
         sfg_->pControlSubsystem->readCommands(sfg_);
 }//end ProcessCommands()
 
-//fetch the Compass Heading in degrees
+// The following Get____() methods return orientation values
+// calculated by the 9DOF Kalman algorithm (the most advanced).
+// They have been mapped to match the conventions used for
+// vessels:
+//  Compass Heading; 0 at magnetic north, and increasing CW.
+//  Pitch; 0 with boat level, increasing with Bow Up.
+//  Roll; 0 with boat level, increasing with Starboard roll.
+//  Turn Rate; positive with turn to Starboard
+//  Pitch Rate; positive with Bow moving Up.
+//  Roll Rate; positive with increasing Starboard heel.
+//  Acceleration; X to Bow, Y to Port, Z Up.
+// This works with the Adafruit NXP FXOS8700/FXAS21002
+//  breakout board, mounted with X toward the bow, Y to port,
+//  and Z (component side of PCB) facing up.
+// If the sensor orienatation is different than assumed, 
+//  you may need to remap the axes below.  If a different
+//  sensor board is used, you may need also to change the
+//  axes mapping in the file hal_axis_remap.c  The latter
+//  mapping is applied *before* the fusion algorithm, 
+//  whereas the below mapping is applied *after*.
+
+// fetch the Compass Heading in degrees
 float SensorFusion::GetHeadingDegrees(void) {
 //TODO - make generic so it's not dependent on algorithm used
   return sfg_->SV_9DOF_GBY_KALMAN.fRhoPl;
@@ -129,21 +150,47 @@ float SensorFusion::GetHeadingDegrees(void) {
 
 //fetch the Pitch in degrees
 float SensorFusion::GetPitchDegrees(void) {
-  return sfg_->SV_9DOF_GBY_KALMAN.fThePl;
+  return sfg_->SV_9DOF_GBY_KALMAN.fPhiPl;
 }  // end GetPitchDegrees()
 
 //fetch the Roll in degrees
 float SensorFusion::GetRollDegrees(void) {
-  return sfg_->SV_9DOF_GBY_KALMAN.fPhiPl;
+  return -(sfg_->SV_9DOF_GBY_KALMAN.fThePl);
 }  // end GetRollDegrees()
 
-bool SensorFusion::InstallSensor( uint8_t sensor_i2c_addr, SensorType sensor_type ) {
-// connect to the sensors we will be using.  Accelerometer and magnetometer may
-// be combined in the same IC, and only requre one call. If that is the case, then 
-//  ensure the *_Read() function reads both the accel & magnetometer data.
-// The sfg_ struct contains fields for  accel, magnetometer, gyro, baro, thermo.
-// The *_Init() and *_Read() functions of each sensor are defined in driver_*.*
-// files, and place data in the correct sfg_ fields
+float SensorFusion::GetTurnRateDegPerS(void) {
+  return sfg_->SV_9DOF_GBY_KALMAN.fOmega[2];
+}//end GetTurnRateDegPerS()
+
+float SensorFusion::GetPitchRateDegPerS(void) {
+  return sfg_->SV_9DOF_GBY_KALMAN.fOmega[0];
+}//end GetTurnRateDegPerS()
+
+float SensorFusion::GetRollRateDegPerS(void) {
+  return -(sfg_->SV_9DOF_GBY_KALMAN.fOmega[1]);
+}//end GetTurnRateDegPerS()
+
+float SensorFusion::GetAccelXGees(void) {
+  return sfg_->Accel.fGc[1];
+}//end GetTurnRateDegPerS()
+
+float SensorFusion::GetAccelYGees(void) {
+  return sfg_->Accel.fGc[0];
+}//end GetTurnRateDegPerS()
+
+float SensorFusion::GetAccelZGees(void) {
+  return sfg_->Accel.fGc[2];
+}//end GetTurnRateDegPerS()
+
+bool SensorFusion::InstallSensor(uint8_t sensor_i2c_addr,
+                                   SensorType sensor_type) {
+    // connect to the sensors we will be using.  Accelerometer and magnetometer
+    // may be combined in the same IC, and only requre one call. If that is the
+    // case, then
+    //  ensure the *_Read() function reads both the accel & magnetometer data.
+    // The sfg_ struct contains fields for  accel, magnetometer, gyro, baro,
+    // thermo. The *_Init() and *_Read() functions of each sensor are defined in
+    // driver_*.* files, and place data in the correct sfg_ fields
 
     if( num_sensors_installed_ >= MAX_NUM_SENSORS ) {
         //already have max number of sensors installed
