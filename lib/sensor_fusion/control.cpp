@@ -29,13 +29,14 @@
 // global structures
 uint8_t           sUARTOutputBuffer[256];  // larger than the nominal 124 byte size for outgoing packets
 
-typedef enum {
+/*typedef enum {
     HardwareSerial,
     WiFiSerial
 } UART_Type;
+*/
 
 //TODO - can start WiFi client in initializeControlPort() instead of global
-extern WiFiClient client; //defined in main.cpp
+//extern WiFiClient client; //defined in main.cpp
 
 // Blocking function to write multiple bytes to specified output(s): a UART
 //  or a TCP socket, as specified in build.h
@@ -45,35 +46,36 @@ extern WiFiClient client; //defined in main.cpp
 int8_t SendSerialBytesOut(SensorFusionGlobals *sfg)
 {
   ControlSubsystem *pComm = sfg->pControlSubsystem;
-  // track the number of bytes separately and run wired/wireless output in
-  // parallel
-#if F_USE_WIRED_UART
-    uint16_t bytes_left_wired = pComm->bytes_to_send;
-#else
+  // track number of bytes separately to run wired/wireless output in parallel
     uint16_t bytes_left_wired = 0;
-#endif
-#if F_USE_WIRELESS_UART
-    uint16_t bytes_left_wireless = pComm->bytes_to_send;
-#else
+    HardwareSerial *serial_port = (HardwareSerial *) (pComm->serial_port_);
+    if (serial_port) {
+      bytes_left_wired = pComm->bytes_to_send;
+    }
+
+    WiFiClient *tcp_client = (WiFiClient *)(pComm->tcp_client_);
     uint16_t bytes_left_wireless = 0;
-#endif
+    if (tcp_client) {
+      bytes_left_wireless = pComm->bytes_to_send;
+    }
+
     int bytes_to_write_wired;
 
     while ((bytes_left_wired > 0) || (bytes_left_wireless > 0)) {
       if (bytes_left_wired > 0) {
-        bytes_to_write_wired = Serial.availableForWrite();
+        bytes_to_write_wired = serial_port->availableForWrite();
         if( bytes_to_write_wired > bytes_left_wired ) {
           bytes_to_write_wired = bytes_left_wired;
         }
         //write() won't return until all requested are sent, so only ask for what there's room for
-        Serial.write(&(pComm->serial_out_buf[pComm->bytes_to_send - bytes_left_wired]), bytes_to_write_wired);
+        serial_port->write(&(pComm->serial_out_buf[pComm->bytes_to_send - bytes_left_wired]), bytes_to_write_wired);
         bytes_left_wired -= bytes_to_write_wired;
       };
-      if (client.connected() && (bytes_left_wireless > 0)) {
+      if (tcp_client->connected() && (bytes_left_wireless > 0)) {
         // send data to wifi TCP socket.  write() returns actual # queued, which may be less than requested.
-          bytes_left_wireless -= client.write(&(pComm->serial_out_buf[pComm->bytes_to_send - bytes_left_wireless]), bytes_left_wireless);
-      }else if( !client.connected()) {
-        client.stop();
+          bytes_left_wireless -= tcp_client->write(&(pComm->serial_out_buf[pComm->bytes_to_send - bytes_left_wireless]), bytes_left_wireless);
+      }else if( !tcp_client->connected()) {
+        tcp_client->stop();
         bytes_left_wireless = 0;  //don't bother trying to send any remaining bytes
       }
     }//end while() there are unsent bytes
@@ -89,25 +91,32 @@ int8_t SendSerialBytesOut(SensorFusionGlobals *sfg)
 int8_t ReceiveIncomingCommands(SensorFusionGlobals *sfg)
 {
     uint8_t     data;
+    WiFiClient *tcp_client = (WiFiClient *) sfg->pControlSubsystem->tcp_client_;
+    HardwareSerial *serial_port = (HardwareSerial*) sfg->pControlSubsystem->serial_port_;
 
-    //check for incoming bytes from serial UART
-    while (0 < Serial.available() )
-    {   data = Serial.read(); 
-        DecodeCommandBytes(sfg, &data, 1);
+    // check for incoming bytes from serial UART
+    if( serial_port ) {
+        while (0 < Serial.available() )
+      {   data = serial_port->read(); 
+          DecodeCommandBytes(sfg, &data, 1);
+      }
     }
     // check for incoming bytes from TCP socket
-    while (client.connected() && (0 < client.available())) {
-        client.read(&data, 1);
+    if (tcp_client) {
+      while (tcp_client->connected() && (0 < tcp_client->available())) {
+        tcp_client->read(&data, 1);
         DecodeCommandBytes(sfg, &data, 1);
+      }
     }
 
     return 0;
 }//end ReceiveIncomingCommands()
 
 /// Initialize the control subsystem and all related hardware
-int8_t initializeControlPort(
-    ControlSubsystem *pComm  ///< pointer to the control subystem structure
-)
+bool initializeControlPort(
+    ControlSubsystem *pComm,  ///< pointer to the control subystem structure
+    const void *serial_port, const void *tcp_client
+    )
 {
     if (pComm)
     {   //TODO - seems that many packet types are sent anyways. Check whether it's the Sensor Toolbox
@@ -123,11 +132,17 @@ int8_t initializeControlPort(
         pComm->write = SendSerialBytesOut;
         pComm->stream = CreateOutgoingPackets;
         pComm->readCommands = ReceiveIncomingCommands;
+        pComm->serial_port_ = serial_port;
+        pComm->tcp_client_ = tcp_client;
 
-        return (0);
+        return true;
     }
     else
     {
-        return (1);
+        return false;
     }
 }//end initializeControlPort()
+
+void UpdateTCPClient(ControlSubsystem *pComm,void *tcp_client) {
+    pComm->tcp_client_ = tcp_client;
+}//end UpdateTCPClient()

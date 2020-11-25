@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <sstream>
 #include <string>
+#include <Wire.h>
 #ifdef ESP8266
   #include <ESP8266WiFi.h>
   #include <ESP8266WiFiAP.h>
@@ -10,7 +11,6 @@
   #include <WiFiAP.h>
 #endif
 #include <WiFiClient.h>
-#include <Wire.h>
 
 // Sensor Fusion Headers
 #include "sensor_fusion_class.h"
@@ -23,12 +23,6 @@
 #include "hal_i2c.h"            //I2C interfaces for ESP platform
 #include "status.h"   	        // Status indicator interface - application specific
 
-// wifi config - using ESP as Access Point (AP)
-const char *ssid = "compass";
-const char *password = "northsouth";
-#define WIFI_STREAMING_PORT 23
-WiFiServer server(WIFI_STREAMING_PORT);  // use wifi server port 23 (telnet)
-WiFiClient client;  // TODO remove as global - is used in control.cpp
 
 //pin that can be twiddled for debugging
 #ifdef ESP8266
@@ -38,6 +32,14 @@ WiFiClient client;  // TODO remove as global - is used in control.cpp
 #endif
 #ifdef ESP32
   #define DEBUG_OUTPUT_PIN GPIO_NUM_22  
+#endif
+
+#if F_USE_WIRELESS_UART
+  const char *ssid = "compass";
+  const char *password = "northsouth";
+  #define WIFI_STREAMING_PORT 23
+  WiFiServer server(WIFI_STREAMING_PORT);  // use wifi server port 23 (telnet)
+  WiFiClient tcp_client;
 #endif
 
 // Sensor Fusion Global data structures
@@ -55,21 +57,24 @@ void setup() {
     Serial.begin(BOARD_DEBUG_UART_BAUDRATE); //initialize serial UART
     delay(200);
 
-#if F_USE_WIRELESS_UART
-    // init WiFi connection
-    WiFi.softAP(ssid, password);
-    IPAddress myIP = WiFi.softAPIP();
-    Serial.print("My AP IP address: ");
-    Serial.println(myIP);
-    server.begin(23);
-    Serial.print("TCP server started. Connect to ");
-    Serial.print(myIP);
-    Serial.println(" on port 23.");
-#endif
-
   debug_log("waitasec...");  
   //delay not necessary - gives time to open a serial monitor
   delay(1000);
+
+// wifi config - using ESP as Access Point (AP)
+#if F_USE_WIRELESS_UART
+  // init WiFi connection
+  WiFi.softAP(ssid, password);
+  IPAddress myIP = WiFi.softAPIP();
+  Serial.print("My AP IP address: ");
+  Serial.println(myIP);
+  server.begin(23);
+  Serial.print("TCP server started. Connect to ");
+  Serial.print(myIP);
+  Serial.println(" on port 23.");
+#else
+  Serial *tcp_client = NULL;
+#endif
 
   //initialize the I2C system at max clock rate supported by sensors
   Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
@@ -79,7 +84,12 @@ void setup() {
   //create our fusion engine instance
   sensor_fusion = new SensorFusion(PIN_I2C_SDA, PIN_I2C_SCL);
 
-// connect to the sensors.  Accelerometer and magnetometer are in same IC.
+  //call with NULL if not needing a particular stream, or call with no args
+  if( ! sensor_fusion->InitializeControlSubsystem(&Serial, &tcp_client) ) {
+    debug_log("trouble initting Output and Control system");
+  }
+
+  // connect to the sensors.  Accelerometer and magnetometer are in same IC.
   if(! sensor_fusion->InstallSensor(BOARD_ACCEL_MAG_I2C_ADDR,
                                SensorType::kMagnetometer) ) {
     debug_log("trouble installing Magnetometer");
@@ -116,11 +126,12 @@ void loop() {
 
     while (true) {
 #if F_USE_WIRELESS_UART
-      if (!client) {
-        client = server.available();  // listen for incoming TCP clients
-        if (client) {
-          //Serial.print("New Client on ");   
-          //Serial.println(client.localIP());
+      if (!tcp_client) {
+        tcp_client = server.available();  // listen for incoming TCP clients
+        if (tcp_client) {
+          sensor_fusion->UpdateWiFiStream(&tcp_client);  
+          // Serial.print("New Client on ");
+          // Serial.println(client.localIP());
         }
       }
 #endif
@@ -139,23 +150,18 @@ void loop() {
         //process any incoming commands
         sensor_fusion->ProcessCommands();
 
-/*        if ((millis() - last_print_time) > 1000) {
+        if ((millis() - last_print_time) > 1000) {
           last_print_time += 1000;
-          Serial.printf("%lu,%f\n\r", millis(),sensor_fusion->GetHeadingDegrees());
-          //sensor_fusion->RunControlAndOutput();
+//          Serial.printf("%lu,%f\n\r", millis(),sensor_fusion->GetHeadingDegrees());
         }
-*/
+
 //        sfg.applyPerturbation(
 //            &sfg);  // apply debug perturbation (if testing mode enabled)
                     //      debug_log("applied perturbation");
 
-        //Make and send data to the Sensor Fusion Toolbox or whatever UART is connected to.
-//        sfg.pControlSubsystem->stream(&sfg);  //create the output packet  
-//        sfg.pControlSubsystem->write(sfg.pControlSubsystem);  //send the output packet
 
-//        sfg.pControlSubsystem->readCommands(&sfg);
-//        digitalWrite(
-//            DEBUG_OUTPUT_PIN, i % 2);  // toggle output pin each time through, for debugging
+//        digitalWrite(DEBUG_OUTPUT_PIN, i % 2);  // toggle pin for debugging
+
       }//end of loop that reads sensors and runs fusion as needed
     }//end while(true)
 } // end loop()

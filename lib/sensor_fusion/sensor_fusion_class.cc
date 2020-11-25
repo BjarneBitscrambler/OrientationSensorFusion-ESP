@@ -17,6 +17,7 @@
 #include "sensor_fusion_class.h"
 
 #include <stdint.h>
+#include <Stream.h>
 
 #include "sensor_fusion.h"
 #include "control.h"
@@ -39,10 +40,15 @@ SensorFusion::SensorFusion(int8_t pin_i2c_sda, int8_t pin_i2c_scl) {
 
 }  // end SensorFusion()
 
-void SensorFusion::InitializeControlSubsystem(void) {
-  initializeControlPort(control_subsystem_);  // configure pins and ports for
+bool SensorFusion::InitializeControlSubsystem( const Stream *serial_port, const Stream *tcp_client) {
+
+  return initializeControlPort(control_subsystem_, serial_port, tcp_client);  // configure pins and ports for
                                               // the control sub-system
 }  // end InitializeControlSubsystem()
+
+void SensorFusion::UpdateWiFiStream(void *tcp_client) {
+  UpdateTCPClient(control_subsystem_, tcp_client);
+}  // end UpdateTCPClient()
 
 void SensorFusion::InitializeStatusSubsystem(void) {
   initializeStatusSubsystem(

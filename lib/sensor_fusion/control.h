@@ -55,16 +55,23 @@ typedef struct ControlSubsystem {
 	volatile int8_t  AccelCalPacketOn;              ///< variable used to coordinate accelerometer calibration
     uint8_t         *serial_out_buf;        //buffer containing the output stream
     uint16_t        bytes_to_send;          //how many bytes waiting to go out
-	writePort_t      *write;                        ///< function to write output buffer to the serial putput(s)
+    const void *serial_port_;           //is cast to Serial * and used to output to the serial port
+    const void *tcp_client_;            //is cast to WiFiClient * and used to output to a connected TCP client
+    writePort_t
+        *write;  ///< function to write output buffer to the serial putput(s)
     readCommand_t    *readCommands;                 //< function to check for incoming commands and process them
     streamData_t     *stream;                       ///< function to create output data packets and place in buffer
 } ControlSubsystem;
 
-int8_t initializeControlPort(ControlSubsystem *pComm);  ///< Call this once to initialize structures, ports, etc.
+bool initializeControlPort(ControlSubsystem *pComm,const void *serial_port, const void *tcp_client);  ///< Call this once to initialize structures, ports, etc.
+
+//updates pointer to the TCP client. Call whenever new client connects or disconnects
+void UpdateTCPClient(ControlSubsystem *pComm,void *tcp_client);
 
 // Located in output_stream.c:
-/// Called once per fusion cycle to stream information required by the NXP Sensor Fusion Toolbox.
-/// Packet protocols are defined in the NXP Sensor Fusion for Kinetis Product Development Kit User Guide.
+/// Called once per fusion cycle to stream information required by the NXP
+/// Sensor Fusion Toolbox. Packet protocols are defined in the NXP Sensor Fusion
+/// for Kinetis Product Development Kit User Guide.
 void CreateOutgoingPackets(SensorFusionGlobals *sfg);
 
 // Located in DecodeCommandBytes.c:

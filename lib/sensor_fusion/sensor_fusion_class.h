@@ -13,6 +13,7 @@
 #ifndef SENSOR_FUSION_CLASS_H_
 #define SENSOR_FUSION_CLASS_H_
 
+#include <Stream.h>
 
 #include "sensor_fusion.h"
 #include "board.h"
@@ -36,6 +37,8 @@ class SensorFusion {
   SensorFusion(int8_t pin_i2c_sda = -1, int8_t pin_i2c_scl = -1);
   bool InstallSensor(uint8_t sensor_i2c_addr, SensorType sensor_type);
   void InitializeFusionEngine(void);
+  bool InitializeControlSubsystem( const Stream *serial_port = NULL, const Stream *tcp_client = NULL);
+  void UpdateWiFiStream(void *tcp_client);
   void ReadSensors(void);
   void RunFusion(void);
   void ProduceOutput(void);
@@ -45,7 +48,6 @@ class SensorFusion {
   float GetRollDegrees(void);
 
  private:
-  void InitializeControlSubsystem(void);
   void InitializeStatusSubsystem(void);
   void InitializeSensorFusionGlobals(void);
 
