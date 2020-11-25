@@ -161,7 +161,7 @@ void loop() {
         
         if ((millis() - last_print_time) > kPrintIntervalMs) {
           last_print_time += kPrintIntervalMs;
-          Serial.printf("%lu,\t%03.1f, %02.1f, %02.1f,\t%03.0f, %03.0f, %03.0f,\t%01.2f, %01.2f, %01.2f\n\r", millis(),
+          Serial.printf("%lu,\t%03.1f, %+5.1f, %+5.1f,\t%+4.0f, %+4.0f, %+4.0f,\t%+5.2f, %+5.2f, %+5.2f\n\r", millis(),
                         sensor_fusion->GetHeadingDegrees(),
                         sensor_fusion->GetPitchDegrees(),
                         sensor_fusion->GetRollDegrees(),
@@ -177,7 +177,6 @@ void loop() {
 //        sfg.applyPerturbation(
 //            &sfg);  // apply debug perturbation (if testing mode enabled)
                     //      debug_log("applied perturbation");
-
 
 //        digitalWrite(DEBUG_OUTPUT_PIN, i % 2);  // toggle pin for debugging
 
