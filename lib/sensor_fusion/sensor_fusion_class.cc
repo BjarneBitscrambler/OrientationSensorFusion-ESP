@@ -145,7 +145,9 @@ void SensorFusion::ProcessCommands(void) {
 // fetch the Compass Heading in degrees
 float SensorFusion::GetHeadingDegrees(void) {
 //TODO - make generic so it's not dependent on algorithm used
-  return sfg_->SV_9DOF_GBY_KALMAN.fRhoPl;
+return (sfg_->SV_9DOF_GBY_KALMAN.fRhoPl <= 90)
+           ? (sfg_->SV_9DOF_GBY_KALMAN.fRhoPl + 270.0)
+           : (sfg_->SV_9DOF_GBY_KALMAN.fRhoPl - 90.0);
 }  // end GetHeadingDegrees()
 
 //fetch the Pitch in degrees
