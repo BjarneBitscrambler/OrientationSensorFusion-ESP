@@ -35,7 +35,7 @@ extern "C" {
 /// "write" "stream" and "readCommands" provide three control functions visible at the main()
 /// level.  These typedefs define the structure of those calls.
 ///@{
-typedef int8_t (writePort_t) (struct ControlSubsystem *pComm);
+typedef int8_t (writePort_t) (SensorFusionGlobals *sfg);
 typedef int8_t (readCommand_t) (SensorFusionGlobals *sfg);
 typedef void (streamData_t)(SensorFusionGlobals *sfg);
 ///@}

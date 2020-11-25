@@ -42,9 +42,11 @@ extern WiFiClient client; //defined in main.cpp
 // On ESP32, hardware UART has internal FIFO of length 0x7f, and once the
 // bytes to be written are all in the FIFO, this routine returns. Actual
 // sending of the data may take a while longer...
-int8_t SendSerialBytesOut(ControlSubsystem *pComm)
-{  
-    //track the number of bytes separately and run wired/wireless output in parallel
+int8_t SendSerialBytesOut(SensorFusionGlobals *sfg)
+{
+  ControlSubsystem *pComm = sfg->pControlSubsystem;
+  // track the number of bytes separately and run wired/wireless output in
+  // parallel
 #if F_USE_WIRED_UART
     uint16_t bytes_left_wired = pComm->bytes_to_send;
 #else

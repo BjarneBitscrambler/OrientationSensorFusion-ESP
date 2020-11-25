@@ -68,7 +68,7 @@ void setup() {
 #endif
 
   debug_log("waitasec...");  
-  //delay not really necessary - gives time to open a serial monitor
+  //delay not necessary - gives time to open a serial monitor
   delay(1000);
 
   //initialize the I2C system at max clock rate supported by sensors
@@ -76,22 +76,10 @@ void setup() {
   Wire.setClock( 400000 ); //in ESP8266 library, can't set clock in same call that sets pins
   debug_log("I2C initted");
 
+  //create our fusion engine instance
   sensor_fusion = new SensorFusion(PIN_I2C_SDA, PIN_I2C_SCL);
 
-  // initialize Sensor Fusion
-/*  initializeControlPort(&controlSubsystem);  // configure pins and ports for the
-                                             // control sub-system
-  debug_log("Control Port OK");
-  initializeStatusSubsystem(
-      &statusSubsystem);  // configure pins and ports for the status sub-system
-  debug_log("Status Subsystem OK");
-  initSensorFusionGlobals(
-      &sfg, &statusSubsystem,
-      &controlSubsystem);  // Initialize sensor fusion structures
-  debug_log("SFG OK");
-*/
-
-// connect to the sensors we will be using.  Accelerometer and magnetometer are in same IC.
+// connect to the sensors.  Accelerometer and magnetometer are in same IC.
   if(! sensor_fusion->InstallSensor(BOARD_ACCEL_MAG_I2C_ADDR,
                                SensorType::kMagnetometer) ) {
     debug_log("trouble installing Magnetometer");
@@ -104,25 +92,8 @@ void setup() {
                                SensorType::kGyroscope) ) {
     debug_log("trouble installing Gyroscope");
   }
+  debug_log("Sensors connected");
 
-/*#if F_USING_ACCEL || F_USING_MAG
-  sfg.installSensor(&sfg, &sensors[0], BOARD_ACCEL_MAG_I2C_ADDR, 1, NULL,
-                    FXOS8700_Init, FXOS8700_Read);
-  debug_log("Accel/Mag connected");
-#endif
-#if F_USING_GYRO
-  sfg.installSensor(&sfg, &sensors[1], BOARD_GYRO_I2C_ADDR, 1, NULL,
-                    FXAS21002_Init, FXAS21002_Read);
-  debug_log("Gyro connected");
-#endif
-*/
-/*  sfg.initializeFusionEngine(
-      &sfg);  // Initialize sensors and magnetic calibration
-  debug_log("Fusion Engine OK");
-
-  sfg.setStatus(&sfg, NORMAL);  // Set status state to NORMAL
-  debug_log("Passing to main...");
-*/
   sensor_fusion->InitializeFusionEngine();
   debug_log("Fusion Engine OK");
 
@@ -131,11 +102,18 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-    unsigned long last_call = millis();
-    unsigned long last_print = millis();
-    const unsigned long kLoopIntervalMs = 1000 / SENSOR_READ_RATE_HZ;
-    const unsigned int kLoopsPerFusion = (1000 / FUSION_HZ) / kLoopIntervalMs;
-    uint8_t loop_count = 0;
+
+    //Usually the fusion algorithm is run once each time the sensors are read
+    //However we allow for possibility of reading several times before fusing
+    //(for instance, if we want to collect several magnetometer readings each
+    //fusion cycle, since the magnetometer IC doesn't have a FIFO). To take
+    //advantage of this feature, adjust the constants like kLoopsPerMagRead
+    //in sensor_fusion_class.h
+    const unsigned long kLoopIntervalMs = 1000 / LOOP_RATE_HZ;
+
+    unsigned long last_loop_time = millis();
+    unsigned long last_print_time = millis();
+
     while (true) {
 #if F_USE_WIRELESS_UART
       if (!client) {
@@ -146,42 +124,27 @@ void loop() {
         }
       }
 #endif
-      if ((millis() - last_call) > kLoopIntervalMs) {
-        last_call += kLoopIntervalMs; //keep executing the below periodically
+      if ((millis() - last_loop_time) > kLoopIntervalMs) {
+        last_loop_time += kLoopIntervalMs; //keep executing the below periodically
         
-        sensor_fusion->ReadSensors(); //read the Sensors whose turn it is
+        //read the Sensors whose turn it is, according to the loops_per_fuse_counter_ 
+        sensor_fusion->ReadSensors(); 
 
-        ++loop_count;
-        if( loop_count == kLoopsPerFusion ) {
-          loop_count = 0;
-          sensor_fusion->RunFusion();  // run the fusion routines every 25 ms
+        // run fusion routine according to loops_per_fuse_counter_
+        sensor_fusion->RunFusion();
 
-        }
- 
-        if ((millis() - last_print) > 1000) {
-          last_print += 1000;
+        //create and send output if fusion has produced new data
+        sensor_fusion->ProduceOutput();
+
+        //process any incoming commands
+        sensor_fusion->ProcessCommands();
+
+/*        if ((millis() - last_print_time) > 1000) {
+          last_print_time += 1000;
           Serial.printf("%lu,%f\n\r", millis(),sensor_fusion->GetHeadingDegrees());
           //sensor_fusion->RunControlAndOutput();
-
         }
-
-        /*      sfg.readSensors(
-                  &sfg, (uint16_t)sfg.loopcounter);  // Reads sensors, applies
-        HAL and                                               // does averaging
-        (if applicable)
-        //      debug_log("read sensors");
-              sfg.conditionSensorReadings(&sfg);  // magCal (magnetic
-        calibration) is part of this
-        //      debug_log("applied cal");
-              digitalWrite(
-                  DEBUG_OUTPUT_PIN, 0);  // toggle output pin each time through,
-        for debugging sfg.runFusion(&sfg);                // Run the actual
-        fusion algorithms digitalWrite( DEBUG_OUTPUT_PIN, 1);  // toggle output
-        pin each time through, for debugging
-        //      debug_log("fused");
-              // Serial.printf(" Algo took %ld us\n",
-        sfg.SV_9DOF_GBY_KALMAN.systick);
-      */
+*/
 //        sfg.applyPerturbation(
 //            &sfg);  // apply debug perturbation (if testing mode enabled)
                     //      debug_log("applied perturbation");

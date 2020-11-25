@@ -10,7 +10,7 @@
     NXP Sensor Fusion version 7 library algortihms.
 
     It is possible to directly interface with the library
-    methods contained in the C files, most of which are
+    methods contained in the C files, which are
     based on those provided by NXP in their version 7.20 release. 
 */
 
@@ -33,16 +33,16 @@ SensorFusion::SensorFusion(int8_t pin_i2c_sda, int8_t pin_i2c_scl) {
             // https://stackoverflow.com/questions/14114686/create-an-array-of-structure-using-new
             // which will allow adding arbitrary # of sensors.
 
-  InitializeControlPort();
+  InitializeControlSubsystem();
   InitializeStatusSubsystem();
   InitializeSensorFusionGlobals();
 
 }  // end SensorFusion()
 
-void SensorFusion::InitializeControlPort(void) {
+void SensorFusion::InitializeControlSubsystem(void) {
   initializeControlPort(control_subsystem_);  // configure pins and ports for
                                               // the control sub-system
-}  // end InitializeControlPort()
+}  // end InitializeControlSubsystem()
 
 void SensorFusion::InitializeStatusSubsystem(void) {
   initializeStatusSubsystem(
@@ -64,46 +64,72 @@ void SensorFusion::InitializeFusionEngine( ) {
 void SensorFusion::ReadSensors(void) {
     //Reads sensors.  Tracks how many invocations since last fusion of data, so
     //  sensors are read at various intervals (depending, e.g. on whether they have a fIFO)
-    ++loops_per_fuse_counter_;
-
+    // which is controlled by kLoopsPerMagRead, etc., in sensor_fusion_class.h
+    
     sfg_->readSensors(sfg_, loops_per_fuse_counter_);  // Reads sensors, applies HAL, removes -32768 
 
 }//end ReadSensors()
 
 void SensorFusion::RunFusion(void) {
-    //applies fusion algorithm to data accumulated in buffers
-    
-    sfg_->conditionSensorReadings(sfg_);  //Pre-processing; Magnetic calibration.
-    sfg_->runFusion(sfg_);                // Run fusion algorithms
-        
-    // Serial.printf(" Algo took %ld us\n", sfg.SV_9DOF_GBY_KALMAN.systick);
-    sfg_->loopcounter++;  // loop counter is used to "serialize" mag cal
+  // applies fusion algorithm to data accumulated in buffers
+
+  // only run fusion every kLoopsPerFusionCalc'th time through loop
+  if (loops_per_fuse_counter_ < kLoopsPerFusionCalc) {
+    ++loops_per_fuse_counter_;
+    return;
+  }
+
+  sfg_->conditionSensorReadings(sfg_);  // Pre-processing; Magnetic calibration.
+  sfg_->runFusion(sfg_);                // Run fusion algorithms
+
+  // Serial.printf(" Algo took %ld us\n", sfg.SV_9DOF_GBY_KALMAN.systick);
+  sfg_->loopcounter++;  // loop counter is used to "serialize" mag cal
                         // operations and blink LEDs to indicate status
-    // This loop
-    // should cycle at least four times for blink to operate
-    // correctly. TODO - is this the best way?
-    if (0 == sfg_->loopcounter % 4) {
-      sfg_->updateStatus(sfg_);  // make pending status updates visible
-    }
+  // This loop
+  // should cycle at least four times for blink to operate
+  // correctly. TODO - is this the best way?
+  if (0 == sfg_->loopcounter % 4) {
+    sfg_->updateStatus(sfg_);  // make pending status updates visible
+  }
 
-    sfg_->queueStatus(sfg_,NORMAL);  // assume NORMAL next pass through the loop
-    //this resets temporary error conditions (SOFT_FAULT)
-        
-    loops_per_fuse_counter_ = 0;    //reset counter that determines when sensors are read
+  // assume NORMAL status next pass through the loop
+  // this resets temporary error conditions (SOFT_FAULT)
+  sfg_->queueStatus(sfg_,NORMAL);  
 
-} // end RunFusion()
+  loops_per_fuse_counter_ = 1;  // reset loop counter
 
-void SensorFusion::RunControlAndOutput(void) {
-        //Make and send data to the Sensor Fusion Toolbox or whatever UART is connected to.
+}  // end RunFusion()
+
+void SensorFusion::ProduceOutput(void) {
+  // Make & send data to Sensor Fusion Toolbox or whatever UART is
+  // connected to.
+  if (loops_per_fuse_counter_ == 1) {       // only run if fusion has happened
+    sfg_->pControlSubsystem->stream(sfg_);  // create output packet
+    sfg_->pControlSubsystem->write(sfg_);   // send output packet
+  }
+
+}  // end ProduceOutput()
+
+void SensorFusion::ProcessCommands(void) {
         //process any incoming commands
-        sfg_->pControlSubsystem->stream(sfg_);  //create the output packet  
-        sfg_->pControlSubsystem->write(sfg_->pControlSubsystem);  //send the output packet
         sfg_->pControlSubsystem->readCommands(sfg_);
-}//end RunControlAndOutput()
+}//end ProcessCommands()
 
+//fetch the Compass Heading in degrees
 float SensorFusion::GetHeadingDegrees(void) {
+//TODO - make generic so it's not dependent on algorithm used
   return sfg_->SV_9DOF_GBY_KALMAN.fRhoPl;
 }  // end GetHeadingDegrees()
+
+//fetch the Pitch in degrees
+float SensorFusion::GetPitchDegrees(void) {
+  return sfg_->SV_9DOF_GBY_KALMAN.fThePl;
+}  // end GetPitchDegrees()
+
+//fetch the Roll in degrees
+float SensorFusion::GetRollDegrees(void) {
+  return sfg_->SV_9DOF_GBY_KALMAN.fPhiPl;
+}  // end GetRollDegrees()
 
 bool SensorFusion::InstallSensor( uint8_t sensor_i2c_addr, SensorType sensor_type ) {
 // connect to the sensors we will be using.  Accelerometer and magnetometer may

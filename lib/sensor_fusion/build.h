@@ -71,22 +71,23 @@ extern "C" {
 ///@}
 
 /// @name SensorParameters
-// The Output Data Rates (ODR) are set by the calls to *_Init() for each
-// physical sensor If a sensor has a FIFO, then it can be read once/fusion cycle; if not, then read more often
-#define GYRO_ODR_HZ 400     ///< (int) requested gyroscope ODR Hz
+// The Output Data Rates (ODR) are set by the calls to *_Init() for each physical sensor.
+// If a sensor has a FIFO, then it can be read once/fusion cycle; if not, then read more often
+#define GYRO_ODR_HZ     400 ///< (int) requested gyroscope ODR Hz
 #define ACCEL_ODR_HZ    200 ///< (int) requested accelerometer ODR Hz (overrides MAG_ODR_HZ for FXOS8700)
 #define MAG_ODR_HZ      200 ///< (int) requested magnetometer ODR Hz (overridden by ACCEL_ODR_HZ for FXOS8700)
-#define SENSOR_READ_RATE_HZ  200    //adjust according to the size of the FIFOs on sensors. If no FIFO (e.g. 
-//FXOS8700 magnetometer) then need to read at same rate as ODR.
-#define FUSION_HZ       40  ///< (int) actual rate of fusion algorithm execution and sensor FIFO reads
+#define LOOP_RATE_HZ     40 //adjust according to the size of the FIFOs on sensors. If no FIFO (e.g. 
+//FXOS8700 magnetometer) and don't want to skip any readings then need to read at same rate as ODR. 
+//If FIFO exists or willing to skip readings, then usually set same as FUSION_HZ. See also sensor_fusion_class.h
+#define FUSION_HZ       40  ///< (int) rate of fusion algorithm execution
 
 // Output data rate parameters
 #define MAXPACKETRATEHZ 40  //max rate at which data packets can practically be sent (e.g. to Fusion Toolbox)
 #define RATERESOLUTION 1000 //When throttling back on output rate, this is the resolution in ms
 
 //Specify which output method(s) to use for sending serial data packets and receiving commands
-#define F_USE_WIRELESS_UART     0x0000	///< 0x0001 to include, 0x0000 otherwise
-#define F_USE_WIRED_UART        0x0000	///< 0x0002 to include, 0x0000 otherwise
+#define F_USE_WIRELESS_UART     0x0001	///< 0x0001 to include, 0x0000 otherwise
+#define F_USE_WIRED_UART        0x0002	///< 0x0002 to include, 0x0000 otherwise
 
 //#define INCLUDE_DEBUG_FUNCTIONS // Comment this line to disable the ApplyPerturbation function
 

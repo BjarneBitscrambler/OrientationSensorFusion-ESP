@@ -38,11 +38,14 @@ class SensorFusion {
   void InitializeFusionEngine(void);
   void ReadSensors(void);
   void RunFusion(void);
-  void RunControlAndOutput(void);
+  void ProduceOutput(void);
+  void ProcessCommands(void);
   float GetHeadingDegrees(void);
+  float GetPitchDegrees(void);
+  float GetRollDegrees(void);
 
  private:
-  void InitializeControlPort(void);
+  void InitializeControlSubsystem(void);
   void InitializeStatusSubsystem(void);
   void InitializeSensorFusionGlobals(void);
 
@@ -52,11 +55,16 @@ class SensorFusion {
   PhysicalSensor *sensors_;              // up to 4 sensors
   uint8_t num_sensors_installed_ = 0;    //TODO calc this based on traversing sfg->pSensors->next till NULL
   
-  uint8_t loops_per_fuse_counter_ = 0;   //counts how many sensor reads have been done between each fusion
+  //following set the relationship between
+  //number of sensor reads and each execution of the fusion algorithm.
+  //Normally there is a 1:1 relationship (i.e. read, fuse, read, fuse,...)
+  //but other arrangements are possible (e.g. read, read, fuse, read, read,...)
+  //The rate at which main loop() executes reads is set by LOOP_RATE_HZ in build.h
+  uint8_t loops_per_fuse_counter_ = 0;   //counts how many times through loop have been done
   const uint8_t kLoopsPerMagRead = 1;     //how often a magnetometer read is performed
-  const uint8_t kLoopsPerAccelRead = 5;   //how often an accelerometer read is performed
-  const uint8_t kLoopsPerGyroRead = 5;    //how often a gyroscope read is performed
-  const uint8_t kLoopsPerFusionCalc = 5;  //how often to fuse. Usually the max of previous 3 constants.
+  const uint8_t kLoopsPerAccelRead = 1;   //how often an accelerometer read is performed
+  const uint8_t kLoopsPerGyroRead = 1;    //how often a gyroscope read is performed
+  const uint8_t kLoopsPerFusionCalc = 1;  //how often to fuse. Usually the max of previous 3 constants.
 
 };  // end SensorFusion
 
