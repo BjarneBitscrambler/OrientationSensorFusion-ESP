@@ -1,3 +1,17 @@
+
+/*! \file main.cc
+    \brief Example main program, demonstrating how to use SensorFusion class
+    This file creates a SensorFusion object, and runs a loop that produces
+    orientation data every 25ms. Output is possible in NXP SensorToolbox application
+    format, and also in user-defined format, depending on which functions are called.
+    Both Serial UART and WiFi output are supported.
+    Because this file is also being used for development of the fusion library, 
+    various features may be commented in/out in the latest version found on Github.
+    You may want to keep a local copy that doesn't get modified each time you 
+    refresh your local repository.
+
+*/
+
 #include <Arduino.h>
 #include <sstream>
 #include <string>
@@ -57,6 +71,7 @@ void setup() {
     Serial.begin(BOARD_DEBUG_UART_BAUDRATE); //initialize serial UART
     delay(200);
 
+//TODO can also use log_e, log_w, log_i() etc from esp32_hal-log.h but is not compatible with ESP8266?
   debug_log("waitasec...");  
   //delay not necessary - gives time to open a serial monitor
   delay(1000);
@@ -145,8 +160,6 @@ void loop() {
         tcp_client = server.available();  // check for incoming TCP clients
         if (tcp_client) {
           sensor_fusion->UpdateWiFiStream(&tcp_client);  
-          // Serial.print("New Client on ");
-          // Serial.println(client.localIP());
         }
       }
 #endif 
