@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*! \file calibration_storage.c
+/*! \file calibration_storage.cc
     \brief Provides functions to store calibration to NVM
 
     Written for use on Arduino-Espressif environment where EEPROM library available.

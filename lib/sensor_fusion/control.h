@@ -31,6 +31,8 @@
 extern "C" {
 #endif
 
+#define MAX_LEN_SERIAL_OUTPUT_BUF   255  // larger than the nominal 124 byte size for outgoing packets
+
 /// @name Control Port Function Type Definitions
 /// "write" "stream" and "readCommands" provide three control functions visible at the main()
 /// level.  These typedefs define the structure of those calls.
@@ -46,24 +48,26 @@ typedef void (streamData_t)(SensorFusionGlobals *sfg);
 /// for the library.  A C++-like typedef structure which includes executable methods
 /// for the subsystem is defined here.
 typedef struct ControlSubsystem {
-	quaternion_type DefaultQuaternionPacketType;	///< default quaternion transmitted at power on
-	volatile quaternion_type QuaternionPacketType;	///< quaternion type transmitted over UART
-	volatile uint8_t AngularVelocityPacketOn;	///< flag to enable angular velocity packet
-	volatile uint8_t DebugPacketOn;			///< flag to enable debug packet
-	volatile uint8_t RPCPacketOn;			///< flag to enable roll, pitch, compass packet
-	volatile uint8_t AltPacketOn;			///< flag to enable altitude packet
-	volatile int8_t  AccelCalPacketOn;              ///< variable used to coordinate accelerometer calibration
-    uint8_t         *serial_out_buf;        //buffer containing the output stream
-    uint16_t        bytes_to_send;          //how many bytes waiting to go out
-    const void *serial_port_;           //is cast to Serial * and used to output to the serial port
-    const void *tcp_client_;            //is cast to WiFiClient * and used to output to a connected TCP client
-    writePort_t
-        *write;  ///< function to write output buffer to the serial putput(s)
-    readCommand_t    *readCommands;                 //< function to check for incoming commands and process them
-    streamData_t     *stream;                       ///< function to create output data packets and place in buffer
+	quaternion_type DefaultQuaternionPacketType;	// default quaternion transmitted at power on
+	volatile quaternion_type QuaternionPacketType;	// quaternion type transmitted over UART
+	volatile uint8_t AngularVelocityPacketOn;	// flag to enable angular velocity packet
+	volatile uint8_t DebugPacketOn;			// flag to enable debug packet
+	volatile uint8_t RPCPacketOn;			// flag to enable roll, pitch, compass packet
+	volatile uint8_t AltPacketOn;			// flag to enable altitude packet
+	volatile int8_t  AccelCalPacketOn;      // variable used to coordinate accelerometer calibration
+    uint8_t         *serial_out_buf;        //buffer containing the output stream (data packet)
+    uint16_t        bytes_to_send;          //how many bytes in output stream waiting to go out
+    const void *serial_port;           //cast to Serial * and used to output to the serial port
+    const void *tcp_client;            //cast to WiFiClient * and used to output to a connected TCP client
+
+    writePort_t *write;  // function to write output buffer to the output(s)
+    readCommand_t *readCommands;  // function to check for incoming commands and process them
+    streamData_t *stream;  // function to create output data packets and place in buffer
 } ControlSubsystem;
 
-bool initializeControlPort(ControlSubsystem *pComm,const void *serial_port, const void *tcp_client);  ///< Call this once to initialize structures, ports, etc.
+bool initializeIOSubsystem(
+    ControlSubsystem *pComm, const void *serial_port,
+    const void *tcp_client);  // Initialize structures, ports, etc.
 
 //updates pointer to the TCP client. Call whenever new client connects or disconnects
 void UpdateTCPClient(ControlSubsystem *pComm,void *tcp_client);

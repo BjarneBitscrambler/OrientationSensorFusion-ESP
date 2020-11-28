@@ -14,8 +14,8 @@
  */
 
 /**
- * @file hal_i2c.c
- * @brief The hal_i2c.c file contains definitions for low-level interface functions
+ * @file hal_i2c.cc
+ * @brief Contains definitions for low-level interface functions
  *  for reading and writing data from/to sensor using I2C.
  */
 

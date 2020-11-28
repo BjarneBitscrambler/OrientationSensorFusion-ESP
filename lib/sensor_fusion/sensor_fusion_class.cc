@@ -34,17 +34,18 @@ SensorFusion::SensorFusion(int8_t pin_i2c_sda, int8_t pin_i2c_scl) {
             // https://stackoverflow.com/questions/14114686/create-an-array-of-structure-using-new
             // which will allow adding arbitrary # of sensors.
 
-  InitializeControlSubsystem();
+  InitializeInputOutputSubsystem();
   InitializeStatusSubsystem();
   InitializeSensorFusionGlobals();
 
 }  // end SensorFusion()
 
-bool SensorFusion::InitializeControlSubsystem( const Stream *serial_port, const Stream *tcp_client) {
-
-  return initializeControlPort(control_subsystem_, serial_port, tcp_client);  // configure pins and ports for
-                                              // the control sub-system
-}  // end InitializeControlSubsystem()
+bool SensorFusion::InitializeInputOutputSubsystem(const Stream *serial_port,
+                                                  const void *tcp_client
+                                                  ) {
+  return initializeIOSubsystem(control_subsystem_, serial_port,
+                               tcp_client);  
+}  // end InitializeInputOutputSubsystem()
 
 void SensorFusion::UpdateWiFiStream(void *tcp_client) {
   UpdateTCPClient(control_subsystem_, tcp_client);
@@ -115,6 +116,24 @@ void SensorFusion::ProduceToolboxOutput(void) {
   }
 
 }  // end ProduceToolboxOutput()
+
+//places data from buffer into Control subsystem's output buffer, and sends
+//it out via serial and/or wifi.  Any existing data in the output buffer 
+//that hasn't already been sent will be overwritten.
+//Returns true on success, false on problem such as data_length too long
+//for the transmit buffer.
+bool SensorFusion::SendArbitraryData(const char *buffer, uint16_t data_length) {
+  if (data_length > MAX_LEN_SERIAL_OUTPUT_BUF) {
+    return false;
+  }
+  char *out_buf = (char *)(sfg_->pControlSubsystem->serial_out_buf);
+  for (uint16_t i = 0; i < data_length; i++) {
+    out_buf[i] = buffer[i];
+  }
+  sfg_->pControlSubsystem->bytes_to_send = data_length;
+  sfg_->pControlSubsystem->write(sfg_);  // send output packet
+  return true;
+}  // end SendArbitraryData()
 
 void SensorFusion::ProcessCommands(void) {
         //process any incoming commands

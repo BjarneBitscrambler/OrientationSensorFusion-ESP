@@ -72,8 +72,6 @@ void setup() {
   Serial.print("TCP server started. Connect to ");
   Serial.print(myIP);
   Serial.println(" on port 23.");
-#else
-  Serial *tcp_client = NULL;
 #endif
 
   //initialize the I2C system at max clock rate supported by sensors
@@ -84,17 +82,23 @@ void setup() {
   //create our fusion engine instance
   sensor_fusion = new SensorFusion(PIN_I2C_SDA, PIN_I2C_SCL);
 
-  //Fusion system creates a data packet of sensor readings and algorithm results
-  //formatted for the NXP Sensor Toolbox program. If this is desired then call
-  //InitializeControlSubsystem() with pointer to a serial stream (e.g. &Serial)
+  //Fusion system can output arbitrary data & text, and accept incoming commands
+  //These happen over either a hardware serial link, or a WiFi TCP link.
+  //If this capability is desired then call InitializeInputOutputSubsystem()
+  //with pointer to a serial stream (e.g. &Serial)
   //that has been initialized earlier in main (>115200 baud recommended).
   //Output can also be directed to a TCP client connecting on port 23 - if this
-  //is desired, second parameter to InitializeControlSubsystem() is the 
-  //pointer to the WiFiClient object.  Pass a NULL for stream(s)
-  //aren't needed, or just call InitializeControlSubsystem() with no parameters.
-  //Note: to use the streams, the appropriate #define has to be set in build.h  
-//  if( ! sensor_fusion->InitializeControlSubsystem(&Serial, &tcp_client) ) {
-  if( ! sensor_fusion->InitializeControlSubsystem(NULL, &tcp_client) ) {
+  //is desired, second parameter to InitializeInputOutputSubsystem() is the 
+  //pointer to the WiFiClient object.  Pass a NULL for stream(s) that
+  //aren't needed, or just call InitializeInputOutputSubsystem() with no parameters.
+  //Note: to use the streams, the appropriate #define F_USE_WIRELESS_UART and/or
+  //#define F_USE_WIRED_UART has to be set in build.h
+  //The actual content sent on the streams is determined by calling 
+  //ProduceToolboxOutput() for Toolbox compatible data packets, or
+  //SendArbitraryOutput() for whatever you have placed in the Tx buffer. Using both
+  //calls is not recommended, as interpreting the Toolbox data amongst your data will
+  //be confusing.
+  if( ! (sensor_fusion->InitializeInputOutputSubsystem(&Serial, &tcp_client)) ) {
     debug_log("trouble initting Output and Control system");
   }
 
@@ -133,17 +137,19 @@ void loop() {
     unsigned long last_loop_time = millis();
     unsigned long last_print_time = millis();
 
+    char output_str[100];
+
     while (true) {
 #if F_USE_WIRELESS_UART
       if (!tcp_client) {
-        tcp_client = server.available();  // listen for incoming TCP clients
+        tcp_client = server.available();  // check for incoming TCP clients
         if (tcp_client) {
           sensor_fusion->UpdateWiFiStream(&tcp_client);  
           // Serial.print("New Client on ");
           // Serial.println(client.localIP());
         }
       }
-#endif
+#endif 
       if ((millis() - last_loop_time) > kLoopIntervalMs) {
         last_loop_time += kLoopIntervalMs; //keep executing the below periodically
         
@@ -153,27 +159,27 @@ void loop() {
         // run fusion routine according to loops_per_fuse_counter_
         sensor_fusion->RunFusion();
 
-        //create and send output if fusion has produced new data
-        sensor_fusion->ProduceToolboxOutput();
+        //create and send Toolbox format packet if fusion has produced new data
+        //This call is optional - if you don't want Toolbox packets, omit it
+//        sensor_fusion->ProduceToolboxOutput();
 
         //process any incoming commands
-        sensor_fusion->ProcessCommands();
-        
+        //This call is optional - if you don't need external control, omit it
+//        sensor_fusion->ProcessCommands();
+
         if ((millis() - last_print_time) > kPrintIntervalMs) {
           last_print_time += kPrintIntervalMs;
-          Serial.printf("%lu,\t%03.1f, %+5.1f, %+5.1f,\t%+4.0f, %+4.0f, %+4.0f,\t%+5.2f, %+5.2f, %+5.2f\n\r", millis(),
-                        sensor_fusion->GetHeadingDegrees(),
-                        sensor_fusion->GetPitchDegrees(),
-                        sensor_fusion->GetRollDegrees(),
-                        sensor_fusion->GetTurnRateDegPerS(),
-                        sensor_fusion->GetPitchRateDegPerS(),
-                        sensor_fusion->GetRollRateDegPerS(),
-                        sensor_fusion->GetAccelXGees(),
-                        sensor_fusion->GetAccelYGees(),
-                        sensor_fusion->GetAccelZGees()
-                        );
-        }
+          snprintf(output_str, 99, "%lu,%03.1f,%+5.1f,%+5.1f,%+4.0f\n\r",
+                   millis(), sensor_fusion->GetHeadingDegrees(),
+                   sensor_fusion->GetPitchDegrees(),
+                   sensor_fusion->GetRollDegrees(),
+                   sensor_fusion->GetTurnRateDegPerS());
 
+          if (!sensor_fusion->SendArbitraryData(output_str,
+                                                strlen(output_str))) {
+            debug_log("couldn't send output");
+          }
+        }
 //        sfg.applyPerturbation(
 //            &sfg);  // apply debug perturbation (if testing mode enabled)
                     //      debug_log("applied perturbation");

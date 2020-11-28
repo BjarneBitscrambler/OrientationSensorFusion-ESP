@@ -1,5 +1,5 @@
 
-/*! \file debug_print.c
+/*! \file debug_print.cc
     \brief defines function debug_print() that outputs to serial port
     Can disable these prints by compiling without defining ENABLE_DEBUG_LOG
 */
