@@ -9,7 +9,7 @@ The present software works with the NXP 9DOF sensor combination (magnetometer, a
 ## Background
 Orientation sensing using multi-mode sensors (e.g. accelerometer + gyroscope + magnetometer) has become quite accurate when coupled with the right sensor fusion software. My motivation for porting NXP's library is to create an orientation sensor for marine use, using off-the-shelf hardware and the Signal K / SensESP project (https://github.com/SignalK/SensESP) to provide orientation data (e.g. magnetic heading, roll, and pitch) on a vessel.
 
-An earlier version of NXP's sensor fusion library has been ported by AdaFruit for use with their sensors in the Arduino environment. A newer version of the NXP sensor fusion library (version 7.2) is available, and that is what the present project is using. This newer library has several improvements, including the ability to perform magnetic calibration while in use (as opposed to needing a separate software tool, as with the earlier fusion library).
+An earlier version of NXP's sensor fusion library has been ported by AdaFruit (Adafruit AHRS) for use with their sensors in the Arduino environment. A newer version of the NXP sensor fusion library (version 7.2) is available from NXP, and that is what the present project is using. This newer library has several improvements, including the ability to perform magnetic calibration while in use (as opposed to needing a separate software tool, as with the earlier fusion library).
 
 
 ## Where To Find...
@@ -25,7 +25,7 @@ To use this library follow these steps (some untested - let me know of any chang
 - create a local clone of this repository on your computer
 - setup the PlatformIO development environment
 - create a new PlatformIO project, selecting the *Board:* `Espressif ESP-WROVER-KIT` and *Framework:* `Arduino` (other ESP32 boards should work without changes; other Espressif CPUs like the ESP8266 may need some code adjustments - not tested)
-- copy `main.cpp` into your new PlatformIO project's `/src` folder
+- copy `main.cc` into your new PlatformIO project's `/src` folder
 - copy the `/lib/sensor_fusion` files into your new project's `/lib/sensor_fusion` folder
 - edit your new project's `platformio.ini` file for your specific board and environment. Use this project's `platformio.ini` file as an example.
 - edit `/lib/sensor_fusion/board.h` to reflect your particular hardware. The I2C pins connecting your processor to your sensor ICs will likely be different, and you may also need to change the I2C addresses that the ICs are configured for.
@@ -39,7 +39,7 @@ The out-of-the-box software is configured to send data packets containing the se
 The **Toolbox** when working should show a graphic of a PCB that rotates on the screen in synchronization with motion of your own board. If there is no motion at all, then check that the data packets are arriving on the expected COM: port of your computer. A terminal program (like HyperTerminal or PuTTY) can help display traffic on a COM: port. If the **Toolbox** shows motion but it is jerky or reversed from the actual board motion, then likely one or more of your board's axes are not oriented according to how the fusion software expects. Different sensor board manufacturers will have placed the sensor ICs in orientations particular to their own needs.  The file `hal_axis_remap.c` is used to invert or swap axes as needed to conform to what the fusion algorithm expects. For more details, see that file, and also NXP's Application Note AN5017 (Coordinate Systems).
 
 ### WiFi Data Streaming
-Because testing an orientation sensor with a USB cable tethering it to your development computer is a pain, the software also supports streaming the data over WiFi. In the `main.cpp setup()` code, a WiFi AP (Access Point) is started, which means the ESP processor will broadcast it's SSID and you should be able to connect to it with your development system, using the password you provide in `main.cpp`. Once a WiFi connection is established, you can open a TCP connection to port 23 of the ESP and the orientation data will then stream over your TCP connection.  A few hints:
+Because testing an orientation sensor with a USB cable tethering it to your development computer is a pain, the software also supports streaming the data over WiFi. In the `main.cc setup()` code, a WiFi AP (Access Point) is started, which means the ESP processor will broadcast it's SSID and you should be able to connect to it with your development system, using the password you provide in `main.cc`. Once a WiFi connection is established, you can open a TCP connection to port 23 of the ESP and the orientation data will then stream over your TCP connection.  A few hints:
 - view the ESP's serial output (e.g. using that USB connection) to find out what IP address the ESP has assigned itself
 - on a linux system, an easy way to make and test the connection is the command `telnet 192.168.4.1`, where you replace the example IP address with the one the ESP has indicated in it's serial output. 
 - Once you have noted the IP address, it shouldn't change between reboots of the ESP.
@@ -50,5 +50,5 @@ I did earlier try having the ESP connect as a client to our WiFi router, rather 
 Using WiFi (even when ESP is acting as AP) *does* introduce noticeable lag in the Toolbox graphic response, compared to when wired via USB. It looks like about a 200 ms lag on my system.
 
 ### Additional Debugging
-You can use the GPIO output that toggles each time through the data collection and sending loop to confirm whether your ESP is collecting and transmitting data regularly. Using the default software, the output should toggle every 25 ms (i.e. a 20 Hz square wave). See `main.cpp` for details.
+You can use the GPIO output that toggles each time through the data collection and sending loop to confirm whether your ESP is collecting and transmitting data regularly. Using the default software, the output should toggle every 25 ms (i.e. a 20 Hz square wave). See `main.cc` for details.
 
