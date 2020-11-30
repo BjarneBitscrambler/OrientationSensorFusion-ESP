@@ -29,7 +29,6 @@ void fInitializeAccelCalibration(AccelCalibration *pthisAccelCal,
     *AccelCalPacketOn = MAX_ACCEL_CAL_ORIENTATIONS;
 
     // check to see if the stored accelerometer calibration has been erased
-    // the standard value for erased flash is 0xFF in each byte but for portability check against 0x12345678
 #ifndef SIMULATION
     float   *pFlash;    // pointer to flash float words
     float   cal_vals[21];    // cal values from flash

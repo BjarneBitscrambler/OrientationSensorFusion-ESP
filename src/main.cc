@@ -126,6 +126,10 @@ void setup() {
                                SensorType::kAccelerometer) ) {
     debug_log("trouble installing Accelerometer");
   }
+  if(! sensor_fusion->InstallSensor(BOARD_ACCEL_MAG_I2C_ADDR,
+                               SensorType::kThermometer) ) {
+    debug_log("trouble installing Thermometer");
+  }
   if(! sensor_fusion->InstallSensor(BOARD_GYRO_I2C_ADDR,
                                SensorType::kGyroscope) ) {
     debug_log("trouble installing Gyroscope");
@@ -176,22 +180,25 @@ void loop() {
         //This call is optional - if you don't want Toolbox packets, omit it
 //        sensor_fusion->ProduceToolboxOutput();
 
-        //process any incoming commands
+        //Process any incoming commands arriving over serial or TCP port.
+        //See control_input.c for list of available commands.
         //This call is optional - if you don't need external control, omit it
-//        sensor_fusion->ProcessCommands();
+        sensor_fusion->ProcessCommands();
 
         if ((millis() - last_print_time) > kPrintIntervalMs) {
           last_print_time += kPrintIntervalMs;
-          snprintf(output_str, 99, "%lu,%03.1f,%+5.1f,%+5.1f,%+4.0f\n\r",
+          snprintf(output_str, 99, "%lu,%03.1f,%+5.1f,%+5.1f,%5.1f,%+4.0f\n\r",
                    millis(), sensor_fusion->GetHeadingDegrees(),
                    sensor_fusion->GetPitchDegrees(),
                    sensor_fusion->GetRollDegrees(),
+                   sensor_fusion->GetTemperatureC(),
                    sensor_fusion->GetTurnRateDegPerS());
 
-          if (!sensor_fusion->SendArbitraryData(output_str,
+         if (!sensor_fusion->SendArbitraryData(output_str,
                                                 strlen(output_str))) {
             debug_log("couldn't send output");
           }
+
         }
 //        sfg.applyPerturbation(
 //            &sfg);  // apply debug perturbation (if testing mode enabled)
@@ -199,6 +206,6 @@ void loop() {
 
 //        digitalWrite(DEBUG_OUTPUT_PIN, i % 2);  // toggle pin for debugging
 
-      }//end of loop that reads sensors and runs fusion as needed
-    }//end while(true)
-} // end loop()
+      }  // end of loop that reads sensors and runs fusion as needed
+    }  // end while(true)
+}  // end loop()

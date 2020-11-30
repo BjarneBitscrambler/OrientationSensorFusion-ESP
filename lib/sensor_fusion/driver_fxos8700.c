@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright (c) 2016-2017 NXP
+ * Copyright (c) 2020 Bjarne Hansen
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -131,19 +132,25 @@ const registerwritelist_t   FXOS8700_Initialization[] =
 // sfg = pointer to top level data structure for sensor fusion
 
 int8_t FXOS8700_Accel_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg) {
-    //Use the same init function for both magnetometer and accelererometer - it will
-    //end up being called twice, but that's OK
+    //Use the same init function for thermometer, magnetometer and accelererometer - it will
+    //end up being called three times, but that's OK
     //TODO - can move the accel stuff in here, and mag stuff following...
   return FXOS8700_Init(sensor, sfg);
 }
+
 int8_t FXOS8700_Mag_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg) {
-    //Use the same init function for both magnetometer and accelererometer - it will
-    //end up being called twice, but that's OK
+    //Use the same init function for thermometer, magnetometer and accelererometer - it will
+    //end up being called three times, but that's OK
   return FXOS8700_Init(sensor, sfg);
 }
 
-int8_t FXOS8700_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
-{
+int8_t FXOS8700_Therm_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg) {
+    //Use the same init function for thermometer, magnetometer and accelererometer - it will
+    //end up being called three times, but that's OK
+  return FXOS8700_Init(sensor, sfg);
+}
+
+int8_t FXOS8700_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg) {
     int32_t status;
     uint8_t reg;
 
@@ -182,19 +189,17 @@ int8_t FXOS8700_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
 #endif
 
     return (status);
-}
+} // end FXOS8700_Init()
 
 #if F_USING_ACCEL
-int8_t FXOS8700_Accel_Read(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
-{
+int8_t FXOS8700_Accel_Read(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg) {
     uint8_t                     I2C_Buffer[6 * ACCEL_FIFO_SIZE];    // I2C read buffer
     int32_t                     status;         // I2C transaction status
     int8_t                      j;              // scratch
     uint8_t                     fifo_packet_count;
     int16_t                     sample[3];
 
-    if(!(sensor->isInitialized & F_USING_ACCEL))
-    {
+    if(!(sensor->isInitialized & F_USING_ACCEL)) {
        return SENSOR_ERROR_INIT;
     }
 
@@ -253,8 +258,7 @@ int8_t FXOS8700_Accel_Read(struct PhysicalSensor *sensor, SensorFusionGlobals *s
 
 #if F_USING_MAG
 // read FXOS8700 magnetometer over I2C
-int8_t FXOS8700_Mag_Read(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
-{
+int8_t FXOS8700_Mag_Read(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg) {
     uint8_t                     I2C_Buffer[6];  // I2C read buffer
     int32_t                     status;         // I2C transaction status
     int16_t                     sample[3];
@@ -278,27 +282,45 @@ int8_t FXOS8700_Mag_Read(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg
     }
     return status;
 }//end FXOS8700_ReadMagData()
-#endif
-// This is the composite read function that handles both accel and mag portions of the FXOS8700
+#endif  //F_USING_MAG
 
+// read temperature register over I2C
+int8_t FXOS8700_Therm_Read(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg) {
+    int8_t                      I2C_Buffer;     // I2C read buffer
+    int32_t                     status;         // I2C transaction status
+
+    if(!(sensor->isInitialized)) {
+        return SENSOR_ERROR_INIT;
+    }
+
+    // read the Temperature register 0x51
+    FXOS8700_DATA_READ[0].readFrom = FXOS8700_TEMP;
+    FXOS8700_DATA_READ[0].numBytes = 1;
+    status =  Sensor_I2C_Read(&sensor->deviceInfo, sensor->addr, FXOS8700_DATA_READ, (uint8_t*)(&I2C_Buffer) );
+    if (status==SENSOR_ERROR_NONE) {
+        // convert the byte to temperature and place in sfg structure
+        sfg->Temp.temperatureC = (float)I2C_Buffer * 0.96; //section 14.3 of manual says 0.96 degC/LSB
+    }
+    return status;
+}//end FXOS8700_Therm_Read()
+
+// This is the composite read function that handles both accel and mag portions of the FXOS8700
 // It returns the first failing status flag
-int8_t FXOS8700_Read(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
-{
+int8_t FXOS8700_Read(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg) {
     int8_t  sts1 = 0;
     int8_t  sts2 = 0;
+    int8_t  sts3 = 0;
 #if F_USING_ACCEL
         sts1 = FXOS8700_Accel_Read(sensor, sfg);
 #endif
 
 #if F_USING_MAG
         sts2 = FXOS8700_Mag_Read(sensor, sfg);
+        sts3 = FXOS8700_Therm_Read(sensor, sfg);
 #endif
 
-    if (sts1)
-        return (sts1);
-    else
-        return (sts2);
-}
+    return (sts1 + sts2 + sts3);
+} // end FXOS8700_Read()
 
 // Each entry in a RegisterWriteList is composed of: register address, value to write, bit-mask to apply to write (0 enables)
 const registerwritelist_t   FXOS8700_FULL_IDLE[] =
@@ -313,8 +335,7 @@ const registerwritelist_t   FXOS8700_FULL_IDLE[] =
 // If you want that functionality, you can write your own using the initialization
 // function in this file as a starting template.  We've chosen not to cover all
 // permutations in the interest of simplicity.
-int8_t FXOS8700_Idle(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
-{
+int8_t FXOS8700_Idle(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg) {
     int32_t     status;
     if(sensor->isInitialized == (F_USING_ACCEL|F_USING_MAG)) {
         status = Sensor_I2C_Write_List(&sensor->deviceInfo, sensor->addr, FXOS8700_FULL_IDLE );
@@ -329,4 +350,4 @@ int8_t FXOS8700_Idle(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
       return SENSOR_ERROR_INIT;
     }
     return status;
-}
+} // end FXOS8700_Idle()

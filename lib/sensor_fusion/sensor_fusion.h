@@ -221,6 +221,14 @@ struct MagSensor
 	int16_t iCountsPeruT;			///< counts per uT
 };
 
+/// \brief The TempSensor structure stores raw temperature readings
+///
+/// This may come from an FXOS8700, for example.
+struct TempSensor
+{
+	float temperatureC;			// temperature in Celsius
+};
+
 /// \brief The GyroSensor structure stores raw and processed measurements for a 3-axis gyroscope.
 ///
 /// The GyroSensor structure stores raw and processed measurements, as well as metadata
@@ -487,6 +495,8 @@ typedef struct SensorFusionGlobals
 #if     F_USING_GYRO
 	struct GyroSensor 	Gyro;                   ///< gyro storage
 #endif
+    struct TempSensor Temp;					//temperature storage
+
         ///@}
         ///@{
         /// @name FusionSpecificStructures

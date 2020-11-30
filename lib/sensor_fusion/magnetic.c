@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
  * Copyright 2016-2017 NXP
+ * Copyright 2020 Bjarne Hansen
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -42,7 +43,6 @@ void fInitializeMagCalibration(struct MagCalibration *pthisMagCal,
         pthisMagBuffer->tanarray[i] = (int16_t) (100.0F * tanf(PI * (-0.5F + (float) (i + 1) / MAGBUFFSIZEX)));
 
     // check to see if the stored magnetic calibration has been erased
-    // the standard value for erased flash is 0xFF in each byte but for portability check against 0x12345678
 #ifndef SIMULATION
     float   *pFlash;    // pointer to flash float words
     float   cal_vals[16];    // cal values from flash
@@ -85,10 +85,9 @@ void fInitializeMagCalibration(struct MagCalibration *pthisMagCal,
     pthisMagCal->i10ElementSolverTried = false;
 
     return;
-}
+} // end fInitializeMagCalibration()
 
-// function updates the magnetic measurement buffer with most recent magnetic data (typically 200Hz)
-
+// function updates the magnetic measurement buffer with most recent magnetic data
 // the uncalibrated measurements iBs are stored in the buffer but the calibrated measurements iBc are used for indexing.
 void iUpdateMagBuffer(struct MagBuffer *pthisMagBuffer, struct MagSensor *pthisMag,
                       int32_t loopcounter)
@@ -192,7 +191,7 @@ void iUpdateMagBuffer(struct MagBuffer *pthisMagBuffer, struct MagSensor *pthisM
     }                   // end case 3
 
     // case 4: buffer is not full and this bin has a measurement: over-write if close or try to slot in
-    // elsewhere if not close to the other measurements so as to create a mesh at power up
+    // elsewhere if not close to the other measurements so as to create a mesh
     if ((pthisMagBuffer->iMagBufferCount < MAXMEASUREMENTS) &&
         (pthisMagBuffer->index[j][k] != -1))
     {
@@ -281,7 +280,7 @@ void iUpdateMagBuffer(struct MagBuffer *pthisMagBuffer, struct MagSensor *pthisM
 
     // this line should be unreachable
     return;
-}
+} // end iUpdateMagBuffer()
 
 // function maps the uncalibrated magnetometer data fBs (uT) onto calibrated averaged data fBc (uT), iBc (counts)
 void fInvertMagCal(struct MagSensor *pthisMag, struct MagCalibration *pthisMagCal)
@@ -290,13 +289,13 @@ void fInvertMagCal(struct MagSensor *pthisMag, struct MagCalibration *pthisMagCa
     float   ftmp[3];    // temporary array
     int8_t    i;          // loop counter
 
-    // remove the computed hard iron offsets (uT): ftmp[]=fBs[]-V[]
+    // remove the computed hard iron offsets (uT): ftmp[]=fBs[]-fV[]
     for (i = CHX; i <= CHZ; i++)
     {
         ftmp[i] = pthisMag->fBs[i] - pthisMagCal->fV[i];
     }
 
-    // remove the computed soft iron offsets (uT and counts): fBc=inv(W)*(fBs[]-V[])
+    // remove the computed soft iron offsets (uT and counts): fBc=inv(W)*(fBs[]-fV[])
     for (i = CHX; i <= CHZ; i++)
     {
         pthisMag->fBc[i] = pthisMagCal->finvW[i][CHX] *
@@ -309,7 +308,7 @@ void fInvertMagCal(struct MagSensor *pthisMag, struct MagCalibration *pthisMagCa
     }
 
     return;
-}
+} // end fInvertMagCal()
 
 // function runs the magnetic calibration
 void fRunMagCalibration(struct MagCalibration *pthisMagCal, struct MagBuffer *pthisMagBuffer,
@@ -439,7 +438,7 @@ void fRunMagCalibration(struct MagCalibration *pthisMagCal, struct MagBuffer *pt
         pthisMagCal->fFitErrorpc += 1.0F / ((float) FUSION_HZ * FITERRORAGINGSECS);
 
     return;
-}
+} // end fRunMagCalibration()
 
 // 4 element calibration using 4x4 matrix inverse
 void fUpdateMagCalibration4Slice(struct MagCalibration *pthisMagCal,
@@ -670,7 +669,7 @@ void fUpdateMagCalibration4Slice(struct MagCalibration *pthisMagCal,
     }                   // end of time slice MAGBUFFSIZEX+2
 
     return;
-}
+} // end fUpdateMagCalibration4Slice()
 
 // 7 element calibration using direct eigen-decomposition
 void fUpdateMagCalibration7Slice(struct MagCalibration *pthisMagCal,
@@ -957,7 +956,7 @@ void fUpdateMagCalibration7Slice(struct MagCalibration *pthisMagCal,
     }                   // end of time slice MAGBUFFSIZEX * MAGBUFFSIZEY + 24
 
     return;
-}
+} // end fUpdateMagCalibration7Slice()
 
 // 10 element calibration using direct eigen-decomposition
 void fUpdateMagCalibration10Slice(struct MagCalibration *pthisMagCal,
@@ -1390,7 +1389,7 @@ void fUpdateMagCalibration10Slice(struct MagCalibration *pthisMagCal,
     }   // end of time slice MAGBUFFSIZEX * MAGBUFFSIZEY + 53
 
     return;
-}
+} // end fUpdateMagCalibration10Slice()
 
 // 4 element calibration using 4x4 matrix inverse
 void fComputeMagCalibration4(struct MagCalibration *pthisMagCal,
@@ -1585,7 +1584,7 @@ void fComputeMagCalibration4(struct MagCalibration *pthisMagCal,
     pthisMagCal->ftrB *= DEFAULTB;
 
     return;
-}
+} // end fComputeMagCalibration4()
 
 // 7 element calibration using direct eigen-decomposition
 void fComputeMagCalibration7(struct MagCalibration *pthisMagCal,
@@ -1619,7 +1618,7 @@ void fComputeMagCalibration7(struct MagCalibration *pthisMagCal,
         }
     }
 
-    // add megnetic buffer entries into product matrix fmatA
+    // add magnetic buffer entries into product matrix fmatA
     iCount = 0;
     for (j = 0; j < MAGBUFFSIZEX; j++)
     {
@@ -1748,7 +1747,7 @@ void fComputeMagCalibration7(struct MagCalibration *pthisMagCal,
     }
 
     return;
-}
+} // end fComputeMagCalibration7()
 
 // 10 element calibration using direct eigen-decomposition
 void fComputeMagCalibration10(struct MagCalibration *pthisMagCal,
@@ -1989,5 +1988,5 @@ void fComputeMagCalibration10(struct MagCalibration *pthisMagCal,
     }
 
     return;
-}
+} // end fComputeMagCalibration10()
 #endif

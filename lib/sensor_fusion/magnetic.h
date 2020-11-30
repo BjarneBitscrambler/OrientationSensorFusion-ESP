@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
  * Copyright 2016-2017 NXP
+ * Copyright 2020 Bjarne Hansen
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -28,8 +29,8 @@ extern "C" {
 #if F_USING_MAG
 /// @name Magnetic Calibration Constants
 ///@{
-#define MAGBUFFSIZEX 14				///< x dimension in magnetometer buffer (12x24 equals 288 elements)
-#define MAGBUFFSIZEY (2 * MAGBUFFSIZEX)		///< y dimension in magnetometer buffer (12x24 equals 288 elements)
+#define MAGBUFFSIZEX 14				///< x dimension in magnetometer buffer (14x28 equals 392 elements)
+#define MAGBUFFSIZEY (2 * MAGBUFFSIZEX)		///< y dimension in magnetometer buffer (14x28 equals 392 elements)
 #define MINMEASUREMENTS4CAL 110			///< minimum number of measurements for 4 element calibration
 #define MINMEASUREMENTS7CAL 220			///< minimum number of measurements for 7 element calibration
 #define MINMEASUREMENTS10CAL 330		///< minimum number of measurements for 10 element calibration
@@ -86,8 +87,8 @@ struct MagCalibration
 	int8_t iInitiateMagCal;			        ///< flag to start a new magnetic calibration
 	int8_t iMagBufferReadOnly;		        ///< flag to denote that the magnetic measurement buffer is temporarily read only
 	int8_t i4ElementSolverTried;		        ///< flag to denote at least one attempt made with 4 element calibration
-	int8_t i7ElementSolverTried;		        ///< flag to denote at least one attempt made with 4 element calibration
-	int8_t i10ElementSolverTried;		        ///< flag to denote at least one attempt made with 4 element calibration
+	int8_t i7ElementSolverTried;		        ///< flag to denote at least one attempt made with 7 element calibration
+	int8_t i10ElementSolverTried;		        ///< flag to denote at least one attempt made with 10 element calibration
 };
 
 

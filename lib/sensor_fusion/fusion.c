@@ -365,7 +365,6 @@ void fInit_9DOF_GBY_KALMAN(struct SV_9DOF_GBY_KALMAN *pthisSV, struct AccelSenso
     }
 
     // check to see if a gyro calibration exists in flash
-    // the standard value for erased flash is 0xFF in each byte but for portability check against 0x12345678
 #ifndef SIMULATION
     float   pFlash[3];    // pointer to flash float words
     if (GetGyroCalibrationFromNVM(pFlash))

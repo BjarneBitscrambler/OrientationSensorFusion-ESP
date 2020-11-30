@@ -179,6 +179,11 @@ float SensorFusion::GetRollDegrees(void) {
   return -(sfg_->SV_9DOF_GBY_KALMAN.fThePl);
 }  // end GetRollDegrees()
 
+//fetch the Temperature in degrees C
+float SensorFusion::GetTemperatureC(void) {
+  return sfg_->Temp.temperatureC;
+}  // end GetRollDegrees()
+
 float SensorFusion::GetTurnRateDegPerS(void) {
   return sfg_->SV_9DOF_GBY_KALMAN.fOmega[2];
 }//end GetTurnRateDegPerS()
@@ -240,10 +245,16 @@ bool SensorFusion::InstallSensor(uint8_t sensor_i2c_addr,
                             kLoopsPerGyroRead, NULL, FXAS21002_Init, FXAS21002_Read);
         ++num_sensors_installed_;
         break;
-    case SensorType::kBarometer:
     case SensorType::kThermometer:
-        // TODO define some access functions for these
-        // TODO add temperature/barometer sensor
+        //use the thermometer built into FXOS8700. Not precise nor calibrated, but OK.
+        sfg_->installSensor(sfg_, &sensors_[num_sensors_installed_],
+                            sensor_i2c_addr, kLoopsPerThermRead, NULL,
+                            FXOS8700_Therm_Init, FXOS8700_Therm_Read);
+        ++num_sensors_installed_;
+        break;
+    case SensorType::kBarometer:
+        // TODO define some access functions for this
+        // TODO add barometer sensor
         break;
     default:
         // unrecognized sensor type

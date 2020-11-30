@@ -47,11 +47,13 @@ typedef struct PhysicalSensor PhysicalSensor;
 /// the SensorFusionGlobals object.
 int8_t FXOS8700_Accel_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXOS8700_Mag_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+int8_t FXOS8700_Therm_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXOS8700_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXAS21002_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 
 int8_t FXOS8700_Accel_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXOS8700_Mag_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+int8_t FXOS8700_Therm_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXOS8700_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXAS21002_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 

@@ -54,6 +54,7 @@ class SensorFusion {
   float GetTurnRateDegPerS(void);
   float GetPitchRateDegPerS(void);
   float GetRollRateDegPerS(void);
+  float GetTemperatureC(void);
 
  private:
   void InitializeStatusSubsystem(void);
@@ -74,6 +75,8 @@ class SensorFusion {
   // LOOP_RATE_HZ in build.h
   uint8_t loops_per_fuse_counter_ =
       0;  // counts how many times through loop have been done
+  const uint8_t kLoopsPerThermRead =
+      1;  // how often a thermometer read is performed
   const uint8_t kLoopsPerMagRead =
       1;  // how often a magnetometer read is performed
   const uint8_t kLoopsPerAccelRead =
