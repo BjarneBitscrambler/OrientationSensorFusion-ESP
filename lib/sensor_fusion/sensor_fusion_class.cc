@@ -24,9 +24,8 @@
 #include "sensor_fusion.h"
 #include "status.h"
 
-// Configures the I2C connection to the sensors.
 // Initializes variables and the various subsystems,
-SensorFusion::SensorFusion(int8_t pin_i2c_sda, int8_t pin_i2c_scl) {
+SensorFusion::SensorFusion() {
   sfg_ = new SensorFusionGlobals();
   control_subsystem_ = new ControlSubsystem;
   status_subsystem_ = new StatusSubsystem;
@@ -71,8 +70,9 @@ void SensorFusion::InitializeSensorFusionGlobals(void) {
 
 }  // end InitializeSensorFusionGlobals()
 
+// Configures the I2C connection to the sensors.
 // Initialize the sensors and set status to Normal for start.
-void SensorFusion::InitializeFusionEngine() {
+void SensorFusion::Begin() {
   sfg_->initializeFusionEngine(
       sfg_);                      // Initialize sensors and magnetic calibration
   sfg_->setStatus(sfg_, NORMAL);  // Set status state to NORMAL

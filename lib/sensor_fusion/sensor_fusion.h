@@ -525,7 +525,7 @@ typedef struct SensorFusionGlobals
         ///@{
         /// @name FunctionPointers
         /// Function pointers (the SF library external interface)
-	installSensor_t 	*installSensor;         ///< function for installing a new sensor into t
+	installSensor_t 	*installSensor;         ///< function for installing a new sensor
 	initializeFusionEngine_t *initializeFusionEngine ;  ///< set sensor fusion structures to initial values
 	applyPerturbation_t     *applyPerturbation ;	///< apply step function for testing purposes
 	readSensors_t		*readSensors;		///< read all physical sensors

@@ -15,6 +15,7 @@
 
 #include "control.h"
 #include "fusion.h"
+#include "hal_i2c.h"
 #include "hal_timer.h"
 #include "status.h"
 
@@ -95,9 +96,10 @@ void initSensorFusionGlobals(SensorFusionGlobals *sfg,
 #if F_USING_PRESSURE
     sfg->Pressure.iWhoAmI = 0;
 #endif
-}
+} // end initSensorFusionGlobals()
+
 /// installSensor is used to instantiate a physical sensor driver into the
-/// sensor fusion system.
+/// sensor fusion system. It doesn't actually communicate with the sensor.
 /// This function is normally invoked via the "sfg." global pointer.
 int8_t installSensor(
                      SensorFusionGlobals *sfg,  ///< top level fusion structure
@@ -134,7 +136,7 @@ int8_t installSensor(
     {
         return (1);
     }
-}
+} // end installSensor()
 
 // The initializeSensors function traverses the linked list of physical sensor
 // types and calls the initialization function for each one.
@@ -149,7 +151,7 @@ int8_t initializeSensors(SensorFusionGlobals *sfg)
         if (status == 0) status = s;            // will return 1st error flag, but try all sensors
     }
     return (status);
-}
+} // end initializeSensors()
 
 // process<Sensor>Data routines do post processing for HAL and averaging.  They
 // are called from the readSensors() function below.
@@ -187,7 +189,7 @@ void processAccelData(SensorFusionGlobals *sfg)
                        &(sfg->Accel),
                        &(sfg->pControlSubsystem->AccelCalPacketOn));
     return;
-}
+} // end processAccelData()
 #endif
 
 #if F_USING_MAG
@@ -225,7 +227,7 @@ void processMagData(SensorFusionGlobals *sfg)
                            sfg->loopcounter);
 
     return;
-}
+} // end processMagData()
 #endif
 
 #if F_USING_GYRO
@@ -256,7 +258,7 @@ void processGyroData(SensorFusionGlobals *sfg)
         }
     }
     return;
-}
+} // end processGyroData()
 #endif
 
 /// readSensors traverses the linked list of physical sensors, calling the
@@ -283,7 +285,7 @@ int8_t readSensors(
     }
     if (status==SENSOR_ERROR_INIT) sfg->setStatus(sfg, HARD_FAULT);  // Never returns
     return (status);
-}
+} // end readSensors()
 
 /// conditionSensorReadings() transforms raw software FIFO readings into forms that
 /// can be consumed by the sensor fusion engine.  This include sample averaging
@@ -303,7 +305,7 @@ void conditionSensorReadings(SensorFusionGlobals *sfg) {
     if (sfg->Gyro.isEnabled) processGyroData(sfg);
 #endif
     return;
-}
+} // end conditionSensorReadings()
 
 void zeroArray(StatusSubsystem *pStatus, void* data, uint16_t size, uint16_t numElements, uint8_t check) {
   uint16_t i;
@@ -346,7 +348,7 @@ void zeroArray(StatusSubsystem *pStatus, void* data, uint16_t size, uint16_t num
     }
     return;
   }
-}
+} // end zeroArray()
 
 /// Function to clear FIFO at the end of each fusion computation
 void clearFIFOs(SensorFusionGlobals *sfg) {
@@ -365,7 +367,7 @@ void clearFIFOs(SensorFusionGlobals *sfg) {
     sfg->Gyro.iFIFOCount=0;
     sfg->Gyro.iFIFOExceeded = false;
 #endif
-}
+} // end clearFIFOs()
 
 /// runFusion the top level call that actually runs the sensor fusion.
 /// This is a utility function which manages the various defines in build.h.
@@ -452,10 +454,10 @@ void runFusion(SensorFusionGlobals *sfg)
                  pSV_9DOF_GBY_KALMAN, pAccel, pMag, pGyro,
                  pPressure, pMagCal);
     clearFIFOs(sfg);
-}
+} // end runFusion()
 
 /// This function is responsible for initializing the system prior to starting
-/// the main fusion loop.
+/// the main fusion loop. I2C is initted, sensors configured, calibrations loaded.
 /// This function is normally invoked via the "sfg." global pointer.
 void initializeFusionEngine(SensorFusionGlobals *sfg)
 {
@@ -463,12 +465,10 @@ void initializeFusionEngine(SensorFusionGlobals *sfg)
     struct ControlSubsystem    *pComm;
     pComm = sfg->pControlSubsystem;
 
-    // Configure the systick timer and wait 50ms to avoid a race condition
-    // with the sensors after power on (legacy NXP code - unsure if needed)
-    // SystickTimerConfigure(); unneeded with ESP processors
-    SystickDelayMillis(50);
-
     sfg->setStatus(sfg, INITIALIZING);
+    if( ! I2CInitialize(PIN_I2C_SDA, PIN_I2C_SCL) ) {
+        sfg->setStatus(sfg, HARD_FAULT);  // Never returns
+    }
     status = initializeSensors(sfg);
     if (status!=SENSOR_ERROR_NONE) {  // fault condition found
         sfg->setStatus(sfg, HARD_FAULT);  // Never returns
@@ -502,7 +502,7 @@ void initializeFusionEngine(SensorFusionGlobals *sfg)
     sfg->setStatus(sfg, NORMAL);
 
     clearFIFOs(sfg);
-}
+} // end initializeFusionEngine()
 
 void conditionSample(int16_t sample[3])
 {
@@ -515,7 +515,7 @@ void conditionSample(int16_t sample[3])
     if (sample[CHX] == -32768) sample[CHX]++;
     if (sample[CHY] == -32768) sample[CHY]++;
     if (sample[CHZ] == -32768) sample[CHZ]++;
-}
+} // end conditionSample()
 
 void addToFifo(union FifoSensor *sensor, uint16_t maxFifoSize, int16_t sample[3])
 {
@@ -536,5 +536,5 @@ void addToFifo(union FifoSensor *sensor, uint16_t maxFifoSize, int16_t sample[3]
         //there is no room for a new sample
         sensor->Accel.iFIFOExceeded += 1;
     }
-}
+} // end addToFifo()
 

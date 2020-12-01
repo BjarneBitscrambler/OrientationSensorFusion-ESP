@@ -24,6 +24,22 @@
 #include "driver_sensors_types.h"
 #include "hal_i2c.h"
 
+
+/**************************************************************************/
+/*!
+    @brief  Initialize the I2C system at max clock rate supported by sensors.
+    pin_sda and pin_scl indicate the pin numbers to which the I2C SDA and SCL
+    lines of the sensors are connected. Pass -1 to use the default Arduino pins.
+    
+    Returns true if successful, false if problem initializing I2C.
+*/
+/**************************************************************************/
+bool I2CInitialize( int pin_sda, int pin_scl ) {
+  bool success = Wire.begin(pin_sda, pin_scl);
+  Wire.setClock( 400000 ); //in ESP8266 library, can't set clock in same call that sets pins
+  return success;
+}  // end I2CInitialize()
+
 /**************************************************************************/
 /*!
     @brief  Read single byte from address and place in destination

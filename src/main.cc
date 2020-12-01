@@ -15,7 +15,7 @@
 #include <Arduino.h>
 #include <sstream>
 #include <string>
-#include <Wire.h>
+//#include <Wire.h>
 #ifdef ESP8266
   #include <ESP8266WiFi.h>
   #include <ESP8266WiFiAP.h>
@@ -89,13 +89,8 @@ void setup() {
   Serial.println(" on port 23.");
 #endif
 
-  //initialize the I2C system at max clock rate supported by sensors
-  Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
-  Wire.setClock( 400000 ); //in ESP8266 library, can't set clock in same call that sets pins
-  debug_log("I2C initted");
-
   //create our fusion engine instance
-  sensor_fusion = new SensorFusion(PIN_I2C_SDA, PIN_I2C_SCL);
+  sensor_fusion = new SensorFusion();
 
   //Fusion system can output arbitrary data & text, and accept incoming commands
   //These happen over either a hardware serial link, or a WiFi TCP link.
@@ -136,8 +131,8 @@ void setup() {
   }
   debug_log("Sensors connected");
 
-  sensor_fusion->InitializeFusionEngine();
-  debug_log("Fusion Engine OK");
+  sensor_fusion->Begin();
+  debug_log("Fusion Engine Ready");
 
 } // end setup()
 

@@ -37,6 +37,7 @@ extern "C" {
  ******************************************************************************/
 
 //TODO put these in a class
+bool I2CInitialize(int pin_sda, int pin_scl);
 bool I2CReadByte(uint8_t address, uint8_t reg, uint8_t *destination);
 bool I2CReadBytes(uint8_t address, uint8_t reg, uint8_t *destination, int num_bytes);
 bool I2CWriteByte(uint8_t address, uint8_t reg, uint8_t value);

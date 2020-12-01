@@ -34,9 +34,9 @@ enum class SensorType {
 
 class SensorFusion {
  public:
-  SensorFusion(int8_t pin_i2c_sda = -1, int8_t pin_i2c_scl = -1);
+  SensorFusion();
   bool InstallSensor(uint8_t sensor_i2c_addr, SensorType sensor_type);
-  void InitializeFusionEngine(void);
+  void Begin(void);
   bool InitializeInputOutputSubsystem(const Stream *serial_port = NULL,
                                       const void *tcp_client = NULL);
   void UpdateWiFiStream(void *tcp_client);
