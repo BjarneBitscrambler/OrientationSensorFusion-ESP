@@ -55,6 +55,7 @@ class SensorFusion {
   float GetPitchRateDegPerS(void);
   float GetRollRateDegPerS(void);
   float GetTemperatureC(void);
+  void  GetOrientationQuaternion(Quaternion *quat);
 
  private:
   void InitializeStatusSubsystem(void);
@@ -64,8 +65,7 @@ class SensorFusion {
   ControlSubsystem *control_subsystem_;  // communications
   StatusSubsystem *status_subsystem_;    // visual status indicator
   PhysicalSensor *sensors_;              // up to 4 sensors
-  uint8_t num_sensors_installed_ =
-      0;  // TODO calc this based on traversing sfg->pSensors->next till NULL
+  uint8_t num_sensors_installed_ = 0;
 
   // following set the relationship between
   // number of sensor reads and each execution of the fusion algorithm.
