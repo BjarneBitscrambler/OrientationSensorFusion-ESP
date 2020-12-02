@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*! \file driver_FXAS21002.c
+/*! \file driver_fxas21002.c
     \brief Provides init() and read() functions for the FXAS21002 gyroscope
 */
 

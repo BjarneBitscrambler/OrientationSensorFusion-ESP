@@ -34,14 +34,14 @@ extern "C" {
     #endif
 #endif
 #ifdef ESP32
-    //#include "Arduino.h" //Can use this instead (which includes the *_hal_gpio), but then some other
+    //#include <Arduino.h> //Can use this instead (which includes the *_hal_gpio), but then some other
     // constants get defined too (like PI) which clash with defines in sensor_fusion.h
-  #include "esp32-hal-gpio.h"       //needed for pinMode() etc.
+  #include <esp32-hal-gpio.h>       //needed for pinMode() etc.
 #endif
 
 // Specify the specific sensor IC(s) used 
-#include "driver_fxos8700.h"
-#include "driver_fxas21002.h"
+#include "sensor_fusion/driver_fxos8700.h"
+#include "sensor_fusion/driver_fxas21002.h"
 
 // Board name and type, passed in packets to Sensor Toolbox.  
 // Suspect these fields are only informational. 

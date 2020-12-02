@@ -1,17 +1,40 @@
-/*
- * Copyright (c) 2020, Bjarne Hansen
- * All rights reserved.
- *
- * SPDX-License-Identifier: BSD-3-Clause
- */
+/*!
+  @file sensor_fusion_class.cc
+  @mainpage Sensor Fusion
+  @section intro_sec Introduction
+    An easy-to-use interface to the
+    NXP Sensor Fusion version 7 library algorithms.
 
-/*! \file sensor_fusion_class.cc
-    \brief Class providing an easy-to-use interface to the
-    NXP Sensor Fusion version 7 library algortihms.
+    It is configured to work with the Adafruit breakout board #3643
+    using the NXP FXOS8700 magnetometer/accelerometer and FXAS21002 gyroscope
+ sensor ICs, but can be modified to work with other sensors having an I2C
+ interface. With additional modification, it can also work with SPI interface
+ sensors.
 
-    It is possible to directly interface with the library
-    methods contained in the C files, which are
-    based on those provided by NXP in their version 7.20 release. 
+    The library runs on Espressif's ESP32 and ESP8266 processors and outputs
+ orientation data using the serial and WiFi interfaces.
+
+    A C++ class provides simple access to the most common sensor fusion
+ functions, but it is also possible to directly interface with the library
+ methods contained in the underlying C files, which are based on those provided
+ by NXP in their version 7.20 release.
+
+    @section dependencies Dependencies
+    The fusion code and associated project files have been written for and
+ tested in the PlatformIO development environment, as an Arduino framework
+ project for an ESP32 board.
+
+    This project uses the Wire (I2C) library.  If WiFi
+    output is enabled then it also requires the WiFi libraries.
+
+    @section author Author
+    Bjarne Hansen
+
+    @section license License
+    Copyright (c) 2020, Bjarne Hansen
+    All rights reserved.
+
+    SPDX-License-Identifier: BSD-3-Clause
 */
 
 #include "sensor_fusion_class.h"
@@ -19,10 +42,10 @@
 #include <stdint.h>
 #include <Stream.h>
 
-#include "sensor_fusion.h"
-#include "control.h"
-#include "driver_sensors.h"
-#include "status.h"
+#include "sensor_fusion/sensor_fusion.h"
+#include "sensor_fusion/control.h"
+#include "sensor_fusion/driver_sensors.h"
+#include "sensor_fusion/status.h"
 
 SensorFusion::SensorFusion(int8_t pin_i2c_sda, int8_t pin_i2c_scl) {
   sfg_ = new SensorFusionGlobals();

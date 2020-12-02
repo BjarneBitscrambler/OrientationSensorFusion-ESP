@@ -1,0 +1,20 @@
+<map id="src/sensor_fusion/calibration_storage.cc" name="src/sensor_fusion/calibration_storage.cc">
+<area shape="rect" id="node1" title="Provides functions to store calibration to NVM." alt="" coords="315,5,523,47"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,169,72,196"/>
+<area shape="rect" id="node3" title=" " alt="" coords="243,95,333,121"/>
+<area shape="rect" id="node4" href="$sensor__fusion_8h.html" title="The sensor_fusion.h file implements the top level programming interface." alt="" coords="357,95,481,121"/>
+<area shape="rect" id="node17" href="$calibration__storage_8h.html" title="Provides functions to store calibration to NVM, which on ESP devices is provided by EEPROM." alt="" coords="505,95,663,121"/>
+<area shape="rect" id="node18" href="$debug__print_8h.html" title="defines function debug_print() that outputs to serial port Can disable these prints by compiling with..." alt="" coords="687,95,798,121"/>
+<area shape="rect" id="node5" title=" " alt="" coords="97,169,165,196"/>
+<area shape="rect" id="node6" title=" " alt="" coords="189,169,272,196"/>
+<area shape="rect" id="node7" title=" " alt="" coords="409,408,479,435"/>
+<area shape="rect" id="node8" href="$board_8h.html" title="Board configuration file." alt="" coords="347,169,418,196"/>
+<area shape="rect" id="node10" href="$driver__sensors__types_8h.html" title="The driver_sensors_types.h file contains sensor state structs and error definitions." alt="" coords="421,333,593,360"/>
+<area shape="rect" id="node12" href="$build_8h.html" title="Build configuration file." alt="" coords="493,169,560,196"/>
+<area shape="rect" id="node13" href="$magnetic_8h.html" title="Lower level magnetic calibration interface." alt="" coords="585,169,679,196"/>
+<area shape="rect" id="node14" href="$matrix_8h.html" title="Matrix manipulation functions." alt="" coords="704,169,781,196"/>
+<area shape="rect" id="node15" href="$orientation_8h.html" title="Functions to convert between various orientation representations." alt="" coords="806,169,911,196"/>
+<area shape="rect" id="node16" href="$precisionAccelerometer_8h.html" title="Implements accelerometer calibration routines." alt="" coords="736,333,923,360"/>
+<area shape="rect" id="node9" href="$driver__fxos8700_8h.html" title="Describes the fxos8700 driver interface and structures." alt="" coords="305,244,460,285"/>
+<area shape="rect" id="node11" href="$driver__fxas21002_8h.html" title="Contains the fxas21002 sensor register definitions and its bit mask." alt="" coords="484,244,639,285"/>
+</map>

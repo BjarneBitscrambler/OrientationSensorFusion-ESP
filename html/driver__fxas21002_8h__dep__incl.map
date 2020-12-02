@@ -1,0 +1,22 @@
+<map id="src/sensor_fusion/driver_fxas21002.h" name="src/sensor_fusion/driver_fxas21002.h">
+<area shape="rect" id="node1" title="Contains the fxas21002 sensor register definitions and its bit mask." alt="" coords="1349,5,1526,47"/>
+<area shape="rect" id="node2" href="$board_8h.html" title="Board configuration file." alt="" coords="1301,95,1395,121"/>
+<area shape="rect" id="node12" href="$driver__fxas21002_8c.html" title="Provides init() and read() functions for the FXAS21002 gyroscope." alt="" coords="2985,259,3162,300"/>
+<area shape="rect" id="node3" href="$sensor__fusion__class_8h.html" title="Wrapper for the NXP Sensor Fusion v 7 functions." alt="" coords="5,266,192,293"/>
+<area shape="rect" id="node4" href="$sensor__fusion_8h.html" title="The sensor_fusion.h file implements the top level programming interface." alt="" coords="1257,169,1439,211"/>
+<area shape="rect" id="node11" href="$control__output_8c.html" title="Implements output streaming for the control &amp; status subsystem. Data is packaged up in format compati..." alt="" coords="216,259,400,300"/>
+<area shape="rect" id="node20" href="$status_8c.html" title="Application&#45;specific status subsystem." alt="" coords="2770,266,2961,293"/>
+<area shape="rect" id="node5" href="$calibration__storage_8cc.html" title="Provides functions to store calibration to NVM." alt="" coords="424,259,632,300"/>
+<area shape="rect" id="node6" href="$control_8cpp.html" title="Defines control sub&#45;system." alt="" coords="656,266,867,293"/>
+<area shape="rect" id="node7" href="$control__input_8c.html" title="Command interpreter which interfaces to the Sensor Fusion Toolbox. Commands sent from the Toolbox (e...." alt="" coords="772,348,956,389"/>
+<area shape="rect" id="node8" href="$fusion_8h.html" title="Lower level sensor fusion interface." alt="" coords="942,266,1133,293"/>
+<area shape="rect" id="node9" href="$fusion_8c.html" title="Lower level sensor fusion interface." alt="" coords="981,355,1171,382"/>
+<area shape="rect" id="node10" href="$sensor__fusion_8c.html" title="The sensor_fusion.c file implements the top level programming interface." alt="" coords="1195,348,1378,389"/>
+<area shape="rect" id="node13" href="$driver__fxos8700_8c.html" title="Defines commands to perform various tasks (e.g. read Device ID, Initialize, Read Data) for the FXOS87..." alt="" coords="1259,259,1437,300"/>
+<area shape="rect" id="node14" href="$fusion__testing_8c.html" title="ApplyPerturbation function used to analyze dynamic performance." alt="" coords="1461,259,1640,300"/>
+<area shape="rect" id="node15" href="$hal__axis__remap_8c.html" title="Hardware Abstraction layer for the particular sensors used. Depending on the design of the sensor PCB..." alt="" coords="1665,259,1823,300"/>
+<area shape="rect" id="node16" href="$magnetic_8c.html" title="Lower level magnetic calibration interface." alt="" coords="1848,266,2059,293"/>
+<area shape="rect" id="node17" href="$matrix_8c.html" title="Matrix manipulation functions." alt="" coords="2083,266,2277,293"/>
+<area shape="rect" id="node18" href="$orientation_8c.html" title="Functions to convert between various orientation representations." alt="" coords="2301,266,2523,293"/>
+<area shape="rect" id="node19" href="$precisionAccelerometer_8c.html" title="Implements accelerometer calibration routines." alt="" coords="2547,259,2746,300"/>
+</map>

@@ -15,11 +15,11 @@
 
 #include <Stream.h>
 
-#include "sensor_fusion.h"
 #include "board.h"
 #include "build.h"
-#include "control.h"
-#include "status.h"
+#include "sensor_fusion/sensor_fusion.h"
+#include "sensor_fusion/control.h"
+#include "sensor_fusion/status.h"
 
 enum class SensorType {
   kMagnetometer,

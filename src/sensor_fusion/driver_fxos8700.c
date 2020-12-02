@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*! \file fxos8700_driver.c
+/*! \file driver_fxos8700.c
     \brief Defines commands to perform various tasks (e.g. read Device ID, Initialize, Read Data) 
     for the FXOS8700 6-axis accelerometer plus magnetometer. Actual I2C interface functions are
     found in sensor_io_i2c files.
