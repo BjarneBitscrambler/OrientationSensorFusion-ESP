@@ -5,3 +5,5 @@
 .vscode/ipch
 .vscode/
 include/wifi_credentials.h
+src/main.cc
+
