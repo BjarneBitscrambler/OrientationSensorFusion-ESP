@@ -1,41 +1,22 @@
 /*!
-  @file sensor_fusion_class.cc
-  @mainpage Sensor Fusion
-  @section intro_sec Introduction
-    An easy-to-use interface to the
-    NXP Sensor Fusion version 7 library algorithms.
-
-    It is configured to work with the Adafruit breakout board #3643
-    using the NXP FXOS8700 magnetometer/accelerometer and FXAS21002 gyroscope
- sensor ICs, but can be modified to work with other sensors having an I2C
- interface. With additional modification, it can also work with SPI interface
- sensors.
-
-    The library runs on Espressif's ESP32 and ESP8266 processors and outputs
- orientation data using the serial and WiFi interfaces.
-
-    A C++ class provides simple access to the most common sensor fusion
- functions, but it is also possible to directly interface with the library
- methods contained in the underlying C files, which are based on those provided
- by NXP in their version 7.20 release.
-
-    @section dependencies Dependencies
-    The fusion code and associated project files have been written for and
- tested in the PlatformIO development environment, as an Arduino framework
- project for an ESP32 board.
-
-    This project uses the Wire (I2C) library.  If WiFi
-    output is enabled then it also requires the WiFi libraries.
-
-    @section author Author
-    Bjarne Hansen
-
-    @section license License
-    Copyright (c) 2020, Bjarne Hansen
-    All rights reserved.
-
-    SPDX-License-Identifier: BSD-3-Clause
-*/
+ *  \file sensor_fusion_class.cc
+ *
+ *  \brief    An easy-to-use interface to the
+ *  NXP Sensor Fusion version 7 library algorithms.
+ *
+ * It is configured to work with the Adafruit breakout board #3643
+ * using the NXP FXOS8700 magnetometer/accelerometer and FXAS21002 gyroscope
+ * sensor ICs, but can be modified to work with other sensors having an I2C
+ * interface. With additional modification, it can also work with SPI interface
+ * sensors.
+ *
+ *
+ * A C++ class provides simple access to the most common sensor fusion
+ * functions, but it is also possible to directly interface with the library
+ * methods contained in the underlying C files, which are based on those
+ * provided by NXP in their version 7.20 release. SPDX-License-Identifier:
+ * BSD-3-Clause
+ */
 
 #include "sensor_fusion_class.h"
 
@@ -47,6 +28,11 @@
 #include "sensor_fusion/driver_sensors.h"
 #include "sensor_fusion/status.h"
 
+/*!
+ * Constructor creates and initializes a structure of variables used throughout
+ * the functions. It initializes the control and status subsystems as well as
+ * several subordinate data structures.
+ */
 SensorFusion::SensorFusion(int8_t pin_i2c_sda, int8_t pin_i2c_scl) {
   sfg_ = new SensorFusionGlobals();
   control_subsystem_ = new ControlSubsystem;
@@ -63,42 +49,79 @@ SensorFusion::SensorFusion(int8_t pin_i2c_sda, int8_t pin_i2c_scl) {
 
 }  // end SensorFusion()
 
+/*!
+ * Initialize the Control subsystem, which receives external commands and sends
+ * data packets.
+ * \param serial_port A Stream pointer to which to send output and receive commands. If
+ * NULL, then output is not attempted.
+ * \param tcp_client A WiFiClient pointer to which to send output and receive commands. If
+ * NULL, then output is not attempted.
+ * \return True if the Control subsystem is initialized, else False.
+ */
 bool SensorFusion::InitializeControlSubsystem( const Stream *serial_port, const Stream *tcp_client) {
 
   return initializeControlPort(control_subsystem_, serial_port, tcp_client);  // configure pins and ports for
                                               // the control sub-system
 }  // end InitializeControlSubsystem()
 
+/*!
+ * \brief Update the TCP client pointer.
+ * Call when a new TCP connection is made, as reported by WiFiServer::available()
+ * When tcp_client is NULL, output via WiFi is not attempted.
+ * \param tcp_client A WiFiClient pointer used for input/output
+ */
 void SensorFusion::UpdateWiFiStream(void *tcp_client) {
   UpdateTCPClient(control_subsystem_, tcp_client);
 }  // end UpdateTCPClient()
 
+/*!
+ * \brief Initialize the Status reporting system.
+ * Status is indicated by LEDs, but other means can be added.
+ */
 void SensorFusion::InitializeStatusSubsystem(void) {
   initializeStatusSubsystem(
       status_subsystem_);  // configure pins and ports for the status sub-system
 
 }  // end InitializeStatusSubsystem()
 
+/*!
+ * \brief Set the starting values of variables contained in sfg_
+ */
 void SensorFusion::InitializeSensorFusionGlobals(void) {
   initSensorFusionGlobals(sfg_, status_subsystem_, control_subsystem_);
 
 }  // end InitializeSensorFusionGlobals()
 
+/*!
+ * Initialize the Sensors. Read calibrations. Set status to Normal.
+ */
 void SensorFusion::InitializeFusionEngine( ) {
-     sfg_->initializeFusionEngine(sfg_);  // Initialize sensors and magnetic calibration
+     sfg_->initializeFusionEngine(sfg_);  // Initialize sensors and magnetic calibration 
      sfg_->setStatus(sfg_, NORMAL);  // Set status state to NORMAL
 
 } // end InitializeFusionEngine()
 
+/*!
+ * \brief Reads all sensors.
+ * Applies HAL remapping, removes invalid values, and stores data for 
+ * later processing. Depending on whether a sensor has a built-in FIFO
+ * buffer, that sensor may not be read each time this method is called.
+ * See kLoopsPerMagRead, etc., in sensor_fusion_class.h
+ */
 void SensorFusion::ReadSensors(void) {
-    //Reads sensors.  Tracks how many invocations since last fusion of data, so
-    //  sensors are read at various intervals (depending, e.g. on whether they have a fIFO)
-    // which is controlled by kLoopsPerMagRead, etc., in sensor_fusion_class.h
-    
-    sfg_->readSensors(sfg_, loops_per_fuse_counter_);  // Reads sensors, applies HAL, removes -32768 
+  sfg_->readSensors(
+      sfg_,
+      loops_per_fuse_counter_);  // Reads sensors, applies HAL, removes -32768
 
-}//end ReadSensors()
+}  // end ReadSensors()
 
+/*!
+ * \brief Apply fusion algorithm.
+ * Sensor readings contained in global struct are calibrated and processed.
+ * Status is updated.
+ * Loop counter used for coordinating sensor reads is reset.
+ * 
+ */
 void SensorFusion::RunFusion(void) {
   // applies fusion algorithm to data accumulated in buffers
 
@@ -129,6 +152,10 @@ void SensorFusion::RunFusion(void) {
 
 }  // end RunFusion()
 
+/*!
+ * \brief Generate and send out data, formatted for NXP Orientation Sensor Toolbox.
+ * It is not mandatory to call this routine, if Toolbox output is not needed.
+ */
 void SensorFusion::ProduceToolboxOutput(void) {
   // Make & send data to Sensor Fusion Toolbox or whatever UART is
   // connected to.
@@ -139,6 +166,12 @@ void SensorFusion::ProduceToolboxOutput(void) {
 
 }  // end ProduceToolboxOutput()
 
+/*!
+ * \brief Process any incoming commands.
+ * Commands may arrive by serial or WiFi connection, depending on which of
+ * these is enabled (if any).
+ * It is not mandatory to call this routine, if command responses are not needed.
+ */
 void SensorFusion::ProcessCommands(void) {
         //process any incoming commands
         sfg_->pControlSubsystem->readCommands(sfg_);
@@ -165,7 +198,9 @@ void SensorFusion::ProcessCommands(void) {
 //  mapping is applied *before* the fusion algorithm, 
 //  whereas the below mapping is applied *after*.
 
-// fetch the Compass Heading in degrees
+/*!
+ * \brief \return Return the Compass Heading in degrees
+ */
 float SensorFusion::GetHeadingDegrees(void) {
 //TODO - make generic so it's not dependent on algorithm used
 return (sfg_->SV_9DOF_GBY_KALMAN.fRhoPl <= 90)
@@ -173,49 +208,77 @@ return (sfg_->SV_9DOF_GBY_KALMAN.fRhoPl <= 90)
            : (sfg_->SV_9DOF_GBY_KALMAN.fRhoPl - 90.0);
 }  // end GetHeadingDegrees()
 
-//fetch the Pitch in degrees
+/*!
+ * \brief \return Return the Pitch in degrees
+ */
 float SensorFusion::GetPitchDegrees(void) {
   return sfg_->SV_9DOF_GBY_KALMAN.fPhiPl;
 }  // end GetPitchDegrees()
 
-//fetch the Roll in degrees
+/*!
+ * \brief \return Return the Roll in degrees
+ */
 float SensorFusion::GetRollDegrees(void) {
   return -(sfg_->SV_9DOF_GBY_KALMAN.fThePl);
 }  // end GetRollDegrees()
 
+/*!
+ * \brief \return Return the Turn Rate in degrees
+ */
 float SensorFusion::GetTurnRateDegPerS(void) {
   return sfg_->SV_9DOF_GBY_KALMAN.fOmega[2];
 }//end GetTurnRateDegPerS()
 
+/*!
+ * \brief \return Return the Pitch Rate in degrees/s
+ */
 float SensorFusion::GetPitchRateDegPerS(void) {
   return sfg_->SV_9DOF_GBY_KALMAN.fOmega[0];
 }//end GetTurnRateDegPerS()
 
+/*!
+ * \brief \return Return the Roll Rate in degrees/s
+ */
 float SensorFusion::GetRollRateDegPerS(void) {
   return -(sfg_->SV_9DOF_GBY_KALMAN.fOmega[1]);
 }//end GetTurnRateDegPerS()
 
+/*!
+ * \brief \return Return the X-axis Accleration in gees
+ */
 float SensorFusion::GetAccelXGees(void) {
   return sfg_->Accel.fGc[1];
 }//end GetTurnRateDegPerS()
 
+/*!
+ * \brief \return Return the Y-axis Accleration in gees
+ */
 float SensorFusion::GetAccelYGees(void) {
   return sfg_->Accel.fGc[0];
 }//end GetTurnRateDegPerS()
 
+/*!
+ * \brief \return Return the Z-axis Accleration in gees
+ */
 float SensorFusion::GetAccelZGees(void) {
   return sfg_->Accel.fGc[2];
 }//end GetTurnRateDegPerS()
 
+/*!
+ * \brief Install Sensor in linked list
+ * The max length of the list is checked, and if there is room, the 
+ * given sensor is inserted at the head of the list.
+ * An accelerometer and magnetometer may be combined in one IC - if
+ * that is the case then only one call is required to install, 
+ * provided the associated *_Init() and *_Read() function reads both
+ * the accel & magnetometer data.  The Init() and Read() functions 
+ * of each sensor are defined in driver_*.* files.
+ * \param sensor_i2c_addr is the I2C bus address of the sensor IC
+ * \param sensor_type indicates the type of sensor (e.g. magnetometer)
+ * \return True if sensor installed successfully, else False
+ */
 bool SensorFusion::InstallSensor(uint8_t sensor_i2c_addr,
                                    SensorType sensor_type) {
-    // connect to the sensors we will be using.  Accelerometer and magnetometer
-    // may be combined in the same IC, and only requre one call. If that is the
-    // case, then
-    //  ensure the *_Read() function reads both the accel & magnetometer data.
-    // The sfg_ struct contains fields for  accel, magnetometer, gyro, baro,
-    // thermo. The *_Init() and *_Read() functions of each sensor are defined in
-    // driver_*.* files, and place data in the correct sfg_ fields
 
     if( num_sensors_installed_ >= MAX_NUM_SENSORS ) {
         //already have max number of sensors installed

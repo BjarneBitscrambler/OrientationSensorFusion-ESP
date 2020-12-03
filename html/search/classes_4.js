@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['magbuffer_684',['MagBuffer',['../structMagBuffer.html',1,'']]],
-  ['magcalibration_685',['MagCalibration',['../structMagCalibration.html',1,'']]],
-  ['magsensor_686',['MagSensor',['../structMagSensor.html',1,'']]]
+  ['magbuffer_710',['MagBuffer',['../structMagBuffer.html',1,'']]],
+  ['magcalibration_711',['MagCalibration',['../structMagCalibration.html',1,'']]],
+  ['magsensor_712',['MagSensor',['../structMagSensor.html',1,'']]]
 ];

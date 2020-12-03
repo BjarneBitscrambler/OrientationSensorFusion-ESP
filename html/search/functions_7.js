@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['readsensors_813',['readSensors',['../sensor__fusion_8c.html#a2aef17e3b5cdf8265e189bdee3b4e3e9',1,'sensor_fusion.c']]],
-  ['runfusion_814',['runFusion',['../sensor__fusion_8c.html#a8b90119fee979d0309cc923bf1fad543',1,'sensor_fusion.c']]]
+  ['processcommands_847',['ProcessCommands',['../classSensorFusion.html#adb9854e0dc23586327c7cbf9377a7d72',1,'SensorFusion']]],
+  ['producetoolboxoutput_848',['ProduceToolboxOutput',['../classSensorFusion.html#a639c646f972bb29bccd60ef1926735dc',1,'SensorFusion']]]
 ];

@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['i2creadbyte_799',['I2CReadByte',['../hal__i2c_8cc.html#a99ced0927f15697b0e524090e8004373',1,'hal_i2c.cc']]],
-  ['i2creadbytes_800',['I2CReadBytes',['../hal__i2c_8cc.html#a138e374afd699a1cd4aeafba8d6fba22',1,'hal_i2c.cc']]],
-  ['i2cwritebyte_801',['I2CWriteByte',['../hal__i2c_8cc.html#aa2c0d676aea26d0db8a2a34f7e628f98',1,'hal_i2c.cc']]],
-  ['i2cwritebytes_802',['I2CWriteBytes',['../hal__i2c_8cc.html#a14f42d18b7832058a95097dbe5111766',1,'hal_i2c.cc']]],
-  ['initializecontrolport_803',['initializeControlPort',['../control_8cpp.html#ad828389eaed1cef9fd06a6c10a94682f',1,'initializeControlPort(ControlSubsystem *pComm, const void *serial_port, const void *tcp_client):&#160;control.cpp'],['../control_8h.html#ad828389eaed1cef9fd06a6c10a94682f',1,'initializeControlPort(ControlSubsystem *pComm, const void *serial_port, const void *tcp_client):&#160;control.cpp']]],
-  ['initializefusionengine_804',['initializeFusionEngine',['../sensor__fusion_8c.html#ab088da7731ffdf25710a364a7f88b224',1,'sensor_fusion.c']]],
-  ['initializestatussubsystem_805',['initializeStatusSubsystem',['../status_8c.html#a01619741119cf3432f8cfff23334c793',1,'initializeStatusSubsystem(StatusSubsystem *pStatus):&#160;status.c'],['../status_8h.html#a01619741119cf3432f8cfff23334c793',1,'initializeStatusSubsystem(StatusSubsystem *pStatus):&#160;status.c']]],
-  ['initsensorfusionglobals_806',['initSensorFusionGlobals',['../sensor__fusion_8c.html#a43b44018042fabb5179c2e62277cc942',1,'initSensorFusionGlobals(SensorFusionGlobals *sfg, StatusSubsystem *pStatusSubsystem, ControlSubsystem *pControlSubsystem):&#160;sensor_fusion.c'],['../sensor__fusion_8h.html#a367d92b99365a8143700b76439915d65',1,'initSensorFusionGlobals(SensorFusionGlobals *sfg, struct StatusSubsystem *pStatusSubsystem, struct ControlSubsystem *pControlSubsystem):&#160;sensor_fusion.c']]],
-  ['installsensor_807',['installSensor',['../sensor__fusion_8c.html#a9c9c520415ab2e14bb28e2530d2cad54',1,'sensor_fusion.c']]]
+  ['getaccelxgees_826',['GetAccelXGees',['../classSensorFusion.html#a35a898e6f73a16b86448da7fc7f74b0f',1,'SensorFusion']]],
+  ['getaccelygees_827',['GetAccelYGees',['../classSensorFusion.html#a4db34965d3d35199e6257c7e6a081fba',1,'SensorFusion']]],
+  ['getaccelzgees_828',['GetAccelZGees',['../classSensorFusion.html#ad2c01e361312d241251cb26b09603aae',1,'SensorFusion']]],
+  ['getheadingdegrees_829',['GetHeadingDegrees',['../classSensorFusion.html#aeacc830ce9871cb60ee4086068d5cec7',1,'SensorFusion']]],
+  ['getpitchdegrees_830',['GetPitchDegrees',['../classSensorFusion.html#a3b97277eb26e5cb28c4c8a12af1ed8b6',1,'SensorFusion']]],
+  ['getpitchratedegpers_831',['GetPitchRateDegPerS',['../classSensorFusion.html#a501059a454deb95fed1e01c6e2c78eec',1,'SensorFusion']]],
+  ['getrolldegrees_832',['GetRollDegrees',['../classSensorFusion.html#a240b197f805cac0f8553e4851fa08f49',1,'SensorFusion']]],
+  ['getrollratedegpers_833',['GetRollRateDegPerS',['../classSensorFusion.html#abe9c05976053be9717eac93d5cc22c17',1,'SensorFusion']]],
+  ['getturnratedegpers_834',['GetTurnRateDegPerS',['../classSensorFusion.html#a6c374b3b2242ffee93cebd9335caee3e',1,'SensorFusion']]]
 ];

@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['sensor_5fi2c_5fread_815',['Sensor_I2C_Read',['../hal__i2c_8cc.html#ac43d9c407874143a16bd4518ddf8a0f4',1,'Sensor_I2C_Read(registerDeviceInfo_t *devInfo, uint16_t peripheralAddress, const registerReadlist_t *pReadList, uint8_t *pOutBuffer):&#160;hal_i2c.cc'],['../hal__i2c_8h.html#a7262a7e9e93bd55dac52c6293bf56ee0',1,'Sensor_I2C_Read(registerDeviceInfo_t *devInfo, uint16_t slaveAddress, const registerReadlist_t *pReadList, uint8_t *pOutBuffer):&#160;hal_i2c.cc']]],
-  ['sensor_5fi2c_5fwrite_5flist_816',['Sensor_I2C_Write_List',['../hal__i2c_8cc.html#a8c3e499896c83cb718f52386bde0a481',1,'Sensor_I2C_Write_List(registerDeviceInfo_t *devInfo, uint16_t peripheralAddress, const registerwritelist_t *pRegWriteList):&#160;hal_i2c.cc'],['../hal__i2c_8h.html#a5bfdba785d5db0ff26918346dbceb3cc',1,'Sensor_I2C_Write_List(registerDeviceInfo_t *devInfo, uint16_t slaveAddress, const registerwritelist_t *pRegWriteList):&#160;hal_i2c.cc']]],
-  ['setstatus_817',['setStatus',['../sensor__fusion_8c.html#a741fd2193cc58c09b692d1ae2b7a81e8',1,'sensor_fusion.c']]]
+  ['qaeqaxb_849',['qAeqAxB',['../orientation_8c.html#a22a32becfcb162db012f41ff4f3bc942',1,'qAeqAxB(Quaternion *pqA, const Quaternion *pqB):&#160;orientation.c'],['../orientation_8h.html#a22a32becfcb162db012f41ff4f3bc942',1,'qAeqAxB(Quaternion *pqA, const Quaternion *pqB):&#160;orientation.c']]],
+  ['qaeqbxc_850',['qAeqBxC',['../orientation_8c.html#a12448c36b93d8f3375ce000ef4527b4a',1,'qAeqBxC(Quaternion *pqA, const Quaternion *pqB, const Quaternion *pqC):&#160;orientation.c'],['../orientation_8h.html#a12448c36b93d8f3375ce000ef4527b4a',1,'qAeqBxC(Quaternion *pqA, const Quaternion *pqB, const Quaternion *pqC):&#160;orientation.c']]],
+  ['qconjgaxb_851',['qconjgAxB',['../orientation_8c.html#adb2ea2734ac13ca77b3218d761fe45e0',1,'qconjgAxB(const Quaternion *pqA, const Quaternion *pqB):&#160;orientation.c'],['../orientation_8h.html#adb2ea2734ac13ca77b3218d761fe45e0',1,'qconjgAxB(const Quaternion *pqA, const Quaternion *pqB):&#160;orientation.c']]],
+  ['queuestatus_852',['queueStatus',['../sensor__fusion_8c.html#ae96e36747e6a1aabbec1381f15132ec6',1,'sensor_fusion.c']]]
 ];

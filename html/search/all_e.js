@@ -1,14 +1,20 @@
 var searchData=
 [
-  ['read_546',['read',['../structPhysicalSensor.html#a888d77b8a368051617d438dda404494e',1,'PhysicalSensor']]],
-  ['readsensors_547',['readSensors',['../structSensorFusionGlobals.html#ab0037a4a465eaec402402a4141e6bcb2',1,'SensorFusionGlobals::readSensors()'],['../sensor__fusion_8c.html#a2aef17e3b5cdf8265e189bdee3b4e3e9',1,'readSensors():&#160;sensor_fusion.c']]],
-  ['receiving_5fwired_548',['RECEIVING_WIRED',['../sensor__fusion_8h.html#a69ee883e1c22b117df163c0bd83f66dda07ce7fbb8426233b33e7e7512bb0f55d',1,'sensor_fusion.h']]],
-  ['receiving_5fwireless_549',['RECEIVING_WIRELESS',['../sensor__fusion_8h.html#a69ee883e1c22b117df163c0bd83f66dda60ca895e5ed18a6e1928d4750c7968a0',1,'sensor_fusion.h']]],
-  ['registerdeviceinfo_5ft_550',['registerDeviceInfo_t',['../structregisterDeviceInfo__t.html',1,'']]],
-  ['registeridlefunction_5ft_551',['registeridlefunction_t',['../driver__sensors__types_8h.html#a5deff6bd688b60b97b84fc7e78d3ea63',1,'driver_sensors_types.h']]],
-  ['registerreadlist_5ft_552',['registerReadlist_t',['../structregisterReadlist__t.html',1,'']]],
-  ['registerwritelist_5ft_553',['registerwritelist_t',['../structregisterwritelist__t.html',1,'']]],
-  ['resetflag_554',['resetflag',['../structSV__1DOF__P__BASIC.html#a59d75e8b7c8a93d8a4fea92d15612e3d',1,'SV_1DOF_P_BASIC::resetflag()'],['../structSV__3DOF__G__BASIC.html#aacc604429856228b624e8352244a549f',1,'SV_3DOF_G_BASIC::resetflag()'],['../structSV__3DOF__B__BASIC.html#a19b3fb620150bcc86256285b06a44abf',1,'SV_3DOF_B_BASIC::resetflag()'],['../structSV__3DOF__Y__BASIC.html#a8f2f353e14ccf45da9e82f29f13e28c1',1,'SV_3DOF_Y_BASIC::resetflag()'],['../structSV__6DOF__GB__BASIC.html#a47af0539db856552426ac4564be0511b',1,'SV_6DOF_GB_BASIC::resetflag()'],['../structSV__6DOF__GY__KALMAN.html#ad2ee347d18e4365e209ceef2473eaaa4',1,'SV_6DOF_GY_KALMAN::resetflag()'],['../structSV__9DOF__GBY__KALMAN.html#acc8c88191ae34255a22ff68a0cfe8ef2',1,'SV_9DOF_GBY_KALMAN::resetflag()']]],
-  ['rpcpacketon_555',['RPCPacketOn',['../structControlSubsystem.html#ac865a937c3f6adfe2468d03f59a4b825',1,'ControlSubsystem']]],
-  ['runfusion_556',['runFusion',['../structSensorFusionGlobals.html#a903191d34ab2f428e6807bb8ac731e84',1,'SensorFusionGlobals::runFusion()'],['../sensor__fusion_8c.html#a8b90119fee979d0309cc923bf1fad543',1,'runFusion():&#160;sensor_fusion.c']]]
+  ['q0_549',['q0',['../structQuaternion.html#ad2c5cbfd51513685a1510a2338c43b62',1,'Quaternion']]],
+  ['q1_550',['q1',['../structQuaternion.html#adc92e30ea8def4b2b1cf3a0c4de20201',1,'Quaternion']]],
+  ['q2_551',['q2',['../structQuaternion.html#ae483e2293be13ca05140648acceec418',1,'Quaternion']]],
+  ['q3_552',['q3',['../structQuaternion.html#a37750c60303425f155e78056716444f3',1,'Quaternion::q3()'],['../sensor__fusion_8h.html#a5f469312b3865f2d3efea2edd6f8afaaa19bd87b11e82b9047ad750fb62711ba8',1,'Q3():&#160;sensor_fusion.h']]],
+  ['q3g_553',['Q3G',['../sensor__fusion_8h.html#a5f469312b3865f2d3efea2edd6f8afaaaf63c9f6fec59717499a84048f682cf8a',1,'sensor_fusion.h']]],
+  ['q3m_554',['Q3M',['../sensor__fusion_8h.html#a5f469312b3865f2d3efea2edd6f8afaaada2dae63d5865a8446caa7938c73c5dc',1,'sensor_fusion.h']]],
+  ['q6ag_555',['Q6AG',['../sensor__fusion_8h.html#a5f469312b3865f2d3efea2edd6f8afaaa59c8dc55b720396019ef93eb943a3b96',1,'sensor_fusion.h']]],
+  ['q6ma_556',['Q6MA',['../sensor__fusion_8h.html#a5f469312b3865f2d3efea2edd6f8afaaa0cf62dda224dcbac09ae26cd46ccce01',1,'sensor_fusion.h']]],
+  ['q9_557',['Q9',['../sensor__fusion_8h.html#a5f469312b3865f2d3efea2edd6f8afaaa9c5ceeb2bc9bf27379c7e72bc4d0ff13',1,'sensor_fusion.h']]],
+  ['qaeqaxb_558',['qAeqAxB',['../orientation_8c.html#a22a32becfcb162db012f41ff4f3bc942',1,'qAeqAxB(Quaternion *pqA, const Quaternion *pqB):&#160;orientation.c'],['../orientation_8h.html#a22a32becfcb162db012f41ff4f3bc942',1,'qAeqAxB(Quaternion *pqA, const Quaternion *pqB):&#160;orientation.c']]],
+  ['qaeqbxc_559',['qAeqBxC',['../orientation_8c.html#a12448c36b93d8f3375ce000ef4527b4a',1,'qAeqBxC(Quaternion *pqA, const Quaternion *pqB, const Quaternion *pqC):&#160;orientation.c'],['../orientation_8h.html#a12448c36b93d8f3375ce000ef4527b4a',1,'qAeqBxC(Quaternion *pqA, const Quaternion *pqB, const Quaternion *pqC):&#160;orientation.c']]],
+  ['qconjgaxb_560',['qconjgAxB',['../orientation_8c.html#adb2ea2734ac13ca77b3218d761fe45e0',1,'qconjgAxB(const Quaternion *pqA, const Quaternion *pqB):&#160;orientation.c'],['../orientation_8h.html#adb2ea2734ac13ca77b3218d761fe45e0',1,'qconjgAxB(const Quaternion *pqA, const Quaternion *pqB):&#160;orientation.c']]],
+  ['quaternion_561',['Quaternion',['../structQuaternion.html',1,'Quaternion'],['../orientation_8h.html#a8b8ae6480df2117ee6e3edd97c4309a0',1,'Quaternion():&#160;orientation.h'],['../sensor__fusion_8h.html#a5f469312b3865f2d3efea2edd6f8afaa',1,'quaternion():&#160;sensor_fusion.h']]],
+  ['quaternion_5ftype_562',['quaternion_type',['../sensor__fusion_8h.html#a365b73d4f615f8c348ddd79b1757d372',1,'sensor_fusion.h']]],
+  ['quaternionpackettype_563',['QuaternionPacketType',['../structControlSubsystem.html#aed24cfe0d81f33e1d034ade67d2be243',1,'ControlSubsystem']]],
+  ['queue_564',['queue',['../structStatusSubsystem.html#a55d4df319b219d65ef0854fd1df560ac',1,'StatusSubsystem']]],
+  ['queuestatus_565',['queueStatus',['../structSensorFusionGlobals.html#a40033a483a6917a44603b33122a37ced',1,'SensorFusionGlobals::queueStatus()'],['../sensor__fusion_8c.html#ae96e36747e6a1aabbec1381f15132ec6',1,'queueStatus():&#160;sensor_fusion.c']]]
 ];

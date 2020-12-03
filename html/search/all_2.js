@@ -13,7 +13,8 @@ var searchData=
   ['control_2eh_32',['control.h',['../control_8h.html',1,'']]],
   ['control_5finput_2ec_33',['control_input.c',['../control__input_8c.html',1,'']]],
   ['control_5foutput_2ec_34',['control_output.c',['../control__output_8c.html',1,'']]],
-  ['controlsubsystem_35',['ControlSubsystem',['../structControlSubsystem.html',1,'ControlSubsystem'],['../control_8h.html#a58ba7506d8affb446196806c39823c3a',1,'ControlSubsystem():&#160;control.h']]],
-  ['createoutgoingpackets_36',['CreateOutgoingPackets',['../control_8h.html#a4da1153dfe8ff9b0b610e7d55a92f3ca',1,'CreateOutgoingPackets(SensorFusionGlobals *sfg):&#160;control_output.c'],['../control__output_8c.html#a4da1153dfe8ff9b0b610e7d55a92f3ca',1,'CreateOutgoingPackets(SensorFusionGlobals *sfg):&#160;control_output.c']]],
-  ['contributor_20covenant_20code_20of_20conduct_37',['Contributor Covenant Code of Conduct',['../md_CODE_OF_CONDUCT.html',1,'']]]
+  ['control_5fsubsystem_5f_35',['control_subsystem_',['../classSensorFusion.html#a03cbe4eb9b7709d1db6fa831aef30861',1,'SensorFusion']]],
+  ['controlsubsystem_36',['ControlSubsystem',['../structControlSubsystem.html',1,'ControlSubsystem'],['../control_8h.html#a58ba7506d8affb446196806c39823c3a',1,'ControlSubsystem():&#160;control.h']]],
+  ['createoutgoingpackets_37',['CreateOutgoingPackets',['../control_8h.html#a4da1153dfe8ff9b0b610e7d55a92f3ca',1,'CreateOutgoingPackets(SensorFusionGlobals *sfg):&#160;control_output.c'],['../control__output_8c.html#a4da1153dfe8ff9b0b610e7d55a92f3ca',1,'CreateOutgoingPackets(SensorFusionGlobals *sfg):&#160;control_output.c']]],
+  ['contributor_20covenant_20code_20of_20conduct_38',['Contributor Covenant Code of Conduct',['../md_CODE_OF_CONDUCT.html',1,'']]]
 ];
