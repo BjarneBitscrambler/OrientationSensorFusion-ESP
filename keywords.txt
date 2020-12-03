@@ -1,0 +1,34 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+SensorFusion	KEYWORD1
+
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+InstallSensor	KEYWORD2
+InitializeFusionEngine	KEYWORD2
+InitializeControlSubsystem	KEYWORD2
+UpdateWiFiStream	KEYWORD2
+ReadSensors	KEYWORD2
+RunFusion	KEYWORD2
+ProduceToolboxOutput	KEYWORD2
+ProcessCommands	KEYWORD2
+GetHeadingDegrees	KEYWORD2
+GetPitchDegrees	KEYWORD2
+GetRollDegrees	KEYWORD2
+GetAccelXGees	KEYWORD2
+GetAccelYGees	KEYWORD2
+GetAccelZGees	KEYWORD2
+GetTurnRateDegPerS	KEYWORD2
+GetPitchRateDegPerS	KEYWORD2
+GetRollRateDegPerS	KEYWORD2
+
+
+######################################
+# Constants (LITERAL1)
+######################################
