@@ -45,25 +45,29 @@ enum class SensorType {
  *  use it may be necessary to call them directly.
  */
 class SensorFusion {
-  public:
-    SensorFusion(int8_t pin_i2c_sda = -1, int8_t pin_i2c_scl = -1);
-    bool InstallSensor(uint8_t sensor_i2c_addr, SensorType sensor_type);
-    void InitializeFusionEngine(void);
-    bool InitializeControlSubsystem( const Stream *serial_port = NULL, const Stream *tcp_client = NULL); 
-    void UpdateWiFiStream(void *tcp_client); 
-    void ReadSensors(void); 
-    void RunFusion(void); 
-    void ProduceToolboxOutput(void); 
-    void ProcessCommands(void); 
-    float GetHeadingDegrees(void); 
-    float GetPitchDegrees(void); 
-    float GetRollDegrees(void); 
-    float GetAccelXGees(void);
-    float GetAccelYGees(void);
-    float GetAccelZGees(void);
-    float GetTurnRateDegPerS(void);
-    float GetPitchRateDegPerS(void);
-    float GetRollRateDegPerS(void);
+ public:
+  SensorFusion();
+  bool InstallSensor(uint8_t sensor_i2c_addr, SensorType sensor_type);
+  void Begin(void);
+  bool InitializeInputOutputSubsystem(const Stream *serial_port = NULL,
+                                      const void *tcp_client = NULL);
+  void UpdateWiFiStream(void *tcp_client);
+  void ReadSensors(void);
+  void RunFusion(void);
+  void ProduceToolboxOutput(void);
+  bool SendArbitraryData(const char *buffer, uint16_t data_length);
+  void ProcessCommands(void);
+  float GetHeadingDegrees(void);
+  float GetPitchDegrees(void);
+  float GetRollDegrees(void);
+  float GetAccelXGees(void);
+  float GetAccelYGees(void);
+  float GetAccelZGees(void);
+  float GetTurnRateDegPerS(void);
+  float GetPitchRateDegPerS(void);
+  float GetRollRateDegPerS(void);
+  float GetTemperatureC(void);
+  void  GetOrientationQuaternion(Quaternion *quat);
 
   private:
     void InitializeStatusSubsystem(void);
