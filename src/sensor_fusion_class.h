@@ -90,6 +90,8 @@ class SensorFusion {
    */
     const uint8_t kLoopsPerMagRead =
         1;  ///< how often a magnetometer read is performed
+    const uint8_t kLoopsPerThermRead =
+        1;  ///< how often a thermometer read is performed
     const uint8_t kLoopsPerAccelRead =
         1;  ///< how often an accelerometer read is performed
     const uint8_t kLoopsPerGyroRead =

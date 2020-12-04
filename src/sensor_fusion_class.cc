@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2020, Bjarne Hansen
+ * All rights reserved.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 /*!
  *  \file sensor_fusion_class.cc
  *
@@ -14,8 +20,7 @@
  * A C++ class provides simple access to the most common sensor fusion
  * functions, but it is also possible to directly interface with the library
  * methods contained in the underlying C files, which are based on those
- * provided by NXP in their version 7.20 release. SPDX-License-Identifier:
- * BSD-3-Clause
+ * provided by NXP in their version 7.20 release. 
  */
 
 #include "sensor_fusion_class.h"
@@ -33,7 +38,7 @@
  * the functions. It initializes the control and status subsystems as well as
  * several subordinate data structures.
  */
-SensorFusion::SensorFusion(int8_t pin_i2c_sda, int8_t pin_i2c_scl) {
+SensorFusion::SensorFusion() {
   sfg_ = new SensorFusionGlobals();
   control_subsystem_ = new ControlSubsystem;
   status_subsystem_ = new StatusSubsystem;
@@ -59,11 +64,10 @@ SensorFusion::SensorFusion(int8_t pin_i2c_sda, int8_t pin_i2c_scl) {
  * NULL, then output is not attempted.
  * \return True if the Control subsystem is initialized, else False.
  */
-bool SensorFusion::InitializeControlSubsystem( const Stream *serial_port, const Stream *tcp_client) {
-
-  return initializeControlPort(control_subsystem_, serial_port, tcp_client);  // configure pins and ports for
-                                              // the control sub-system
-}  // end InitializeControlSubsystem()
+bool SensorFusion::InitializeInputOutputSubsystem(const Stream *serial_port,
+                                                  const void *tcp_client) {
+  return initializeIOSubsystem(control_subsystem_, serial_port, tcp_client);
+}  // end InitializeInputOutputSubsystem()
 
 /*!
  * \brief Update the TCP client pointer.
