@@ -45,7 +45,7 @@ In addition to the standard Arduino environment, this project uses these librari
 - **WiFi** libraries (*only needed if WiFi output is enabled*)
 
 ## Where To Find...
-- **Documentation** for the fusion code is html-based; open the project's [`/html/index.html`](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/html/index.html) file in your favourite browser. Documentation is auto-generated from comments in the code itself, using Doxygen. 
+- **Documentation** for the fusion code is html-based; open the project's [`/html/index.html`](/html/index.html) file in your favourite browser. Documentation is auto-generated from comments in the code itself, using Doxygen. 
 - **Test plans, data, results**, etc are on [this project's Github Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki)
 - **NXP's version 7 sensor fusion** for ESP32 processors is under the [Code tab](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP) of this Github repository. It is fully functional with [NXP's Windows-based Sensor Fusion Toolbox](https://www.nxp.com/webapp/sps/download/license.jsp?colCode=SENSORFUSIONREV7) software application. 
 - **Adafruit's AHRS port of NXP's version 4.2 sensor fusion** as integrated with the SensESP project is on the [Upstream](https://github.com/SignalK/SensESP) and [author's](https://github.com/BjarneBitscrambler/SensESP) project pages
