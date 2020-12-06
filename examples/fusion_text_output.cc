@@ -28,15 +28,7 @@
 
 // Sensor Fusion Headers
 #include "sensor_fusion_class.h"
-#include "sensor_fusion/sensor_fusion.h"      // top level magCal and sensor fusion interfaces. Include 1st.
 #include "board.h"              // hardware-specific settings. Edit as needed for board & sensors.
-#include "build.h"
-#include "sensor_fusion/control.h"  	        // Command processing and data streaming interface
-#include "sensor_fusion/debug_print.h"        // provides ability to output debug messages via serial
-#include "sensor_fusion/driver_sensors.h"     // hardware-specific drivers
-#include "sensor_fusion/hal_i2c.h"            //I2C interfaces for ESP platform
-#include "sensor_fusion/status.h"   	        // Status indicator interface - application specific
-
 
 //pin that can be twiddled for debugging
 #ifdef ESP8266
@@ -56,23 +48,15 @@
   WiFiClient tcp_client;
 #endif
 
-// Sensor Fusion Global data structures
-//SensorFusionGlobals sfg;                  //Primary sensor fusion data structure
-struct ControlSubsystem controlSubsystem; // provides serial communications
-struct StatusSubsystem statusSubsystem;   // provides visual (usually LED) status indicator
-struct PhysicalSensor sensors[3];         // this implementation uses up to 3 sensors
+// pointer to our Sensor Fusion object, created in setup() and used in loop()
 SensorFusion *sensor_fusion;
 
 void setup() {
   // put your setup code here, to run once:
 
-    pinMode(DEBUG_OUTPUT_PIN, GPIO_MODE_OUTPUT);
+  pinMode(DEBUG_OUTPUT_PIN, GPIO_MODE_OUTPUT);
 
-    Serial.begin(BOARD_DEBUG_UART_BAUDRATE); //initialize serial UART
-    delay(200);
-
-//TODO can also use log_e, log_w, log_i() etc from esp32_hal-log.h but is not compatible with ESP8266?
-  debug_log("waitasec...");  
+  Serial.begin(BOARD_DEBUG_UART_BAUDRATE); //initialize serial UART
   //delay not necessary - gives time to open a serial monitor
   delay(1000);
 
@@ -109,30 +93,30 @@ void setup() {
   //calls is not recommended, as interpreting the Toolbox data amongst your data will
   //be confusing.
   if( ! (sensor_fusion->InitializeInputOutputSubsystem(&Serial, &tcp_client)) ) {
-    debug_log("trouble initting Output and Control system");
+    Serial.println("trouble initting Output and Control system");
   }
 
   // connect to the sensors.  Accelerometer and magnetometer are in same IC.
   if(! sensor_fusion->InstallSensor(BOARD_ACCEL_MAG_I2C_ADDR,
                                SensorType::kMagnetometer) ) {
-    debug_log("trouble installing Magnetometer");
+    Serial.println("trouble installing Magnetometer");
   }
   if(! sensor_fusion->InstallSensor(BOARD_ACCEL_MAG_I2C_ADDR,
                                SensorType::kAccelerometer) ) {
-    debug_log("trouble installing Accelerometer");
+    Serial.println("trouble installing Accelerometer");
   }
   if(! sensor_fusion->InstallSensor(BOARD_ACCEL_MAG_I2C_ADDR,
                                SensorType::kThermometer) ) {
-    debug_log("trouble installing Thermometer");
+    Serial.println("trouble installing Thermometer");
   }
   if(! sensor_fusion->InstallSensor(BOARD_GYRO_I2C_ADDR,
                                SensorType::kGyroscope) ) {
-    debug_log("trouble installing Gyroscope");
+    Serial.println("trouble installing Gyroscope");
   }
-  debug_log("Sensors connected");
+  Serial.println("Sensors connected");
 
   sensor_fusion->Begin();
-  debug_log("Fusion Engine Ready");
+  Serial.println("Fusion Engine Ready");
 
 } // end setup()
 
@@ -178,7 +162,7 @@ void loop() {
         //Process any incoming commands arriving over serial or TCP port.
         //See control_input.c for list of available commands.
         //This call is optional - if you don't need external control, omit it
-        sensor_fusion->ProcessCommands();
+//        sensor_fusion->ProcessCommands();
 
         if ((millis() - last_print_time) > kPrintIntervalMs) {
           last_print_time += kPrintIntervalMs;
@@ -191,13 +175,13 @@ void loop() {
 
          if (!sensor_fusion->SendArbitraryData(output_str,
                                                 strlen(output_str))) {
-            debug_log("couldn't send output");
+            Serial.println("couldn't send output");
           }
 
         }
 //        sfg.applyPerturbation(
 //            &sfg);  // apply debug perturbation (if testing mode enabled)
-                    //      debug_log("applied perturbation");
+                    //      Serial.println("applied perturbation");
 
 //        digitalWrite(DEBUG_OUTPUT_PIN, i % 2);  // toggle pin for debugging
 

@@ -40,10 +40,12 @@ tested in the *PlatformIO* development environment, as an *Arduino* framework
 project for an ESP32 board.
 
 In addition to the standard Arduino environment, this project uses these libraries:
-- **Wire (I2C)** library
+- **Wire (I2C)** library (*used for communicating with the sensor ICs*)
+- **EEPROM** library (*used to store calibration values in non-volatile memory*)
 - **WiFi** libraries (*only needed if WiFi output is enabled*)
 
 ## Where To Find...
+- **Documentation** for the fusion code is html-based; open the project's [`/html/index.html`](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/html/index.html) file in your favourite browser. Documentation is auto-generated from comments in the code itself, using Doxygen. 
 - **Test plans, data, results**, etc are on [this project's Github Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki)
 - **NXP's version 7 sensor fusion** for ESP32 processors is under the [Code tab](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP) of this Github repository. It is fully functional with [NXP's Windows-based Sensor Fusion Toolbox](https://www.nxp.com/webapp/sps/download/license.jsp?colCode=SENSORFUSIONREV7) software application. 
 - **Adafruit's AHRS port of NXP's version 4.2 sensor fusion** as integrated with the SensESP project is on the [Upstream](https://github.com/SignalK/SensESP) and [author's](https://github.com/BjarneBitscrambler/SensESP) project pages
@@ -53,25 +55,25 @@ Use the *Issues* and *Pull Request* tabs on this project's Github repository if 
 
 ## How-To Use
 To use this library follow these steps (some untested - let me know of any changes you needed to make to get things to work on your setup):
-- setup the PlatformIO development environment
+- setup the *PlatformIO* development environment
 - create a new PlatformIO project, selecting the *Board:* `Espressif ESP-WROVER-KIT` and *Framework:* `Arduino` (other ESP32 boards should work without changes; Espressif CPUs like the ESP8266 may need some code adjustments - not tested)
 
 Now follow either of these two methods to bring in the library files:
-### Method 1
+### Method 1 (gets you a local clone that you can edit or base pull requests on)
 - create a local clone of this repository on your computer
+- from your local repository, copy the contents of `/src` into your new project's `/src` folder. Ensure you get all the files as well as the folder `sensor_fusion`.
 - from your local repository, copy `/examples/fusion_text_output.cc` into your new PlatformIO project's `/src` folder. You may want to rename it `main.cc` to remind yourself that it contains the `setup()` and `loop()` functions.
-- from your local repository, copy the files and subfolders of `/src/*` into your new project's `/lib/sensor_fusion` folder
 
-### Method 2
-- copy this project's `/examples/fusion_text_output.cc` into your new PlatformIO project's `/src` folder
-- in your new project's `platformio.ini` file, add the SensorFusionLibrary **TODO fixup**
+### Method 2 (doesn't require cloning a local repository)
+- copy this project's `/examples/fusion_text_output.cc` into your new PlatformIO project's `/src` folder. You may want to rename it `main.cc` to remind yourself that it contains the `setup()` and `loop()` functions.
+- copy this project's `platformio.ini`into your new project's root directory (or use it to modify the relevant sections in your own project's `platformio.ini`). Locate the section `lib_deps =` and add the line https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP.git. This section should also list the EEPROM and Wire libraries. 
+
+Method 2 results in the library code being imported into PlatformIO's `.pio` folder.
 
 Then:  
 - edit your new project's `platformio.ini` file for your specific board and environment. Use this project's `platformio.ini` file as an example.
-- edit `/lib/sensor_fusion/board.h` to reflect your particular hardware. The I2C pins connecting your processor to your sensor ICs will likely be different, and you may also need to change the I2C addresses that the ICs are configured for.
+- edit the `#defines` at the top of your `fusion_text_output.cc` (the sample `main.cc`)) to reflect your particular hardware. The I2C pins connecting your processor to your sensor ICs will likely be different, and you may also need to change the I2C addresses that the ICs are configured for.
 - compile and download to your processor
-
-The file`/lib/sensor_fusion/build.h` contains defines for various functionality, such as whether the software outputs its data via hardware serial UART or WiFi TCP connections, or both (default). Edit this file as desired, but note that not all combinations of features may be valid or been tested.
 
 ### Initial Text Output
 To confirm that the software is communicating with your sensors, observe the serial port output of the ESP processor. Use a USB connection to a PC running a terminal program at 115200 baud, 8 bits, No parity, 1 stop bit. Several progress messages should appear as the fusion software configures the sensors. Once the algorithm is running, lines of text containing a timestamp and orientation data should scroll by. See the `main.cc` program's `loop()` for details.
@@ -96,6 +98,15 @@ Using WiFi (even when ESP is acting as AP) *does* introduce noticeable lag in th
 
 ### Additional Debugging
 You can use the GPIO output that toggles each time through the data collection and sending loop to confirm whether your ESP is collecting and transmitting data regularly. Using the default software, the output should toggle every 25 ms (i.e. a 20 Hz square wave). See `fusion_text_output.cc` for details.
+
+### Customizing and Modifying
+
+The file`/sensor_fusion/build.h` contains defines for various functionality, such as whether the software outputs its data via hardware serial UART or WiFi TCP connections, or both (default). Edit this file as desired, but note that not all combinations of features may be valid or been tested.
+
+Changes to **adapt to other hardware** are confined to a few files, as the majority of the fusion code is generic C-code that is pretty platform-independent. 
+Files that would be expected to change when using different hardware are the `hal_*.*` files, `board.h`, and `build.h`.  As well, new sensor IC driver files may be needed, patterned on the existing `driver_fxos8700.*` and `driver_fxas21002.*` files. Finally, `calibration_storage.*` may need changing depending on how non-volatile memory functions on the different hardware.
+
+If you want to **change how the fusion algorithm operates**, have a look at `control*.*`, `build.h`, and `status.*`. Quite a lot of parameters are selected via pre-processor `#define` statements; check the comments for suggestions on how to achieve your goals. 
 
 ## Author
 Bjarne Hansen
