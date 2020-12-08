@@ -61,11 +61,11 @@ To use this library follow these steps (some untested - let me know of any chang
 Now follow either of these two methods to bring in the library files:
 ### Method 1 (gets you a local clone that you can edit or base pull requests on)
 - create a local clone of this repository on your computer
-- from your local repository, copy the contents of `/src` into your new project's `/src` folder. Ensure you get all the files as well as the folder `sensor_fusion`.
-- from your local repository, copy `/examples/fusion_text_output.cc` into your new PlatformIO project's `/src` folder. You may want to rename it `main.cc` to remind yourself that it contains the `setup()` and `loop()` functions.
+- from your local repository, copy the contents of `/src` into your new project's `/src` folder. Ensure you get all the files as well as the subfolder `/src/sensor_fusion`.
+- from your local repository, copy `/examples/fusion_text_output.cc` into your new PlatformIO project's `/src` folder. You may want to rename it `main.cc` or `main.cpp` to remind yourself that it contains the `setup()` and `loop()` functions.
 
-### Method 2 (doesn't require cloning a local repository)
-- copy this project's `/examples/fusion_text_output.cc` into your new PlatformIO project's `/src` folder. You may want to rename it `main.cc` to remind yourself that it contains the `setup()` and `loop()` functions.
+### Method 2 (doesn't require manual cloning into a local repository)
+- copy this project's `/examples/fusion_text_output.cc` into your new PlatformIO project's `/src` folder. You may want to rename it `main.cc`  or `main.cpp` to remind yourself that it contains the `setup()` and `loop()` functions.
 - copy this project's `platformio.ini`into your new project's root directory (or use it to modify the relevant sections in your own project's `platformio.ini`). Locate the section `lib_deps =` and add the line https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP.git. This section should also list the EEPROM and Wire libraries. 
 
 Method 2 results in the library code being imported into PlatformIO's `.pio` folder.
