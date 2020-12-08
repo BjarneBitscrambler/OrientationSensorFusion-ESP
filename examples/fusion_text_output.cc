@@ -30,6 +30,19 @@
 #include "sensor_fusion_class.h"
 #include "board.h"              // hardware-specific settings. Edit as needed for board & sensors.
 
+// UART details for data streaming and debug messages. */
+#ifndef BOARD_DEBUG_UART_BAUDRATE
+#define BOARD_DEBUG_UART_BAUDRATE 115200
+#endif
+
+// I2C details 
+#define PIN_I2C_SDA   (23)  //Adjust to your board. A value of -1
+#define PIN_I2C_SCL   (25)  // will use default Arduino pins.
+
+// sensor hardware details       
+#define BOARD_ACCEL_MAG_I2C_ADDR    (0x1F) //I2C address on Adafruit breakout board
+#define BOARD_GYRO_I2C_ADDR         (0x21) //I2C address on Adafruit breakout board
+
 //pin that can be twiddled for debugging
 #ifdef ESP8266
   //ESP8266 has different nomenclature for its GPIO pins and directions

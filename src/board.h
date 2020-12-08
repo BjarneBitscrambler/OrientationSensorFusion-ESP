@@ -49,21 +49,7 @@ extern "C" {
 #define THIS_BOARD  9   //impersonates a FRDM_K22F. Sent in packets to PC-based App.
 #define THIS_SHIELD 4   //impersonates shield AGMP03. Sent in packets to PC-based App.
 
-// UART details for data streaming and debug messages. */
-#ifndef BOARD_DEBUG_UART_BAUDRATE
-#define BOARD_DEBUG_UART_BAUDRATE 115200
-#endif
-
-// I2C details 
-#define PIN_I2C_SDA   (23)  //Adjust to your board. A value of -1
-#define PIN_I2C_SCL   (25)  // will use default Arduino pins.
-
 // sensor hardware details
-#define FXAS21002C_I2C_ADDRESS      (0x21) //I2C address on Adafruit breakout board
-#define FXOS8700_I2C_ADDRESS        (0x1F) //I2C address on Adafruit breakout board
-#define BOARD_ACCEL_MAG_I2C_ADDR    FXOS8700_I2C_ADDRESS
-#define BOARD_GYRO_I2C_ADDR         FXAS21002C_I2C_ADDRESS
-
 #define GYRO_FIFO_SIZE  32	///< FXAX21000, FXAS21002 have 32 element FIFO
 #define ACCEL_FIFO_SIZE 32	///< FXOS8700 (accel), MMA8652, FXLS8952 all have 32 element FIFO
 #define MAG_FIFO_SIZE 	1	///< FXOS8700 (mag) and MAG3110 have no FIFO so equivalent to 1 element FIFO. For 
