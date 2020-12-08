@@ -35,9 +35,17 @@
 */
 /**************************************************************************/
 bool I2CInitialize( int pin_sda, int pin_scl ) {
-  bool success = Wire.begin(pin_sda, pin_scl);
-  Wire.setClock( 400000 ); //in ESP8266 library, can't set clock in same call that sets pins
-  return success;
+  
+ #ifdef ESP32
+    bool success = Wire.begin(pin_sda, pin_scl);
+#endif
+#ifdef ESP8266
+    Wire.begin(pin_sda, pin_scl);
+    bool success = true;    //ESP8266 Wire library doesn't return value from begin()
+#endif
+    Wire.setClock(400000);  // in ESP8266 library, can't set clock in same call
+                            // that sets pins
+    return success;
 }  // end I2CInitialize()
 
 /**************************************************************************/
