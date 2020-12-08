@@ -128,7 +128,7 @@ void setup() {
   }
   Serial.println("Sensors connected");
 
-  sensor_fusion->Begin();
+  sensor_fusion->Begin(PIN_I2C_SDA, PIN_I2C_SCL);
   Serial.println("Fusion Engine Ready");
 
 } // end setup()

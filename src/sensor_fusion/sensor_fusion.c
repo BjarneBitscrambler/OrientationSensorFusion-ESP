@@ -459,14 +459,14 @@ void runFusion(SensorFusionGlobals *sfg)
 /// This function is responsible for initializing the system prior to starting
 /// the main fusion loop. I2C is initted, sensors configured, calibrations loaded.
 /// This function is normally invoked via the "sfg." global pointer.
-void initializeFusionEngine(SensorFusionGlobals *sfg)
+void initializeFusionEngine(SensorFusionGlobals *sfg, int pin_i2c_sda, int pin_i2c_scl)
 {
     int16_t status = 0;
     struct ControlSubsystem    *pComm;
     pComm = sfg->pControlSubsystem;
 
     sfg->setStatus(sfg, INITIALIZING);
-    if( ! I2CInitialize(PIN_I2C_SDA, PIN_I2C_SCL) ) {
+    if( ! I2CInitialize(pin_i2c_sda, pin_i2c_scl) ) {
         sfg->setStatus(sfg, HARD_FAULT);  // Never returns
     }
     status = initializeSensors(sfg);

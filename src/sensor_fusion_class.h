@@ -48,7 +48,7 @@ class SensorFusion {
  public:
   SensorFusion();
   bool InstallSensor(uint8_t sensor_i2c_addr, SensorType sensor_type);
-  void Begin(void);
+  void Begin(int pin_i2c_sda = -1, int pin_i2c_scl = -1);
   bool InitializeInputOutputSubsystem(const Stream *serial_port = NULL,
                                       const void *tcp_client = NULL);
   void UpdateWiFiStream(void *tcp_client);

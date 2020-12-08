@@ -101,9 +101,9 @@ void SensorFusion::InitializeSensorFusionGlobals(void) {
 /*!
  * Initialize the Sensors. Read calibrations. Set status to Normal.
  */
-void SensorFusion::Begin() {
+void SensorFusion::Begin(int pin_i2c_sda, int pin_i2c_scl) {
   sfg_->initializeFusionEngine(
-      sfg_);                      // Initialize sensors and magnetic calibration
+      sfg_, pin_i2c_sda, pin_i2c_scl);                      // Initialize sensors and magnetic calibration
   sfg_->setStatus(sfg_, NORMAL);  // Set status state to NORMAL
 
 }  // end InitializeFusionEngine()

@@ -133,7 +133,7 @@ typedef int8_t (installSensor_t) (
     readSensor_t *read                  ///< SF Sensor Read Function pointer
 );
 
-typedef void   (initializeFusionEngine_t) 	(struct SensorFusionGlobals *sfg);
+typedef void   (initializeFusionEngine_t) 	(struct SensorFusionGlobals *sfg, int pin_i2c_sda1, int pin_i2c_scl);
 typedef void   (runFusion_t) 			(struct SensorFusionGlobals *sfg);
 typedef void   (clearFIFOs_t) 			(struct SensorFusionGlobals *sfg);
 typedef void   (conditionSensorReadings_t) 	(struct SensorFusionGlobals *sfg);
