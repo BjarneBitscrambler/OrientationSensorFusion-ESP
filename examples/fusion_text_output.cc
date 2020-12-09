@@ -35,10 +35,15 @@
 #define BOARD_DEBUG_UART_BAUDRATE 115200
 #endif
 
-// I2C details 
-#define PIN_I2C_SDA   (23)  //Adjust to your board. A value of -1
-#define PIN_I2C_SCL   (25)  // will use default Arduino pins.
-
+// I2C details - indicate which pins the sensor is connected to
+#ifdef ESP8266
+  #define PIN_I2C_SDA   (12)  //Adjust to your board. A value of -1
+  #define PIN_I2C_SCL   (14)  // will use default Arduino pins.
+#endif
+#ifdef ESP32
+  #define PIN_I2C_SDA   (23)  //Adjust to your board. A value of -1
+  #define PIN_I2C_SCL   (25)  // will use default Arduino pins.
+#endif
 // sensor hardware details       
 #define BOARD_ACCEL_MAG_I2C_ADDR    (0x1F) //I2C address on Adafruit breakout board
 #define BOARD_GYRO_I2C_ADDR         (0x21) //I2C address on Adafruit breakout board
@@ -53,16 +58,31 @@
   #define DEBUG_OUTPUT_PIN GPIO_NUM_22  
 #endif
 
+// Data can be output via a WiFi connection in addition to
+// (or instead of) a serial UART. The ESP device will act as
+// a WiFi Access Point (AP) with the credentials listed below.
 #if F_USE_WIRELESS_UART
   const char *ssid = "compass";
   const char *password = "northsouth";
   #define WIFI_STREAMING_PORT 23
   WiFiServer server(WIFI_STREAMING_PORT);  // use wifi server port 23 (telnet)
   WiFiClient tcp_client;
+#else
+void *tcp_client = NULL;
 #endif
 
-// pointer to our Sensor Fusion object, created in setup() and used in loop()
+// Pointer to our Sensor Fusion object, created in setup() and used in loop()
 SensorFusion *sensor_fusion;
+  
+// Variables used for timing the fusion calls and outputting data
+unsigned long last_loop_time;
+unsigned long last_print_time;
+
+// Buffer for holding general text output
+char output_str[100];
+
+// Loop counter, used for toggling the debugging GPIO pin
+int i;
 
 void setup() {
   // put your setup code here, to run once:
@@ -73,7 +93,7 @@ void setup() {
   //delay not necessary - gives time to open a serial monitor
   delay(1000);
 
-// wifi config - using ESP as Access Point (AP)
+  // wifi config - using ESP as Access Point (AP)
 #if F_USE_WIRELESS_UART
   // init WiFi connection
   WiFi.softAP(ssid, password);
@@ -131,19 +151,24 @@ void setup() {
   sensor_fusion->Begin(PIN_I2C_SDA, PIN_I2C_SCL);
   Serial.println("Fusion Engine Ready");
 
+  last_loop_time = millis(); //these will be used in loop()
+  last_print_time = millis();
+
 } // end setup()
+
+
 
 void loop() {
   // put your main code here, to run repeatedly:
 
-    //Usually the fusion algorithm is run once each time the sensors are read
-    //However we allow for possibility of reading several times before fusing
-    //(for instance, if we want to collect several magnetometer readings each
-    //fusion cycle, since the magnetometer IC doesn't have a FIFO). To take
-    //advantage of this feature, adjust the constants like kLoopsPerMagRead
-    //in sensor_fusion_class.h
-    const unsigned long kLoopIntervalMs = 1000 / LOOP_RATE_HZ;
-    const unsigned long kPrintIntervalMs = 250;
+  //Usually the fusion algorithm is run once each time the sensors are read
+  //However we allow for possibility of reading several times before fusing
+  //(for instance, if we want to collect several magnetometer readings each
+  //fusion cycle, since the magnetometer IC doesn't have a FIFO). To take
+  //advantage of this feature, adjust the constants like kLoopsPerMagRead
+  //in sensor_fusion_class.h
+  const unsigned long kLoopIntervalMs = 1000 / LOOP_RATE_HZ;
+  const unsigned long kPrintIntervalMs = 250;
 
     unsigned long last_loop_time = millis();
     unsigned long last_print_time = millis();
@@ -152,52 +177,52 @@ void loop() {
 
     while (true) {
 #if F_USE_WIRELESS_UART
-      if (!tcp_client) {
-        tcp_client = server.available();  // check for incoming TCP clients
-        if (tcp_client) {
-          sensor_fusion->UpdateWiFiStream(&tcp_client);  
-        }
-      }
+  if (!tcp_client) {
+    tcp_client = server.available();  // check for incoming TCP clients
+    if (tcp_client) {
+      sensor_fusion->UpdateWiFiStream(&tcp_client);  
+    }
+  }
 #endif 
-      if ((millis() - last_loop_time) > kLoopIntervalMs) {
-        last_loop_time += kLoopIntervalMs; //keep executing the below periodically
-        
-        //read the Sensors whose turn it is, according to the loops_per_fuse_counter_ 
-        sensor_fusion->ReadSensors(); 
+  if ((millis() - last_loop_time) > kLoopIntervalMs) {
+    last_loop_time += kLoopIntervalMs; //keep executing the below periodically
+    
+    //read the Sensors whose turn it is, according to the loops_per_fuse_counter_ 
+    sensor_fusion->ReadSensors(); 
 
-        // run fusion routine according to loops_per_fuse_counter_
-        sensor_fusion->RunFusion();
+    // run fusion routine according to loops_per_fuse_counter_
+    sensor_fusion->RunFusion();
 
-        //create and send Toolbox format packet if fusion has produced new data
-        //This call is optional - if you don't want Toolbox packets, omit it
-//        sensor_fusion->ProduceToolboxOutput();
+    //create and send Toolbox format packet if fusion has produced new data
+    //This call is optional - if you don't want Toolbox packets, omit it
+//    sensor_fusion->ProduceToolboxOutput();
 
-        //Process any incoming commands arriving over serial or TCP port.
-        //See control_input.c for list of available commands.
-        //This call is optional - if you don't need external control, omit it
-//        sensor_fusion->ProcessCommands();
+    //Process any incoming commands arriving over serial or TCP port.
+    //See control_input.c for list of available commands.
+    //This call is optional - if you don't need external control, omit it
+//    sensor_fusion->ProcessCommands();
 
-        if ((millis() - last_print_time) > kPrintIntervalMs) {
-          last_print_time += kPrintIntervalMs;
-          snprintf(output_str, 99, "%lu,%03.1f,%+5.1f,%+5.1f,%5.1f,%+4.0f\n\r",
-                   millis(), sensor_fusion->GetHeadingDegrees(),
-                   sensor_fusion->GetPitchDegrees(),
-                   sensor_fusion->GetRollDegrees(),
-                   sensor_fusion->GetTemperatureC(),
-                   sensor_fusion->GetTurnRateDegPerS());
-
-         if (!sensor_fusion->SendArbitraryData(output_str,
-                                                strlen(output_str))) {
-            Serial.println("couldn't send output");
-          }
-
-        }
-//        sfg.applyPerturbation(
+//    sfg.applyPerturbation(
 //            &sfg);  // apply debug perturbation (if testing mode enabled)
-                    //      Serial.println("applied perturbation");
+              //      Serial.println("applied perturbation");
 
-//        digitalWrite(DEBUG_OUTPUT_PIN, i % 2);  // toggle pin for debugging
+    digitalWrite(DEBUG_OUTPUT_PIN, i % 2);  // toggle pin for debugging
+    i++;
 
-      }  // end of loop that reads sensors and runs fusion as needed
-    }  // end while(true)
+  }  // end of if() that reads sensors and runs fusion as needed
+    
+  if ((millis() - last_print_time) > kPrintIntervalMs) {
+    last_print_time += kPrintIntervalMs;
+    snprintf(output_str, 99, "%lu,%03.1f,%+5.1f,%+5.1f,%5.1f,%+4.0f\n\r",
+            millis(), sensor_fusion->GetHeadingDegrees(),
+            sensor_fusion->GetPitchDegrees(),
+            sensor_fusion->GetRollDegrees(),
+            sensor_fusion->GetTemperatureC(),
+            sensor_fusion->GetTurnRateDegPerS());
+
+    if (!sensor_fusion->SendArbitraryData(output_str,
+                                 strlen(output_str))) {
+    Serial.println("couldn't send output");
+    }
+  } // end timed if() that prints data as text
 }  // end loop()
