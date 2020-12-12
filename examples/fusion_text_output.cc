@@ -170,12 +170,6 @@ void loop() {
   const unsigned long kLoopIntervalMs = 1000 / LOOP_RATE_HZ;
   const unsigned long kPrintIntervalMs = 250;
 
-    unsigned long last_loop_time = millis();
-    unsigned long last_print_time = millis();
-
-    char output_str[100];
-
-    while (true) {
 #if F_USE_WIRELESS_UART
   if (!tcp_client) {
     tcp_client = server.available();  // check for incoming TCP clients
