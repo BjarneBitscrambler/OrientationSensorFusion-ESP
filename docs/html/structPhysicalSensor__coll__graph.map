@@ -1,0 +1,4 @@
+<map id="PhysicalSensor" name="PhysicalSensor">
+<area shape="rect" id="node1" title="An instance of PhysicalSensor structure type should be allocated for each physical sensors (combo dev..." alt="" coords="23,109,143,136"/>
+<area shape="rect" id="node2" href="$structregisterDeviceInfo__t.html" title="This structure defines the device specific info required by register I/O." alt="" coords="5,5,160,32"/>
+</map>

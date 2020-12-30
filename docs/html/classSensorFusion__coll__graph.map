@@ -1,0 +1,12 @@
+<map id="SensorFusion" name="SensorFusion">
+<area shape="rect" id="node1" title=" " alt="" coords="655,288,763,315"/>
+<area shape="rect" id="node2" href="$structStatusSubsystem.html" title="StatusSubsystem() provides an object&#45;like interface for communicating status to the user." alt="" coords="5,109,140,136"/>
+<area shape="rect" id="node5" href="$structSensorFusionGlobals.html" title="The top level fusion structure." alt="" coords="419,199,577,225"/>
+<area shape="rect" id="node3" href="$structPhysicalSensor.html" title="An instance of PhysicalSensor structure type should be allocated for each physical sensors (combo dev..." alt="" coords="685,109,805,136"/>
+<area shape="rect" id="node4" href="$structregisterDeviceInfo__t.html" title="This structure defines the device specific info required by register I/O." alt="" coords="667,5,822,32"/>
+<area shape="rect" id="node6" href="$structTempSensor.html" title="The TempSensor structure stores raw temperature readings." alt="" coords="413,109,514,136"/>
+<area shape="rect" id="node7" href="$structMagCalibration.html" title="Magnetic Calibration Structure." alt="" coords="539,109,660,136"/>
+<area shape="rect" id="node8" href="$structMagBuffer.html" title=" " alt="" coords="178,109,269,136"/>
+<area shape="rect" id="node9" href="$structMagSensor.html" title="The MagSensor structure stores raw and processed measurements for a 3&#45;axis magnetic sensor." alt="" coords="293,109,388,136"/>
+<area shape="rect" id="node10" href="$structControlSubsystem.html" title="The ControlSubsystem encapsulates command and data streaming functions." alt="" coords="886,109,1027,136"/>
+</map>

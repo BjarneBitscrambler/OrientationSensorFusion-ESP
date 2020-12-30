@@ -1,0 +1,9 @@
+<map id="src/sensor_fusion/hal_i2c.cc" name="src/sensor_fusion/hal_i2c.cc">
+<area shape="rect" id="node1" title="The hal_i2c.cc file contains definitions for low&#45;level interface functions for reading and writing da..." alt="" coords="101,5,260,47"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,95,89,121"/>
+<area shape="rect" id="node3" title=" " alt="" coords="114,95,178,121"/>
+<area shape="rect" id="node4" href="$driver__sensors__types_8h.html" title="The driver_sensors_types.h file contains sensor state structs and error definitions." alt="" coords="117,169,289,196"/>
+<area shape="rect" id="node6" href="$hal__i2c_8h.html" title="The hal_i2c.h file declares low&#45;level interface functions for reading and writing sensor registers us..." alt="" coords="275,95,355,121"/>
+<area shape="rect" id="node5" title=" " alt="" coords="229,244,300,271"/>
+<area shape="rect" id="node7" title=" " alt="" coords="365,169,447,196"/>
+</map>

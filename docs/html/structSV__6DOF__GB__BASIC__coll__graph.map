@@ -1,0 +1,4 @@
+<map id="SV_6DOF_GB_BASIC" name="SV_6DOF_GB_BASIC">
+<area shape="rect" id="node1" title="SV_6DOF_GB_BASIC is the 6DOF basic accelerometer and magnetometer state vector structure." alt="" coords="5,109,160,136"/>
+<area shape="rect" id="node2" href="$structQuaternion.html" title="quaternion structure definition" alt="" coords="35,5,130,32"/>
+</map>

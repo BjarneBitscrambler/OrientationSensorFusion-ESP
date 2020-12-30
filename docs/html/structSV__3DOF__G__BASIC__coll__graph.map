@@ -1,0 +1,4 @@
+<map id="SV_3DOF_G_BASIC" name="SV_3DOF_G_BASIC">
+<area shape="rect" id="node1" title="This is the 3DOF basic accelerometer state vector structure." alt="" coords="5,109,151,136"/>
+<area shape="rect" id="node2" href="$structQuaternion.html" title="quaternion structure definition" alt="" coords="31,5,125,32"/>
+</map>

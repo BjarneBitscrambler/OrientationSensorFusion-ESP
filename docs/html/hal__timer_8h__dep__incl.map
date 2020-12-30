@@ -1,0 +1,5 @@
+<map id="src/sensor_fusion/hal_timer.h" name="src/sensor_fusion/hal_timer.h">
+<area shape="rect" id="node1" title="Wrapper for Hardware Abstraction Layer (HAL) Contains replacements for hardware&#45;specific functions Cu..." alt="" coords="127,5,285,47"/>
+<area shape="rect" id="node2" href="$fusion_8c.html" title="Lower level sensor fusion interface." alt="" coords="5,102,196,129"/>
+<area shape="rect" id="node3" href="$sensor__fusion_8c.html" title="The sensor_fusion.c file implements the top level programming interface." alt="" coords="220,95,403,136"/>
+</map>

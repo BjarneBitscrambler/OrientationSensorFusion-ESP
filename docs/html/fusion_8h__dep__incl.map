@@ -1,0 +1,6 @@
+<map id="src/sensor_fusion/fusion.h" name="src/sensor_fusion/fusion.h">
+<area shape="rect" id="node1" title="Lower level sensor fusion interface." alt="" coords="214,5,405,32"/>
+<area shape="rect" id="node2" href="$control__input_8c.html" title="Command interpreter which interfaces to the Sensor Fusion Toolbox. Commands sent from the Toolbox (e...." alt="" coords="5,80,189,121"/>
+<area shape="rect" id="node3" href="$fusion_8c.html" title="Lower level sensor fusion interface." alt="" coords="214,87,405,114"/>
+<area shape="rect" id="node4" href="$sensor__fusion_8c.html" title="The sensor_fusion.c file implements the top level programming interface." alt="" coords="429,80,611,121"/>
+</map>

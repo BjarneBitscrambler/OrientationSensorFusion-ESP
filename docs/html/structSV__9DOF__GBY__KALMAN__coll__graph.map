@@ -1,0 +1,4 @@
+<map id="SV_9DOF_GBY_KALMAN" name="SV_9DOF_GBY_KALMAN">
+<area shape="rect" id="node1" title="SV_9DOF_GBY_KALMAN is the 9DOF Kalman filter accelerometer, magnetometer and gyroscope state vector s..." alt="" coords="5,95,184,121"/>
+<area shape="rect" id="node2" href="$structQuaternion.html" title="quaternion structure definition" alt="" coords="47,5,142,32"/>
+</map>

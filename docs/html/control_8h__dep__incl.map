@@ -1,0 +1,11 @@
+<map id="src/sensor_fusion/control.h" name="src/sensor_fusion/control.h">
+<area shape="rect" id="node1" title="Defines control sub&#45;system." alt="" coords="487,5,683,32"/>
+<area shape="rect" id="node2" href="$sensor__fusion__class_8h.html" title=" " alt="" coords="5,87,192,114"/>
+<area shape="rect" id="node4" href="$sensor__fusion__class_8cc.html" title="An easy&#45;to&#45;use interface to the NXP Sensor Fusion version 7 library algorithms." alt="" coords="133,169,326,196"/>
+<area shape="rect" id="node5" href="$control_8cc.html" title="Defines control sub&#45;system." alt="" coords="267,87,469,114"/>
+<area shape="rect" id="node6" href="$control__input_8c.html" title="Command interpreter which interfaces to the Sensor Fusion Toolbox. Commands sent from the Toolbox (e...." alt="" coords="493,80,677,121"/>
+<area shape="rect" id="node7" href="$control__output_8c.html" title="Implements output streaming for the control &amp; status subsystem. Data is packaged up in format compati..." alt="" coords="701,80,885,121"/>
+<area shape="rect" id="node8" href="$fusion__testing_8c.html" title="ApplyPerturbation function used to analyze dynamic performance." alt="" coords="909,80,1088,121"/>
+<area shape="rect" id="node9" href="$sensor__fusion_8c.html" title="The sensor_fusion.c file implements the top level programming interface." alt="" coords="1113,80,1295,121"/>
+<area shape="rect" id="node3" href="$main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class This file creates a SensorFusion ob..." alt="" coords="12,169,108,196"/>
+</map>
