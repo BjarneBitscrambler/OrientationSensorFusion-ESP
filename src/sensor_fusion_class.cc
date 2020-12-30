@@ -33,6 +33,10 @@
 #include "sensor_fusion/driver_sensors.h"
 #include "sensor_fusion/status.h"
 
+const float kDegToRads = PI / 180.0;  ///< To convert Degrees to Radians, multiply by this constant.
+const float kCelsiusToKelvin = 273.15; ///< To convert degrees C to K, add this constant.
+const float kGeesToMPerSS = 9.80665; ///< To convert acceleration in G to m/s^2, multiply by this constant.
+
 /*!
  * Constructor creates and initializes a structure of variables used throughout
  * the functions. It initializes the control and status subsystems as well as
@@ -236,11 +240,25 @@ float SensorFusion::GetHeadingDegrees(void) {
 }  // end GetHeadingDegrees()
 
 /*!
+ * \brief \return Return the Compass Heading in radians
+ */
+float SensorFusion::GetHeadingRadians(void) {
+  return GetHeadingDegrees() * kDegToRads;
+}  // end GetHeadingRadians()
+
+/*!
  * \brief \return Return the Pitch in degrees
  */
 float SensorFusion::GetPitchDegrees(void) {
   return sfg_->SV_9DOF_GBY_KALMAN.fPhiPl;
 }  // end GetPitchDegrees()
+
+/*!
+ * \brief \return Return the Pitch in radians
+ */
+float SensorFusion::GetPitchRadians(void) {
+  return GetPitchDegrees() * kDegToRads;
+}  // end GetPitchRadians()
 
 /*!
  * \brief \return Return the Roll in degrees
@@ -250,11 +268,25 @@ float SensorFusion::GetRollDegrees(void) {
 }  // end GetRollDegrees()
 
 /*!
+ * \brief \return Return the Roll in radians
+ */
+float SensorFusion::GetRollRadians(void) {
+  return GetRollDegrees() * kDegToRads;
+}  // end GetRollRadians()
+
+/*!
  * \brief \return Return the Temperature in degrees C
  */
 float SensorFusion::GetTemperatureC(void) {
   return sfg_->Temp.temperatureC;
 }  // end GetTemperatureC()
+
+/*!
+ * \brief \return Return the Temperature in degrees K
+ */
+float SensorFusion::GetTemperatureK(void) {
+  return GetTemperatureC() + kCelsiusToKelvin;
+}  // end GetTemperatureK()
 
 /*!
  * \brief \return Return the Turn Rate in degrees
@@ -264,39 +296,81 @@ float SensorFusion::GetTurnRateDegPerS(void) {
 }  // end GetTurnRateDegPerS()
 
 /*!
+ * \brief \return Return the Turn Rate in rad/s
+ */
+float SensorFusion::GetTurnRateRadPerS(void) {
+  return GetTurnRateDegPerS() * kDegToRads;
+}  // end GetTurnRateRadPerS()
+
+/*!
  * \brief \return Return the Pitch Rate in degrees/s
  */
 float SensorFusion::GetPitchRateDegPerS(void) {
   return sfg_->SV_9DOF_GBY_KALMAN.fOmega[0];
-}  // end GetTurnRateDegPerS()
+}  // end GetPitchRateDegPerS()
+
+/*!
+ * \brief \return Return the Pitch Rate in rad/s
+ */
+float SensorFusion::GetPitchRateRadPerS(void) {
+  return GetPitchRateDegPerS() * kDegToRads;
+}  // end GetPitchRateRadPerS()
 
 /*!
  * \brief \return Return the Roll Rate in degrees/s
  */
 float SensorFusion::GetRollRateDegPerS(void) {
   return -(sfg_->SV_9DOF_GBY_KALMAN.fOmega[1]);
-}  // end GetTurnRateDegPerS()
+}  // end GetRollRateDegPerS()
 
 /*!
- * \brief \return Return the X-axis Accleration in gees
+ * \brief \return Return the Roll Rate in rad/s
+ */
+float SensorFusion::GetRollRateRadPerS(void) {
+  return GetRollRateDegPerS() * kDegToRads;
+}  // end GetRollRateRadPerS()
+
+/*!
+ * \brief \return Return the X-axis Acceleration in gees
  */
 float SensorFusion::GetAccelXGees(void) {
   return sfg_->Accel.fGc[1];
-}  // end GetTurnRateDegPerS()
+}  // end GetAccelXGees()
 
 /*!
- * \brief \return Return the Y-axis Accleration in gees
+ * \brief \return Return the X-axis Acceleration in m/s^2
+ */
+float SensorFusion::GetAccelXMPerSS(void) {
+  return GetAccelXGees() * kGeesToMPerSS;
+}  // end GetAccelXMPerSS()
+
+/*!
+ * \brief \return Return the Y-axis Acceleration in gees
  */
 float SensorFusion::GetAccelYGees(void) {
   return sfg_->Accel.fGc[0];
-}  // end GetTurnRateDegPerS()
+}  // end GetAccelYGees()
 
 /*!
- * \brief \return Return the Z-axis Accleration in gees
+ * \brief \return Return the Y-axis Acceleration in m/s^2
+ */
+float SensorFusion::GetAccelYMPerSS(void) {
+  return GetAccelYGees() * kGeesToMPerSS;
+}  // end GetAccelYMPerSS()
+
+/*!
+ * \brief \return Return the Z-axis Acceleration in gees
  */
 float SensorFusion::GetAccelZGees(void) {
   return sfg_->Accel.fGc[2];
-}  // end GetTurnRateDegPerS()
+}  // end GetAccelZGees()
+
+/*!
+ * \brief \return Return the Z-axis Acceleration in m/s^2
+ */
+float SensorFusion::GetAccelZMPerSS(void) {
+  return GetAccelZGees() * kGeesToMPerSS;
+}  // end GetAccelZMPerSS()
 
 /*!
  * \brief Return the orientation as a quaternion

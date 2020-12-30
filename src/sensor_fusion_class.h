@@ -60,13 +60,23 @@ class SensorFusion {
   float GetHeadingDegrees(void);
   float GetPitchDegrees(void);
   float GetRollDegrees(void);
+  float GetHeadingRadians(void);
+  float GetPitchRadians(void);
+  float GetRollRadians(void);
   float GetAccelXGees(void);
   float GetAccelYGees(void);
   float GetAccelZGees(void);
+  float GetAccelXMPerSS(void);
+  float GetAccelYMPerSS(void);
+  float GetAccelZMPerSS(void);
   float GetTurnRateDegPerS(void);
   float GetPitchRateDegPerS(void);
   float GetRollRateDegPerS(void);
+  float GetTurnRateRadPerS(void);
+  float GetPitchRateRadPerS(void);
+  float GetRollRateRadPerS(void);
   float GetTemperatureC(void);
+  float GetTemperatureK(void);
   void  GetOrientationQuaternion(Quaternion *quat);
 
   private:
