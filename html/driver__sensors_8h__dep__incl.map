@@ -1,6 +1,0 @@
-<map id="src/sensor_fusion/driver_sensors.h" name="src/sensor_fusion/driver_sensors.h">
-<area shape="rect" id="node1" title="Provides function prototypes for driver level interfaces It does not have a corresponding ...." alt="" coords="213,5,391,47"/>
-<area shape="rect" id="node2" href="$driver__fxos8700_8c.html" title="Defines commands to perform various tasks (e.g. read Device ID, Initialize, Read Data) for the FXOS87..." alt="" coords="5,95,183,136"/>
-<area shape="rect" id="node3" href="$status_8c.html" title="Application&#45;specific status subsystem." alt="" coords="207,102,397,129"/>
-<area shape="rect" id="node4" href="$sensor__fusion__class_8cc.html" title="An easy&#45;to&#45;use interface to the NXP Sensor Fusion version 7 library algorithms." alt="" coords="421,102,615,129"/>
-</map>

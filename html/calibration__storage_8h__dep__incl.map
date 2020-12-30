@@ -1,8 +1,0 @@
-<map id="src/sensor_fusion/calibration_storage.h" name="src/sensor_fusion/calibration_storage.h">
-<area shape="rect" id="node1" title="Provides functions to store calibration to NVM, which on ESP devices is provided by EEPROM." alt="" coords="437,5,645,47"/>
-<area shape="rect" id="node2" href="$calibration__storage_8cc.html" title="Provides functions to store calibration to NVM." alt="" coords="5,95,213,136"/>
-<area shape="rect" id="node3" href="$control__input_8c.html" title="Command interpreter which interfaces to the Sensor Fusion Toolbox. Commands sent from the Toolbox (e...." alt="" coords="237,95,421,136"/>
-<area shape="rect" id="node4" href="$fusion_8c.html" title="Lower level sensor fusion interface." alt="" coords="446,102,637,129"/>
-<area shape="rect" id="node5" href="$magnetic_8c.html" title="Lower level magnetic calibration interface." alt="" coords="661,102,872,129"/>
-<area shape="rect" id="node6" href="$precisionAccelerometer_8c.html" title="Implements accelerometer calibration routines." alt="" coords="895,95,1094,136"/>
-</map>

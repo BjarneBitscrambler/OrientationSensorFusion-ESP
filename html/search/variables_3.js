@@ -1,6 +1,0 @@
-var searchData=
-[
-  ['debugpacketon_872',['DebugPacketOn',['../structControlSubsystem.html#afad5c0b195e653735ff4ef8c712732f4',1,'ControlSubsystem']]],
-  ['defaultquaternionpackettype_873',['DefaultQuaternionPacketType',['../structControlSubsystem.html#a6dfa727255d37c96265eee36558f8129',1,'ControlSubsystem']]],
-  ['deviceinfo_874',['deviceInfo',['../structfxos8700__i2c__sensorhandle__t.html#ab23db8d6620ee177eeb0c68b80254e85',1,'fxos8700_i2c_sensorhandle_t::deviceInfo()'],['../structPhysicalSensor.html#a3d7aae36c0a03c34a3d8a01371f975c3',1,'PhysicalSensor::deviceInfo()']]]
-];
