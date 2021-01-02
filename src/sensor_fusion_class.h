@@ -57,6 +57,7 @@ class SensorFusion {
   void ProduceToolboxOutput(void);
   bool SendArbitraryData(const char *buffer, uint16_t data_length);
   void ProcessCommands(void);
+  bool IsDataValid(void);
   float GetHeadingDegrees(void);
   float GetPitchDegrees(void);
   float GetRollDegrees(void);

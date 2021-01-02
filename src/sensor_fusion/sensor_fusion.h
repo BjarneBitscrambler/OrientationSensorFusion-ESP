@@ -104,10 +104,10 @@ typedef enum {                                  ///  These are the state definit
 	INITIALIZING,                           ///< Initializing sensors and algorithms
 	LOWPOWER,                               ///< Running in reduced power mode
 	NORMAL,                                 ///< Operation is Nominal
-        RECEIVING_WIRED,                        ///< Receiving commands over wired interface (momentary)
-        RECEIVING_WIRELESS,                     ///< Receiving commands over wireless interface (momentary)
+  RECEIVING_WIRED,                        ///< Receiving commands over wired interface (momentary)
+  RECEIVING_WIRELESS,                     ///< Receiving commands over wireless interface (momentary)
 	HARD_FAULT,                             ///< Non-recoverable FAULT = something went very wrong
-        SOFT_FAULT                              ///< Recoverable FAULT = something went wrong, but we can keep going
+  SOFT_FAULT                              ///< Recoverable FAULT = something went wrong, but we can keep going
 } fusion_status_t;
 
 // declare typedefs for function prototypes that need to be installed
@@ -139,8 +139,10 @@ typedef void   (clearFIFOs_t) 			(struct SensorFusionGlobals *sfg);
 typedef void   (conditionSensorReadings_t) 	(struct SensorFusionGlobals *sfg);
 typedef void   (applyPerturbation_t) 		(struct SensorFusionGlobals *sfg) ;
 typedef void   (setStatus_t) 			(struct SensorFusionGlobals *sfg, fusion_status_t status);
+typedef fusion_status_t  (getStatus_t) 			(struct SensorFusionGlobals *sfg);
 typedef void   (updateStatus_t) 		(struct SensorFusionGlobals *sfg);
 typedef void   (ssSetStatus_t) 			(struct StatusSubsystem *pStatus, fusion_status_t status);
+typedef fusion_status_t   (ssGetStatus_t) 			(struct StatusSubsystem *pStatus);
 typedef void   (ssUpdateStatus_t) 		(struct StatusSubsystem *pStatus);
 
 /// \brief An instance of PhysicalSensor structure type should be allocated for each physical sensors (combo devices = 1)
@@ -167,7 +169,7 @@ struct PhysicalSensor {
 struct PressureSensor
 {
 	uint8_t iWhoAmI;		        ///< sensor whoami
-        bool  isEnabled;                        ///< true if the device is sampling
+  bool  isEnabled;            ///< true if the device is sampling
 	int32_t iH;				///< most recent unaveraged height (counts)
 	int32_t iP;				///< most recent unaveraged pressure (counts)
 	float fH;				///< most recent unaveraged height (m)
@@ -536,6 +538,8 @@ typedef struct SensorFusionGlobals
 	setStatus_t		*queueStatus;  	        ///< queue status change for next regular interval
 	updateStatus_t		*updateStatus; 		///< status=next status
 	updateStatus_t		*testStatus; 		///< increment to next enumerated status value (test only)
+  getStatus_t 	*getStatus;	///< fetch the current status from the Status Subsystem
+
         ///@}
 } SensorFusionGlobals;
 

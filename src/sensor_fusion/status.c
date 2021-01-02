@@ -158,11 +158,18 @@ void ssSetStatus(StatusSubsystem *pStatus, fusion_status_t status)
     ssUpdateStatus(pStatus);
 }
 
+// return the system status
+fusion_status_t ssGetStatus(StatusSubsystem *pStatus)
+{
+    return pStatus->status;
+}
+
 /// initializeStatusSubsystem() should be called once at startup to initialize the
 /// data structure and to put hardware into the proper state for communicating status.
 void initializeStatusSubsystem(StatusSubsystem *pStatus)
 {
     pStatus->set = ssSetStatus;
+    pStatus->get = ssGetStatus;
     pStatus->queue = ssQueueStatus;
     pStatus->update = ssUpdateStatus;
     pStatus->test = ssTest;
@@ -171,15 +178,6 @@ void initializeStatusSubsystem(StatusSubsystem *pStatus)
     pStatus->queue(pStatus, OFF);
     pStatus->toggle = false;
 
-    /* Un-gate the port clocks */
-    //CLOCK_EnableClock(RED_LED.clockName);
-    //CLOCK_EnableClock(GREEN_LED.clockName);
-    //CLOCK_EnableClock(BLUE_LED.clockName);
-    // Led pin mux Configuration
-    /*PORT_SetPinMux(BOARD_LED_RED_GPIO_PORT, BOARD_LED_RED_GPIO_PIN,
-                   kPORT_MuxAsGpio);
-    PORT_SetPinMux(BOARD_LED_GREEN_GPIO_PORT, BOARD_LED_GREEN_GPIO_PIN,
-                   kPORT_MuxAsGpio); */
     /* set initial values */
     LED_RED_INIT(LOGIC_LED_OFF);
     LED_GREEN_INIT(LOGIC_LED_OFF);

@@ -109,6 +109,7 @@ void SensorFusion::Begin(int pin_i2c_sda, int pin_i2c_scl) {
   sfg_->initializeFusionEngine(
       sfg_, pin_i2c_sda, pin_i2c_scl);                      // Initialize sensors and magnetic calibration
   sfg_->setStatus(sfg_, NORMAL);  // Set status state to NORMAL
+//TODO - setStatus should check whether initialize worked.
 
 }  // end InitializeFusionEngine()
 
@@ -207,6 +208,17 @@ void SensorFusion::ProcessCommands(void) {
   // process any incoming commands
   sfg_->pControlSubsystem->readCommands(sfg_);
 }  // end ProcessCommands()
+
+/*!
+ * \brief \return Boolean indicating whether orientation data are valid
+ */
+bool SensorFusion::IsDataValid(void) {
+  if( NORMAL == sfg_->pStatusSubsystem->status ) {
+    return true;
+  } else {
+    return false;
+  }
+}  // end IsDataValid()
 
 // The following Get____() methods return orientation values
 // calculated by the 9DOF Kalman algorithm (the most advanced).

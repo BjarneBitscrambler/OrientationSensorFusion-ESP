@@ -41,7 +41,10 @@ extern "C" {
 /// @name SensorBitFields
 /// These bit-field values are used to declare which sensor types are used in the application.
 /// Change bit-field values to 0x0000 for any features NOT USED.
+/// These bitmasks are also used to set the pSensor->isInitialized flag once a particular
+/// sensor is communicating successfully. F_USING_NONE indicates a problem with that sensor.
 //TODO - unhandled exception if trying to not use gyro (and possibly others)
+#define F_USING_NONE        0x0000 ///< 0x0000 indicates a sensor is unavailable / unconfigured.
 #define F_USING_ACCEL       0x0001 ///< nominally 0x0001 if an accelerometer is to be used, 0x0000 otherwise
 #define F_USING_MAG         0x0002 ///< nominally 0x0002 if an magnetometer  is to be used, 0x0000 otherwise
 #define F_USING_GYRO        0x0004 ///< nominally 0x0004 if a gyro           is to be used, 0x0000 otherwise

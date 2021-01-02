@@ -18,7 +18,7 @@ extern "C" {
     \brief Application-specific status subsystem
 
     Applications may change how they choose to display status information.
-    The default implementation here uses LEDs on NXP Freedom boards.
+    The default implementation here uses LEDs.
     You may swap out implementations as long as the "Required" methods and states
     are retained.
 */
@@ -30,6 +30,7 @@ typedef struct StatusSubsystem {
 	fusion_status_t		next;           ///< Pending status change
 	// Required methods
 	ssSetStatus_t           *set;	        ///< change status immediately - no delay
+	ssGetStatus_t           *get;	        ///< return status
 	ssSetStatus_t           *queue;         ///< queue status change for next regular interval
 	ssUpdateStatus_t        *update;        ///< make pending status active/visible
 	ssUpdateStatus_t        *test ;         ///< unit test which simply increments to next state

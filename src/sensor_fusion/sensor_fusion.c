@@ -20,10 +20,17 @@
 #include "status.h"
 
 /// Poor man's inheritance for status subsystem setStatus command
-/// This function is normally involved via the "sfg." global pointer.
+/// This function is normally invoked via the "sfg." global pointer.
 void setStatus(SensorFusionGlobals *sfg, fusion_status_t status)
 {
     sfg->pStatusSubsystem->set(sfg->pStatusSubsystem, status);
+}
+
+/// Poor man's inheritance for status subsystem getStatus command
+/// This function is normally invoked via the "sfg." global pointer.
+fusion_status_t getStatus(SensorFusionGlobals *sfg)
+{
+  return sfg->pStatusSubsystem->get(sfg->pStatusSubsystem);
 }
 
 /// Poor man's inheritance for status subsystem queueStatus command.
@@ -79,6 +86,7 @@ void initSensorFusionGlobals(SensorFusionGlobals *sfg,
     sfg->conditionSensorReadings = conditionSensorReadings; // function does averaging, HAL adjustments, etc.
     sfg->clearFIFOs = clearFIFOs;             // function to clear FIFO flags    sfg->applyPerturbation = ApplyPerturbation; // function used for step function testing
     sfg->setStatus = setStatus;               // function to immediately set status change
+    sfg->getStatus = getStatus;               // function to report status
     sfg->queueStatus = queueStatus;           // function to queue status change
     sfg->updateStatus = updateStatus;         // function to promote queued status change
     sfg->testStatus = testStatus;             // function for unit testing the status subsystem
@@ -264,6 +272,8 @@ void processGyroData(SensorFusionGlobals *sfg)
 /// readSensors traverses the linked list of physical sensors, calling the
 /// individual read functions one by one.
 /// This function is normally invoked via the "sfg." global pointer.
+/// If a sensor is flagged as uninitialized, an attempt is made to initialize it.
+/// If a sensor does not respond, it is marked as unintialized.
 int8_t readSensors(
     SensorFusionGlobals *sfg,   ///< pointer to global sensor fusion data structure
     uint8_t read_loop_counter  ///< current loop counter (used for multirate processing)
@@ -271,19 +281,39 @@ int8_t readSensors(
 {
     struct PhysicalSensor  *pSensor;
     int8_t          s;
-    int8_t          status = 0;
+    int8_t          status = SENSOR_ERROR_NONE;
 
     pSensor = sfg->pSensors;
 
     for (pSensor = sfg->pSensors; pSensor != NULL; pSensor = pSensor->next)
     {   if (pSensor->isInitialized) {
             if ( 0 == (read_loop_counter % pSensor->schedule)) {
+                //read the sensor if it is its turn (per loop_counter)
                 s = pSensor->read(pSensor, sfg);
-                if (status == 0) status = s;            // will return 1st error flag, but try all sensors
+                if(s != SENSOR_ERROR_NONE) {
+                    //sensor reported error, so mark it uninitialized.
+                    //If it becomes reinitialized next loop, init function will set flag back to sensor type
+                    pSensor->isInitialized = F_USING_NONE; 
+                }
+                if (status == SENSOR_ERROR_NONE) status = s; // will return 1st error flag, but try all sensors
+            }
+        }else {
+            //sensor not initialized. Make one attempt to init it.
+            //If init succeeds, next time through a sensor read will be attempted
+            s = pSensor->initialize(pSensor, sfg);
+            if (s != SENSOR_ERROR_NONE) {
+              //note that there is still an error
+              status = s;
             }
         }
     }
-    if (status==SENSOR_ERROR_INIT) sfg->setStatus(sfg, HARD_FAULT);  // Never returns
+    if (status == SENSOR_ERROR_NONE) {
+        //change (or keep) status to NORMAL on next regular status update
+        sfg->queueStatus(sfg, NORMAL);
+    } else {
+      // flag that we have problem reading sensor, which may clear later
+      sfg->setStatus(sfg, SOFT_FAULT);
+    }
     return (status);
 } // end readSensors()
 
@@ -459,9 +489,14 @@ void runFusion(SensorFusionGlobals *sfg)
 /// This function is responsible for initializing the system prior to starting
 /// the main fusion loop. I2C is initted, sensors configured, calibrations loaded.
 /// This function is normally invoked via the "sfg." global pointer.
+/// Fusion system status is set to:
+///   INITIALIZING at the start of this function,
+///   HARD_FAULT if a problem occurs initializing the I2C hardware,
+///   SOFT_FAULT if a sensor doesn't initialize (it could be corrected later),
+///   NORMAL when function ends, assuming no problem occurred
 void initializeFusionEngine(SensorFusionGlobals *sfg, int pin_i2c_sda, int pin_i2c_scl)
 {
-    int16_t status = 0;
+    int16_t status = SENSOR_ERROR_NONE;
     struct ControlSubsystem    *pComm;
     pComm = sfg->pControlSubsystem;
 
@@ -470,8 +505,8 @@ void initializeFusionEngine(SensorFusionGlobals *sfg, int pin_i2c_sda, int pin_i
         sfg->setStatus(sfg, HARD_FAULT);  // Never returns
     }
     status = initializeSensors(sfg);
-    if (status!=SENSOR_ERROR_NONE) {  // fault condition found
-        sfg->setStatus(sfg, HARD_FAULT);  // Never returns
+    if (status!=SENSOR_ERROR_NONE) {  // fault condition found - will try again later
+        sfg->setStatus(sfg, SOFT_FAULT);
     }
 
     // recall: typedef enum quaternion {Q3, Q3M, Q3G, Q6MA, Q6AG, Q9} quaternion_type;
@@ -499,9 +534,14 @@ void initializeFusionEngine(SensorFusionGlobals *sfg, int pin_i2c_sda, int pin_i
 #if F_USING_ACCEL
     fInitializeAccelCalibration(&sfg->AccelCal, &sfg->AccelBuffer, &sfg->pControlSubsystem->AccelCalPacketOn );
 #endif
-    sfg->setStatus(sfg, NORMAL);
 
     clearFIFOs(sfg);
+
+    if( status == SENSOR_ERROR_NONE ) {
+        //nothing went wrong, so set status to normal
+        sfg->setStatus(sfg, NORMAL);
+    }
+
 } // end initializeFusionEngine()
 
 void conditionSample(int16_t sample[3])
