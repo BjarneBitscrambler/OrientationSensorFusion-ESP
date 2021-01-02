@@ -1,5 +1,11 @@
 var searchData=
 [
-  ['loopcounter_1039',['loopcounter',['../structSensorFusionGlobals.html#a8cab13f2671b3245ada13e8303fb67a7',1,'SensorFusionGlobals']]],
-  ['loops_5fper_5ffuse_5fcounter_5f_1040',['loops_per_fuse_counter_',['../classSensorFusion.html#a2e639e936fa40817d4d4ac1a6d7ce707',1,'SensorFusion']]]
+  ['kcelsiustokelvin_1039',['kCelsiusToKelvin',['../sensor__fusion__class_8cc.html#a5855042a847a6c3327d38b00430e3029',1,'sensor_fusion_class.cc']]],
+  ['kdegtorads_1040',['kDegToRads',['../sensor__fusion__class_8cc.html#a76c800ec7229187314ec56bbee7cdd6e',1,'sensor_fusion_class.cc']]],
+  ['kgeestomperss_1041',['kGeesToMPerSS',['../sensor__fusion__class_8cc.html#a42c6f43a9e8557e0ecdb44870a19b02e',1,'sensor_fusion_class.cc']]],
+  ['kloopsperaccelread_1042',['kLoopsPerAccelRead',['../classSensorFusion.html#a1def9458ee27d8d6bff3381796c56550',1,'SensorFusion']]],
+  ['kloopsperfusioncalc_1043',['kLoopsPerFusionCalc',['../classSensorFusion.html#ab62b17efb7e67cdbaf78f5ba62b97d7d',1,'SensorFusion']]],
+  ['kloopspergyroread_1044',['kLoopsPerGyroRead',['../classSensorFusion.html#a83380e9ad84408827b9f24bb38e1fe6a',1,'SensorFusion']]],
+  ['kloopspermagread_1045',['kLoopsPerMagRead',['../classSensorFusion.html#a4ced6fbf3966d9a5350d6d02fe68c71e',1,'SensorFusion']]],
+  ['kloopsperthermread_1046',['kLoopsPerThermRead',['../classSensorFusion.html#a3799c22bb629cb1015947a89a633b73b',1,'SensorFusion']]]
 ];

@@ -137,8 +137,12 @@ Macros</h2></td></tr>
 <tr class="memdesc:a200c1becfc3641688164c1b17c26a4f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">the coordinate system to be used <br /></td></tr>
 <tr class="separator:a200c1becfc3641688164c1b17c26a4f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">SensorBitFields</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p>These bit-field values are used to declare which sensor types are used in the application. Change bit-field values to 0x0000 for any features NOT USED. </p>
+<tr><td colspan="2"><div class="groupText"><p>These bit-field values are used to declare which sensor types are used in the application. Change bit-field values to 0x0000 for any features NOT USED. These bitmasks are also used to set the pSensor-&gt;isInitialized flag once a particular sensor is communicating successfully. F_USING_NONE indicates a problem with that sensor. </p>
 </div></td></tr>
+<tr class="memitem:ae11eb9325463d11da08cf75d5091d2d0"><td class="memItemLeft" align="right" valign="top"><a id="ae11eb9325463d11da08cf75d5091d2d0"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="build_8h.html#ae11eb9325463d11da08cf75d5091d2d0">F_USING_NONE</a>&#160;&#160;&#160;0x0000</td></tr>
+<tr class="memdesc:ae11eb9325463d11da08cf75d5091d2d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">0x0000 indicates a sensor is unavailable / unconfigured. <br /></td></tr>
+<tr class="separator:ae11eb9325463d11da08cf75d5091d2d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f284d04ec459633d30dc85cf0a32a0d"><td class="memItemLeft" align="right" valign="top"><a id="a8f284d04ec459633d30dc85cf0a32a0d"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="build_8h.html#a8f284d04ec459633d30dc85cf0a32a0d">F_USING_ACCEL</a>&#160;&#160;&#160;0x0001</td></tr>
 <tr class="memdesc:a8f284d04ec459633d30dc85cf0a32a0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">nominally 0x0001 if an accelerometer is to be used, 0x0000 otherwise <br /></td></tr>

@@ -115,6 +115,8 @@ Include dependency graph for sensor_fusion.c:</div>
 Functions</h2></td></tr>
 <tr class="memitem:a741fd2193cc58c09b692d1ae2b7a81e8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__fusion_8c.html#a741fd2193cc58c09b692d1ae2b7a81e8">setStatus</a> (<a class="el" href="structSensorFusionGlobals.html">SensorFusionGlobals</a> *sfg, <a class="el" href="sensor__fusion_8h.html#a69ee883e1c22b117df163c0bd83f66dd">fusion_status_t</a> status)</td></tr>
 <tr class="separator:a741fd2193cc58c09b692d1ae2b7a81e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6be6cce5ced2ae430ab26d458d0619bb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="sensor__fusion_8h.html#a69ee883e1c22b117df163c0bd83f66dd">fusion_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__fusion_8c.html#a6be6cce5ced2ae430ab26d458d0619bb">getStatus</a> (<a class="el" href="structSensorFusionGlobals.html">SensorFusionGlobals</a> *sfg)</td></tr>
+<tr class="separator:a6be6cce5ced2ae430ab26d458d0619bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae96e36747e6a1aabbec1381f15132ec6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__fusion_8c.html#ae96e36747e6a1aabbec1381f15132ec6">queueStatus</a> (<a class="el" href="structSensorFusionGlobals.html">SensorFusionGlobals</a> *sfg, <a class="el" href="sensor__fusion_8h.html#a69ee883e1c22b117df163c0bd83f66dd">fusion_status_t</a> status)</td></tr>
 <tr class="separator:ae96e36747e6a1aabbec1381f15132ec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa13c4a9f07f3a2abfdb2e0808e5752d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__fusion_8c.html#aa13c4a9f07f3a2abfdb2e0808e5752d4">updateStatus</a> (<a class="el" href="structSensorFusionGlobals.html">SensorFusionGlobals</a> *sfg)</td></tr>
@@ -237,6 +239,25 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sens
 
 </div>
 </div>
+<a id="a6be6cce5ced2ae430ab26d458d0619bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6be6cce5ced2ae430ab26d458d0619bb">&#9670;&nbsp;</a></span>getStatus()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="sensor__fusion_8h.html#a69ee883e1c22b117df163c0bd83f66dd">fusion_status_t</a> getStatus </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorFusionGlobals.html">SensorFusionGlobals</a> *&#160;</td>
+          <td class="paramname"><em>sfg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Poor man's inheritance for status subsystem getStatus command This function is normally invoked via the "sfg." global pointer. </p>
+
+</div>
+</div>
 <a id="ad806fd4e0528fbcc42a46697fdb53394"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad806fd4e0528fbcc42a46697fdb53394">&#9670;&nbsp;</a></span>initializeFusionEngine()</h2>
 
@@ -268,7 +289,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sens
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This function is responsible for initializing the system prior to starting the main fusion loop. I2C is initted, sensors configured, calibrations loaded. This function is normally invoked via the "sfg." global pointer. </p>
+<p>This function is responsible for initializing the system prior to starting the main fusion loop. I2C is initted, sensors configured, calibrations loaded. This function is normally invoked via the "sfg." global pointer. Fusion system status is set to: INITIALIZING at the start of this function, HARD_FAULT if a problem occurs initializing the I2C hardware, SOFT_FAULT if a sensor doesn't initialize (it could be corrected later), NORMAL when function ends, assuming no problem occurred </p>
 
 </div>
 </div>
@@ -397,7 +418,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sens
         </tr>
       </table>
 </div><div class="memdoc">
-<p>readSensors traverses the linked list of physical sensors, calling the individual read functions one by one. This function is normally invoked via the "sfg." global pointer. </p>
+<p>readSensors traverses the linked list of physical sensors, calling the individual read functions one by one. This function is normally invoked via the "sfg." global pointer. If a sensor is flagged as uninitialized, an attempt is made to initialize it. If a sensor does not respond, it is marked as unintialized. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sfg</td><td>pointer to global sensor fusion data structure </td></tr>
@@ -452,7 +473,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sens
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Poor man's inheritance for status subsystem setStatus command This function is normally involved via the "sfg." global pointer. </p>
+<p>Poor man's inheritance for status subsystem setStatus command This function is normally invoked via the "sfg." global pointer. </p>
 
 </div>
 </div>
