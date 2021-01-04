@@ -24,7 +24,7 @@ extern "C" {
 #define THISBUILD 720 ///< define build number sent in debug packet for display purposes only
 
 // print debug messages to serial output. Set to 1 to enable, 0 to disable
-#define ENABLE_DEBUG_LOG 1
+#define ENABLE_DEBUG_LOG 0
 
 /// @name CoordinateSystemBitFields
 /// These defines determine the frame of reference (x, y, z axes and Euler angles) standard
@@ -60,15 +60,15 @@ extern "C" {
 #define F_1DOF_P_BASIC \
     0x0000 ///< 1DOF pressure (altitude) and temperature algorithm selector  - 0x0100 to include, 0x0000 otherwise
 #define F_3DOF_G_BASIC \
-    0x0200 ///< 3DOF accel tilt (accel) algorithm selector                   - 0x0200 to include, 0x0000 otherwise
+    0x0000 ///< 3DOF accel tilt (accel) algorithm selector                   - 0x0200 to include, 0x0000 otherwise
 #define F_3DOF_B_BASIC \
-    0x0400 ///< 3DOF mag eCompass (vehicle/mag) algorithm selector           - 0x0400 to include, 0x0000 otherwise
+    0x0000 ///< 3DOF mag eCompass (vehicle/mag) algorithm selector           - 0x0400 to include, 0x0000 otherwise
 #define F_3DOF_Y_BASIC \
-    0x0800 ///< 3DOF gyro integration algorithm selector                     - 0x0800 to include, 0x0000 otherwise
+    0x0000 ///< 3DOF gyro integration algorithm selector                     - 0x0800 to include, 0x0000 otherwise
 #define F_6DOF_GB_BASIC \
-    0x1000 ///< 6DOF accel and mag eCompass algorithm selector               - 0x1000 to include, 0x0000 otherwise
+    0x0000 ///< 6DOF accel and mag eCompass algorithm selector               - 0x1000 to include, 0x0000 otherwise
 #define F_6DOF_GY_KALMAN \
-    0x2000 ///< 6DOF accel and gyro (Kalman) algorithm selector              - 0x2000 to include, 0x0000 otherwise
+    0x0000 ///< 6DOF accel and gyro (Kalman) algorithm selector              - 0x2000 to include, 0x0000 otherwise
 #define F_9DOF_GBY_KALMAN \
     0x4000 ///< 9DOF accel, mag and gyro algorithm selector                  - 0x4000 to include, 0x0000 otherwise
 ///@}
@@ -89,8 +89,10 @@ extern "C" {
 #define RATERESOLUTION 1000 //When throttling back on output rate, this is the resolution in ms
 
 //Specify which output method(s) to use for sending serial data packets and receiving commands
-#define F_USE_WIRELESS_UART     0x0001	///< 0x0001 to include, 0x0000 otherwise
-#define F_USE_WIRED_UART        0x0002	///< 0x0002 to include, 0x0000 otherwise
+//At least one path is needed if using the Orientation Library with the NXP Sensor Toolbox program.
+//Neither is needed if using the sensor_fusion_class.* to interface with the Orientation library.
+#define F_USE_WIRELESS_UART     0x0000	///< 0x0001 to include, 0x0000 otherwise
+#define F_USE_WIRED_UART        0x0000	///< 0x0002 to include, 0x0000 otherwise
 
 //#define INCLUDE_DEBUG_FUNCTIONS // Comment this line to disable the ApplyPerturbation function
 
