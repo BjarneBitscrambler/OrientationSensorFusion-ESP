@@ -45,9 +45,11 @@ int8_t SendSerialBytesOut(SensorFusionGlobals *sfg)
       bytes_left_wired = pComm->bytes_to_send;
     }
 
-    WiFiClient *tcp_client = (WiFiClient *)(pComm->tcp_client);
     uint16_t bytes_left_wireless = 0;
-    if (tcp_client) {
+    WiFiClient *tcp_client = NULL;
+    if (NULL != pComm->tcp_client) {
+      tcp_client = (WiFiClient *)(pComm->tcp_client);
+      // was WiFiClient *tcp_client = (WiFiClient *)(pComm->tcp_client);
       bytes_left_wireless = pComm->bytes_to_send;
     }
 
@@ -63,12 +65,14 @@ int8_t SendSerialBytesOut(SensorFusionGlobals *sfg)
         serial_port->write(&(pComm->serial_out_buf[pComm->bytes_to_send - bytes_left_wired]), bytes_to_write_wired);
         bytes_left_wired -= bytes_to_write_wired;
       };
-      if (tcp_client->connected() && (bytes_left_wireless > 0)) {
+      if (bytes_left_wireless > 0) {
+        if( tcp_client->connected() ) {
         // send data to wifi TCP socket.  write() returns actual # queued, which may be less than requested.
           bytes_left_wireless -= tcp_client->write(&(pComm->serial_out_buf[pComm->bytes_to_send - bytes_left_wireless]), bytes_left_wireless);
-      }else if( !tcp_client->connected()) {
-        tcp_client->stop();
-        bytes_left_wireless = 0;  //don't bother trying to send any remaining bytes
+        }else {
+          tcp_client->stop();
+          bytes_left_wireless = 0;  //don't bother trying to send any remaining bytes
+        }
       }
     }//end while() there are unsent bytes
     pComm->bytes_to_send = 0;

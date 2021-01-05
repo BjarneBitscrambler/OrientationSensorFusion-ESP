@@ -28,7 +28,8 @@
 
 // Sensor Fusion Headers
 #include "sensor_fusion_class.h"
-#include "board.h"              // hardware-specific settings. Edit as needed for board & sensors.
+#include "board.h"   // hardware-specific settings. Edit as needed for board & sensors.
+#include "build.h"   // sensor fusion configuration options. Edit as needed.
 
 // UART details for data streaming and debug messages. */
 #ifndef BOARD_DEBUG_UART_BAUDRATE
@@ -67,33 +68,31 @@
   #define WIFI_STREAMING_PORT 23
   WiFiServer server(WIFI_STREAMING_PORT);  // use wifi server port 23 (telnet)
   WiFiClient tcp_client;
-#else
-void *tcp_client = NULL;
 #endif
 
-// Pointer to our Sensor Fusion object, created in setup() and used in loop()
-SensorFusion *sensor_fusion;
-  
-// Variables used for timing the fusion calls and outputting data
-unsigned long last_loop_time;
-unsigned long last_print_time;
+  // Pointer to our Sensor Fusion object, created in setup() and used in loop()
+  SensorFusion *sensor_fusion;
 
-// Buffer for holding general text output
-char output_str[100];
+  // Variables used for timing the fusion calls and outputting data
+  unsigned long last_loop_time;
+  unsigned long last_print_time;
 
-// Loop counter, used for toggling the debugging GPIO pin
-int i;
+  // Buffer for holding general text output
+  char output_str[100];
+
+  // Loop counter, used for toggling the debugging GPIO pin
+  int i;
 
 void setup() {
-  // put your setup code here, to run once:
+    // put your setup code here, to run once:
 
-  pinMode(DEBUG_OUTPUT_PIN, GPIO_MODE_OUTPUT);
+    pinMode(DEBUG_OUTPUT_PIN, GPIO_MODE_OUTPUT);
 
-  Serial.begin(BOARD_DEBUG_UART_BAUDRATE); //initialize serial UART
-  //delay not necessary - gives time to open a serial monitor
-  delay(1000);
+    Serial.begin(BOARD_DEBUG_UART_BAUDRATE);  // initialize serial UART
+    // delay not necessary - gives time to open a serial monitor
+    delay(1000);
 
-  // wifi config - using ESP as Access Point (AP)
+    // wifi config - using ESP as Access Point (AP)
 #if F_USE_WIRELESS_UART
   // init WiFi connection
   WiFi.softAP(ssid, password);
@@ -125,9 +124,27 @@ void setup() {
   //SendArbitraryOutput() for whatever you have placed in the Tx buffer. Using both
   //calls is not recommended, as interpreting the Toolbox data amongst your data will
   //be confusing.
-  if( ! (sensor_fusion->InitializeInputOutputSubsystem(&Serial, &tcp_client)) ) {
+#if F_USE_WIRELESS_UART && F_USE_WIRED_UART
+  //setup IO subsystem to use both Serial and WiFi
+  if (!(sensor_fusion->InitializeInputOutputSubsystem(&Serial, &tcp_client))) {
     Serial.println("trouble initting Output and Control system");
   }
+#elif F_USE_WIRED_UART
+  //setup IO subsystem to use only Serial port
+  if (!(sensor_fusion->InitializeInputOutputSubsystem(&Serial, NULL))) {
+    Serial.println("trouble initting Output and Control system");
+  }
+#elif F_USE_WIRELESS_UART
+  //setup IO subsystem to use only WiFi
+  if (!(sensor_fusion->InitializeInputOutputSubsystem(NULL, &tcp_client))) {
+    Serial.println("trouble initting Output and Control system");
+  }
+#else
+  //setup IO subsystem for no output
+  if (!(sensor_fusion->InitializeInputOutputSubsystem(NULL, NULL))) {
+    Serial.println("trouble initting Output and Control system");
+  }
+#endif
 
   // connect to the sensors.  Accelerometer and magnetometer are in same IC.
   if(! sensor_fusion->InstallSensor(BOARD_ACCEL_MAG_I2C_ADDR,
@@ -155,7 +172,6 @@ void setup() {
   last_print_time = millis();
 
 } // end setup()
-
 
 
 void loop() {
@@ -213,10 +229,21 @@ void loop() {
             sensor_fusion->GetRollDegrees(),
             sensor_fusion->GetTemperatureC(),
             sensor_fusion->GetTurnRateDegPerS());
-
-    if (!sensor_fusion->SendArbitraryData(output_str,
-                                 strlen(output_str))) {
-    Serial.println("couldn't send output");
-    }
+    Serial.print( output_str ); //simplest way to see library output
+    /* If preferred, the library's input/output subsystem can be used
+    to output data. This is useful, for example, to send the data
+    via WiFi instead of a wired connection. To do this, comment out
+    the Serial.print() command above, and use the 
+    following call to SendArbitraryData(), or the earlier-mentioned
+    ProduceToolboxOutput().  With either I/O subsystem call, ensure
+    that at least one of either the Serial stream or WiFi stream is
+    enabled in the file build.h (via F_USE_WIRELESS_UART and F_USE_WIRED_UART)
+    and that the call to InitializeInputOutputSubsystem() in setup()
+    references the desired stream(s).
+    */
+//    if (!sensor_fusion->SendArbitraryData(output_str,
+//                                 strlen(output_str))) {
+//    Serial.println("couldn't send output");
+//    }
   } // end timed if() that prints data as text
 }  // end loop()
