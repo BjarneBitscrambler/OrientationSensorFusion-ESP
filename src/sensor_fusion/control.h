@@ -39,6 +39,7 @@ extern "C" {
 ///@{
 typedef int8_t (writePort_t) (SensorFusionGlobals *sfg);
 typedef int8_t (readCommand_t) (SensorFusionGlobals *sfg);
+typedef void (injectCommand_t) (SensorFusionGlobals *sfg, uint8_t input_buffer[], uint16_t nbytes);
 typedef void (streamData_t)(SensorFusionGlobals *sfg);
 ///@}
 
@@ -62,6 +63,7 @@ typedef struct ControlSubsystem {
 
     writePort_t *write;  // function to write output buffer to the output(s)
     readCommand_t *readCommands;  // function to check for incoming commands and process them
+    injectCommand_t *injectCommand;  // function that provides a command directly and processes it
     streamData_t *stream;  // function to create output data packets and place in buffer
 } ControlSubsystem;
 
@@ -78,9 +80,11 @@ void UpdateTCPClient(ControlSubsystem *pComm,void *tcp_client);
 /// for Kinetis Product Development Kit User Guide.
 void CreateOutgoingPackets(SensorFusionGlobals *sfg);
 
-// Located in DecodeCommandBytes.c:
-/// This function is responsible for decoding commands sent by the NXP Sensor Fusion Toolbox and setting
-/// the appropriate flags in the ControlSubsystem data structure.
+/// Located in control_input.c:
+/// This function is responsible for decoding commands, which can arrive externally
+/// (serial or WiFi) when sent by the NXP Sensor Fusion Toolbox, or by direct call.
+/// This function sets the appropriate flags in the ControlSubsystem data structure,
+/// or performs whatever other appropriate action called for by the command.
 /// Packet protocols are defined in the NXP Sensor Fusion for Kinetis Product Development Kit User Guide.
 void DecodeCommandBytes(SensorFusionGlobals *sfg, uint8_t input_buffer[], uint16_t nbytes);
 

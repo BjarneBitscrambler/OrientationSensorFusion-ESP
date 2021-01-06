@@ -42,7 +42,7 @@ enum class SensorType {
  *  Class that wraps the various mostly-C-style functions of the
  *  sensor fusion code into easier to use methods. Not all the
  *  lower-level functions are exposed however; for more advanced
- *  use it may be necessary to call them directly.
+ *  use it will be necessary to call them directly.
  */
 class SensorFusion {
  public:
@@ -57,6 +57,7 @@ class SensorFusion {
   void ProduceToolboxOutput(void);
   bool SendArbitraryData(const char *buffer, uint16_t data_length);
   void ProcessCommands(void);
+  void InjectCommand(const char *command);
   bool IsDataValid(void);
   float GetHeadingDegrees(void);
   float GetPitchDegrees(void);

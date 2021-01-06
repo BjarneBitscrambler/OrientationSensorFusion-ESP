@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Sensor Fusion Library
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.4.0</span>
    </div>
    <div id="projectbrief">Orientation sensing for Espressif (ESP32, ESP8266) processors</div>
   </td>
@@ -284,7 +284,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This function is responsible for decoding commands sent by the NXP Sensor Fusion Toolbox and setting the appropriate flags in the <a class="el" href="structControlSubsystem.html" title="The ControlSubsystem encapsulates command and data streaming functions.">ControlSubsystem</a> data structure. Packet protocols are defined in the NXP Sensor Fusion for Kinetis Product Development Kit User Guide. </p>
+<p>Located in <a class="el" href="control__input_8c.html" title="Command interpreter which interfaces to the Sensor Fusion Toolbox. Commands sent from the Toolbox (e....">control_input.c</a>: This function is responsible for decoding commands, which can arrive externally (serial or WiFi) when sent by the NXP Sensor Fusion Toolbox, or by direct call. This function sets the appropriate flags in the <a class="el" href="structControlSubsystem.html" title="The ControlSubsystem encapsulates command and data streaming functions.">ControlSubsystem</a> data structure, or performs whatever other appropriate action called for by the command. Packet protocols are defined in the NXP Sensor Fusion for Kinetis Product Development Kit User Guide. </p>
 
 </div>
 </div>

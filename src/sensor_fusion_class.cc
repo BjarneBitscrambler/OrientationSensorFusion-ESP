@@ -210,6 +210,24 @@ void SensorFusion::ProcessCommands(void) {
 }  // end ProcessCommands()
 
 /*!
+ * \brief Inject and process a single command in the control subsystem.
+ *
+ * Command provided by this call bypasses the usual input route (serial
+ * UART or WiFi) and is instead provided directly in this function call.
+ * This provides an alterative way of manipulating the fusion algortithm
+ * without needing to use the entire control or input subsystem, For a
+ * list of valid commands, see control_input.c in the Oroientation library.
+ *
+ * @param const char * command is a four-character sequence selected from
+ * the list of valid commands. Illegal commands are ignored without
+ * any action taken.
+ */
+void SensorFusion::InjectCommand(const char *command) {
+  // process any incoming commands
+  sfg_->pControlSubsystem->injectCommand(sfg_, (uint8_t *)command, 4);
+}  // end InjectCommand()
+
+/*!
  * \brief \return Boolean indicating whether orientation data are valid
  */
 bool SensorFusion::IsDataValid(void) {

@@ -127,6 +127,7 @@ bool initializeIOSubsystem(
         pComm->write = SendSerialBytesOut;
         pComm->stream = CreateOutgoingPackets;
         pComm->readCommands = ReceiveIncomingCommands;
+        pComm->injectCommand = DecodeCommandBytes;
         pComm->serial_port = serial_port;     
         pComm->tcp_client = tcp_client;
 

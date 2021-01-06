@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Sensor Fusion Library
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.4.0</span>
    </div>
    <div id="projectbrief">Orientation sensing for Espressif (ESP32, ESP8266) processors</div>
   </td>
@@ -90,47 +90,48 @@ $(function() {
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">typedef</span> int8_t (writePort_t) (<a class="code" href="structSensorFusionGlobals.html">SensorFusionGlobals</a> *sfg);</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">typedef</span> int8_t (readCommand_t) (<a class="code" href="structSensorFusionGlobals.html">SensorFusionGlobals</a> *sfg);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">typedef</span> void (streamData_t)(<a class="code" href="structSensorFusionGlobals.html">SensorFusionGlobals</a> *sfg);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="structControlSubsystem.html">   50</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structControlSubsystem.html">ControlSubsystem</a> {</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="sensor__fusion_8h.html#a365b73d4f615f8c348ddd79b1757d372">quaternion_type</a> DefaultQuaternionPacketType;    <span class="comment">// default quaternion transmitted at power on</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">volatile</span> <a class="code" href="sensor__fusion_8h.html#a365b73d4f615f8c348ddd79b1757d372">quaternion_type</a> QuaternionPacketType;  <span class="comment">// quaternion type transmitted over UART</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">volatile</span> uint8_t AngularVelocityPacketOn;   <span class="comment">// flag to enable angular velocity packet</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">volatile</span> uint8_t DebugPacketOn;         <span class="comment">// flag to enable debug packet</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">volatile</span> uint8_t RPCPacketOn;           <span class="comment">// flag to enable roll, pitch, compass packet</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">volatile</span> uint8_t AltPacketOn;           <span class="comment">// flag to enable altitude packet</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">volatile</span> int8_t  AccelCalPacketOn;      <span class="comment">// variable used to coordinate accelerometer calibration</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    uint8_t         *serial_out_buf;        <span class="comment">//buffer containing the output stream (data packet)</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    uint16_t        bytes_to_send;          <span class="comment">//how many bytes in output stream waiting to go out</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">void</span> *serial_port;           <span class="comment">//cast to Serial * and used to output to the serial port</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">void</span> *tcp_client;            <span class="comment">//cast to WiFiClient * and used to output to a connected TCP client</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    writePort_t *write;  <span class="comment">// function to write output buffer to the output(s)</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    readCommand_t *readCommands;  <span class="comment">// function to check for incoming commands and process them</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    streamData_t *stream;  <span class="comment">// function to create output data packets and place in buffer</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;} <a class="code" href="control_8h.html#a58ba7506d8affb446196806c39823c3a">ControlSubsystem</a>;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="control_8h.html#a4d9261d9e56a9a93215b0f86f9e4d0ca">initializeIOSubsystem</a>(</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="structControlSubsystem.html">ControlSubsystem</a> *pComm, <span class="keyword">const</span> <span class="keywordtype">void</span> *serial_port,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">void</span> *tcp_client);  <span class="comment">// Initialize structures, ports, etc.</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">//updates pointer to the TCP client. Call whenever new client connects or disconnects</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keywordtype">void</span> UpdateTCPClient(<a class="code" href="structControlSubsystem.html">ControlSubsystem</a> *pComm,<span class="keywordtype">void</span> *tcp_client);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">// Located in output_stream.c:</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment"></span><span class="keywordtype">void</span> <a class="code" href="control_8h.html#a4da1153dfe8ff9b0b610e7d55a92f3ca">CreateOutgoingPackets</a>(<a class="code" href="structSensorFusionGlobals.html">SensorFusionGlobals</a> *sfg);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">// Located in DecodeCommandBytes.c:</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment"></span><span class="keywordtype">void</span> <a class="code" href="control_8h.html#afc925ab9ed0cd96b9673a9c46d7218fc">DecodeCommandBytes</a>(<a class="code" href="structSensorFusionGlobals.html">SensorFusionGlobals</a> *sfg, uint8_t input_buffer[], uint16_t nbytes);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keywordtype">void</span> <a class="code" href="control_8h.html#af9b2900e9277b457cea45461f8dce3ef">OutputBufAppendItem</a>(uint8_t *pDest, uint16_t *pIndex, uint8_t *pSource, uint16_t iBytesToCopy);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">typedef</span> void (injectCommand_t) (<a class="code" href="structSensorFusionGlobals.html">SensorFusionGlobals</a> *sfg, uint8_t input_buffer[], uint16_t nbytes);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">typedef</span> void (streamData_t)(<a class="code" href="structSensorFusionGlobals.html">SensorFusionGlobals</a> *sfg);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="structControlSubsystem.html">   51</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structControlSubsystem.html">ControlSubsystem</a> {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="sensor__fusion_8h.html#a365b73d4f615f8c348ddd79b1757d372">quaternion_type</a> DefaultQuaternionPacketType;    <span class="comment">// default quaternion transmitted at power on</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">volatile</span> <a class="code" href="sensor__fusion_8h.html#a365b73d4f615f8c348ddd79b1757d372">quaternion_type</a> QuaternionPacketType;  <span class="comment">// quaternion type transmitted over UART</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">volatile</span> uint8_t AngularVelocityPacketOn;   <span class="comment">// flag to enable angular velocity packet</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">volatile</span> uint8_t DebugPacketOn;         <span class="comment">// flag to enable debug packet</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">volatile</span> uint8_t RPCPacketOn;           <span class="comment">// flag to enable roll, pitch, compass packet</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">volatile</span> uint8_t AltPacketOn;           <span class="comment">// flag to enable altitude packet</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">volatile</span> int8_t  AccelCalPacketOn;      <span class="comment">// variable used to coordinate accelerometer calibration</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    uint8_t         *serial_out_buf;        <span class="comment">//buffer containing the output stream (data packet)</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    uint16_t        bytes_to_send;          <span class="comment">//how many bytes in output stream waiting to go out</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">void</span> *serial_port;           <span class="comment">//cast to Serial * and used to output to the serial port</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">void</span> *tcp_client;            <span class="comment">//cast to WiFiClient * and used to output to a connected TCP client</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    writePort_t *write;  <span class="comment">// function to write output buffer to the output(s)</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    readCommand_t *readCommands;  <span class="comment">// function to check for incoming commands and process them</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    injectCommand_t *injectCommand;  <span class="comment">// function that provides a command directly and processes it</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    streamData_t *stream;  <span class="comment">// function to create output data packets and place in buffer</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;} <a class="code" href="control_8h.html#a58ba7506d8affb446196806c39823c3a">ControlSubsystem</a>;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="control_8h.html#a4d9261d9e56a9a93215b0f86f9e4d0ca">initializeIOSubsystem</a>(</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="structControlSubsystem.html">ControlSubsystem</a> *pComm, <span class="keyword">const</span> <span class="keywordtype">void</span> *serial_port,</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">void</span> *tcp_client);  <span class="comment">// Initialize structures, ports, etc.</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">//updates pointer to the TCP client. Call whenever new client connects or disconnects</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keywordtype">void</span> UpdateTCPClient(<a class="code" href="structControlSubsystem.html">ControlSubsystem</a> *pComm,<span class="keywordtype">void</span> *tcp_client);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">// Located in output_stream.c:</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment"></span><span class="keywordtype">void</span> <a class="code" href="control_8h.html#a4da1153dfe8ff9b0b610e7d55a92f3ca">CreateOutgoingPackets</a>(<a class="code" href="structSensorFusionGlobals.html">SensorFusionGlobals</a> *sfg);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="keywordtype">void</span> <a class="code" href="control_8h.html#afc925ab9ed0cd96b9673a9c46d7218fc">DecodeCommandBytes</a>(<a class="code" href="structSensorFusionGlobals.html">SensorFusionGlobals</a> *sfg, uint8_t input_buffer[], uint16_t nbytes);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keywordtype">void</span> <a class="code" href="control_8h.html#af9b2900e9277b457cea45461f8dce3ef">OutputBufAppendItem</a>(uint8_t *pDest, uint16_t *pIndex, uint8_t *pSource, uint16_t iBytesToCopy);</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* _CONTROL_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* _CONTROL_H_ */</span><span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="acontrol_8h_html_a58ba7506d8affb446196806c39823c3a"><div class="ttname"><a href="control_8h.html#a58ba7506d8affb446196806c39823c3a">ControlSubsystem</a></div><div class="ttdeci">struct ControlSubsystem ControlSubsystem</div><div class="ttdoc">The ControlSubsystem encapsulates command and data streaming functions.</div></div>
 <div class="ttc" id="astructSensorFusionGlobals_html"><div class="ttname"><a href="structSensorFusionGlobals.html">SensorFusionGlobals</a></div><div class="ttdoc">The top level fusion structure.</div><div class="ttdef"><b>Definition:</b> sensor_fusion.h:458</div></div>
@@ -138,8 +139,8 @@ $(function() {
 <div class="ttc" id="asensor__fusion_8h_html_a365b73d4f615f8c348ddd79b1757d372"><div class="ttname"><a href="sensor__fusion_8h.html#a365b73d4f615f8c348ddd79b1757d372">quaternion_type</a></div><div class="ttdeci">enum quaternion quaternion_type</div><div class="ttdoc">the quaternion type to be transmitted</div></div>
 <div class="ttc" id="acontrol_8h_html_a4da1153dfe8ff9b0b610e7d55a92f3ca"><div class="ttname"><a href="control_8h.html#a4da1153dfe8ff9b0b610e7d55a92f3ca">CreateOutgoingPackets</a></div><div class="ttdeci">void CreateOutgoingPackets(SensorFusionGlobals *sfg)</div><div class="ttdef"><b>Definition:</b> control_output.c:118</div></div>
 <div class="ttc" id="acontrol_8h_html_af9b2900e9277b457cea45461f8dce3ef"><div class="ttname"><a href="control_8h.html#af9b2900e9277b457cea45461f8dce3ef">OutputBufAppendItem</a></div><div class="ttdeci">void OutputBufAppendItem(uint8_t *pDest, uint16_t *pIndex, uint8_t *pSource, uint16_t iBytesToCopy)</div><div class="ttdoc">Utility function used to place data in output buffer about to be transmitted via UART.</div><div class="ttdef"><b>Definition:</b> control_output.c:34</div></div>
-<div class="ttc" id="astructControlSubsystem_html"><div class="ttname"><a href="structControlSubsystem.html">ControlSubsystem</a></div><div class="ttdoc">The ControlSubsystem encapsulates command and data streaming functions.</div><div class="ttdef"><b>Definition:</b> control.h:50</div></div>
-<div class="ttc" id="acontrol_8h_html_a4d9261d9e56a9a93215b0f86f9e4d0ca"><div class="ttname"><a href="control_8h.html#a4d9261d9e56a9a93215b0f86f9e4d0ca">initializeIOSubsystem</a></div><div class="ttdeci">bool initializeIOSubsystem(ControlSubsystem *pComm, const void *serial_port, const void *tcp_client)</div><div class="ttdoc">Initialize the control subsystem and all related hardware.</div><div class="ttdef"><b>Definition:</b> control.cc:108</div></div>
+<div class="ttc" id="astructControlSubsystem_html"><div class="ttname"><a href="structControlSubsystem.html">ControlSubsystem</a></div><div class="ttdoc">The ControlSubsystem encapsulates command and data streaming functions.</div><div class="ttdef"><b>Definition:</b> control.h:51</div></div>
+<div class="ttc" id="acontrol_8h_html_a4d9261d9e56a9a93215b0f86f9e4d0ca"><div class="ttname"><a href="control_8h.html#a4d9261d9e56a9a93215b0f86f9e4d0ca">initializeIOSubsystem</a></div><div class="ttdeci">bool initializeIOSubsystem(ControlSubsystem *pComm, const void *serial_port, const void *tcp_client)</div><div class="ttdoc">Initialize the control subsystem and all related hardware.</div><div class="ttdef"><b>Definition:</b> control.cc:112</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
