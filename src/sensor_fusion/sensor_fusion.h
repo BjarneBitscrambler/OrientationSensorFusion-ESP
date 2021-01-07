@@ -18,6 +18,8 @@
 #ifndef SENSOR_FUSION_H
 #define SENSOR_FUSION_H
 
+#include <Arduino.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

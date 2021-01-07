@@ -16,6 +16,8 @@
 #ifndef _BOARD_H_
 #define _BOARD_H_
 
+#include <Arduino.h>
+
 #if defined(__cplusplus)
 extern "C" {
 #endif /* __cplusplus */
