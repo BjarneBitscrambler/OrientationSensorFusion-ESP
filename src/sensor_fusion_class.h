@@ -59,6 +59,7 @@ class SensorFusion {
   void ProcessCommands(void);
   void InjectCommand(const char *command);
   bool IsDataValid(void);
+  int SystemStatus(void);
   float GetHeadingDegrees(void);
   float GetPitchDegrees(void);
   float GetRollDegrees(void);

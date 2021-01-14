@@ -238,6 +238,13 @@ bool SensorFusion::IsDataValid(void) {
   }
 }  // end IsDataValid()
 
+/*!
+ * \brief \return Fusion System status
+ */
+int SensorFusion::SystemStatus(void) {
+  return (int)sfg_->pStatusSubsystem->status;
+}  // end SystemStatus()
+
 // The following Get____() methods return orientation values
 // calculated by the 9DOF Kalman algorithm (the most advanced).
 // They have been mapped to match the conventions used for
