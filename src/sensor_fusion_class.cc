@@ -216,7 +216,7 @@ void SensorFusion::ProcessCommands(void) {
  * UART or WiFi) and is instead provided directly in this function call.
  * This provides an alterative way of manipulating the fusion algortithm
  * without needing to use the entire control or input subsystem, For a
- * list of valid commands, see control_input.c in the Oroientation library.
+ * list of valid commands, see control_input.c in the Orientation library.
  *
  * @param const char * command is a four-character sequence selected from
  * the list of valid commands. Illegal commands are ignored without
