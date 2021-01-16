@@ -421,6 +421,55 @@ void  SensorFusion::GetOrientationQuaternion(Quaternion *quat) {
 }  // end GetOrientationQuaternion()
 
 /*!
+ * \brief \return Return magnetic fit error - a measure of magnetic interference
+ */
+float SensorFusion::GetMagneticFitError(void) {
+  return sfg_->MagCal.ftrFitErrorpc;
+}  // end GetMagneticFitError()
+
+/*!
+ * \brief \return Return magnetic fit error - a measure of magnetic interference
+ */
+float SensorFusion::GetMagneticFitError2(void) {
+  return sfg_->MagCal.fFitErrorpc;
+}  // end GetMagneticFitError2()
+
+
+/*!
+ * \brief \return Return magnetic fit error - a measure of magnetic interference
+ */
+float SensorFusion::GetMagneticBMag(void) {
+  return sfg_->MagCal.fB;
+}  // end GetMagneticFitError2()
+
+
+/*!
+ * \brief \return Return magnetic fit error - a measure of magnetic interference
+ */
+float SensorFusion::GetMagneticBMag2(void) {
+  return sfg_->MagCal.ftrB;
+}  // end GetMagneticFitError2()
+
+/*!
+ * \brief \return Return magnetic fit error - a measure of magnetic interference
+ */
+float SensorFusion::GetMagneticVectorTiltErrQ0(void) {
+  return sfg_->SV_9DOF_GBY_KALMAN.fqmErrPl[0];
+}  // end GetMagneticFitError2()
+/*!
+ * \brief \return Return magnetic fit error - a measure of magnetic interference
+ */
+float SensorFusion::GetMagneticVectorTiltErrQ1(void) {
+  return sfg_->SV_9DOF_GBY_KALMAN.fqmErrPl[1];
+}  // end GetMagneticFitError2()
+/*!
+ * \brief \return Return magnetic fit error - a measure of magnetic interference
+ */
+float SensorFusion::GetMagneticVectorTiltErrQ2(void) {
+  return sfg_->SV_9DOF_GBY_KALMAN.fqmErrPl[2];
+}  // end GetMagneticFitError2()
+
+/*!
  * \brief Install Sensor in linked list
  * The max length of the list is checked, and if there is room, the 
  * given sensor is inserted at the head of the list.
