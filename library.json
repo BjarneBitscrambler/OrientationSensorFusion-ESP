@@ -1,6 +1,6 @@
 {
   "name": "OrientationSensorFusion-ESP",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Sensor Fusion library for creating orientation data from accelerometer/gyroscope/magnetometer sensors on ESP devices. Uses NXP version 7 fusion code. Modifiable for other platforms.",
   "keywords": "orientation, sensor fusion, compass, magnetometer, e-compass, attitude and heading reference system",
   "repository":
@@ -21,12 +21,6 @@
   "homepage": "https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP",
   "dependencies": 
   [
-    {
-    "name": "EEPROM"
-    },
-    {
-      "name": "Wire"
-    }
   ],
   "frameworks": "arduino",
   "platforms": "espressif32, espressif8266"
