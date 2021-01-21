@@ -9,11 +9,20 @@ sensor ICs, but can be modified to work with other sensors having an I2C
 interface. With additional modification, it can also work with SPI interface
 sensors.
 
-The library runs on Espressif's ESP32 and ESP8266 processors and outputs
-orientation data using the serial and WiFi interfaces.
+The library runs on Espressif's ESP32 and ESP8266 processors. Library output is via Get___()
+methods that return the various orientation parameters (e.g. `GetHeadingDegrees(void)`, 
+`GetPitchDegrees(void)`, `GetAccelXGees(void)`, etc). A choice of units is provided 
+(e.g. Degrees, Radians, quaternions, Gees or m/s^2). The IC temperature is also available. 
 
-A C++ class provides simple access to the most common sensor fusion
-functions, but it is also possible to directly interface with the library
+An example `main.cpp` (see `examples/fusion_text_output.cc`) illustrates how to use
+this library, and outputs orientation data in text format using serial and WiFi
+interfaces. For a slightly more complex example, see the adjunct library 
+https://github.com/BjarneBitscrambler/SignalK-Orientation
+which uses this one to generate the orientation data, then packages it up and sends it
+via WiFi to a Signal K server.
+
+A C++ class (`src/sensor_fusion_class.h`) provides simple access to the most common 
+sensor fusion functions, but it is also possible to directly interface with the library
 methods contained in the underlying C files, which are based on those provided
 by NXP in their version 7.20 release.
 
@@ -23,7 +32,7 @@ Orientation sensing using combined accelerometer + gyroscope + magnetometer sens
 
 A newer version of the NXP sensor fusion library (version 7.2) is available, which is what this present project is using. This newer library has several improvements, including the ability to perform magnetic calibration while in use (as opposed to needing a separate software tool).
 
-My motivation for porting NXP's library is to create an orientation sensor for marine use, using off-the-shelf hardware and the [Signal K / SensESP project](https://github.com/SignalK/SensESP) to provide orientation data (e.g. magnetic heading, roll, and pitch) on a vessel. I have targeted this project for the Espressif ESP32 microcontroller and the NXP sensors. 
+My motivation for porting NXP's library is to create an orientation sensor for marine use, using off-the-shelf hardware and the [Signal K / SensESP project](https://github.com/SignalK/SensESP) to provide orientation data (e.g. magnetic heading, roll, and pitch) on a vessel. I have targeted this project for the Espressif ESP32/ESP8266 microcontrollers and the NXP sensors. 
 
 
 ## Sensors
@@ -37,18 +46,19 @@ The present software is written for the ESP32 and ESP8266 processors. With some 
 ## Dependencies
 The fusion code and associated project files have been written for and
 tested in the *PlatformIO* development environment, as an *Arduino* framework
-project for an ESP32 board.
+project on an ESP32 board and on an ESP8266 board.
 
-In addition to the standard Arduino environment, this project uses these libraries, which are automatically installed in the Arduino framework:
+In addition to the standard Arduino environment, this project uses the following libraries
+which are automatically installed in the Arduino framework:
 - **Wire (I2C)** library (*used for communicating with the sensor ICs*)
 - **EEPROM** library (*used to store calibration values in non-volatile memory*)
-- **WiFi** libraries (*only needed if WiFi output is enabled*)
+- **WiFi** libraries (*only needed by the example main.cpp if WiFi output is enabled*)
 
 ## Where To Find...
 - **Documentation** for the fusion code is html-based; open the project's [`docs/html/index.html`](/docs/html/index.html) file in your favourite browser. Documentation is auto-generated from comments in the code itself, using Doxygen. 
 - **Test plans, data, results**, etc are on [this project's Github Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki)
 - **NXP's version 7 sensor fusion** for ESP32 processors is under the [Code tab](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP) of this Github repository. It is fully functional with [NXP's Windows-based Sensor Fusion Toolbox](https://www.nxp.com/webapp/sps/download/license.jsp?colCode=SENSORFUSIONREV7) software application. 
-- **Orientation data output in Signal K format** using the SensESP project is on the [SignalK-Orientation](https://github.com/BjarneBitscrambler/SignalK-Orientation) project page. This project provides an example that uses the ORientation library.
+- **Orientation data output in Signal K format** using the SensESP project is on the [SignalK-Orientation](https://github.com/BjarneBitscrambler/SignalK-Orientation) project page. This project provides an example that uses this Orientation library.
 
 ## Contributions
 Use the *Issues* and *Pull Request* tabs on this project's Github repository if you have suggestions or wish to contribute to this project.
@@ -56,7 +66,7 @@ Use the *Issues* and *Pull Request* tabs on this project's Github repository if 
 ## How-To Use
 To use this library follow these steps (some untested - let me know of any changes you needed to make to get things to work on your setup):
 - setup the *PlatformIO* development environment
-- create a new PlatformIO project, selecting the *Board:* `Espressif ESP-WROVER-KIT` and *Framework:* `Arduino` (other ESP32 boards should work without changes; as does the d1_mini board with Espressif's ESP8266 CPU)
+- create a new PlatformIO project, selecting the *Board:* `Espressif ESP-WROVER-KIT` and *Framework:* `Arduino` (other ESP32 boards should work without changes; as does the *d1_mini* board with Espressif's ESP8266 CPU)
 
 Now follow either of these two methods to bring in the library files:
 ### Method 1 (gets you a local clone that you can edit or base pull requests on)
