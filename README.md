@@ -1,7 +1,8 @@
 # Sensor Fusion Library
 
 ## Introduction
-An easy-to-use interface to the **NXP Sensor Fusion version 7** algorithms.
+An easy-to-use interface to the **NXP Sensor Fusion version 7** algorithms, providing
+orientation data derived from a 9 degrees-of-Freedom motion sensor.
 
 It is configured to work with the Adafruit breakout board #3643
 using the *NXP FXOS8700* magnetometer/accelerometer and *FXAS21002* gyroscope
@@ -82,7 +83,7 @@ Method 2 results in the library code being imported into PlatformIO's `.pio` fol
 
 Then:  
 - edit your new project's `platformio.ini` file for your specific board and environment. Use this project's `platformio.ini` file as an example.
-- edit the `#defines` at the top of your `fusion_text_output.cc` (the sample `main.cc`)) to reflect your particular hardware. The I2C pins connecting your processor to your sensor ICs will likely be different, and you may also need to change the I2C addresses that the ICs are configured for.
+- edit the `#defines` at the top of your `fusion_text_output.cc` (the sample `main.cc`) to reflect your particular hardware. The I2C pins connecting your processor to your sensor ICs will likely be different, and you may also need to change the I2C addresses that the ICs are configured for.
 - compile and download to your processor
 
 ### Initial Text Output
