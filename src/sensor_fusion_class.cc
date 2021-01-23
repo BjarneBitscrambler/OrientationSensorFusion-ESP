@@ -421,6 +421,62 @@ void  SensorFusion::GetOrientationQuaternion(Quaternion *quat) {
 }  // end GetOrientationQuaternion()
 
 /*!
+ * \brief \return Return magnetic fit error of trial calibration
+ */
+float SensorFusion::GetMagneticFitErrorTrial(void) {
+  return sfg_->MagCal.ftrFitErrorpc;
+}  // end GetMagneticFitErrorTrial()
+
+/*!
+ * \brief \return Return magnetic fit error of current calibration
+ */
+float SensorFusion::GetMagneticFitError(void) {
+  return sfg_->MagCal.fFitErrorpc;
+}  // end GetMagneticFitError()
+
+
+/*!
+ * \brief \return Return geomagnetic field magnitude in uT of current calibration
+ */
+float SensorFusion::GetMagneticBMag(void) {
+  return sfg_->MagCal.fB;
+}  // end GetMagneticBMag()
+
+
+/*!
+ * \brief \return Return geomagnetic field magnitude in uT of trial calibration
+ */
+float SensorFusion::GetMagneticBMagTrial(void) {
+  return sfg_->MagCal.ftrB;
+}  // end GetMagneticBMagTrial()
+
+/*!
+ * \brief \return Return order [0,4,7,10] of trial calibration
+ */
+float SensorFusion::GetMagneticCalOrder(void) {
+  return (float)(sfg_->MagCal.iValidMagCal);
+}  // end GetMagneticCalOrderTrial()
+
+/*!
+ * \brief \return Return magnetic vector tilt error - X
+ */
+float SensorFusion::GetMagneticVectorTiltErrQ0(void) {
+  return sfg_->SV_9DOF_GBY_KALMAN.fqmErrPl[0];
+}  // end GetMagneticVectorTiltErrQ0()
+/*!
+ * \brief \return Return magnetic vector tilt error - Y
+ */
+float SensorFusion::GetMagneticVectorTiltErrQ1(void) {
+  return sfg_->SV_9DOF_GBY_KALMAN.fqmErrPl[1];
+}  // end GetMagneticVectorTiltErrQ1()
+/*!
+ * \brief \return Return magnetic fvector tilt error - Z
+ */
+float SensorFusion::GetMagneticVectorTiltErrQ2(void) {
+  return sfg_->SV_9DOF_GBY_KALMAN.fqmErrPl[2];
+}  // end GetMagneticVectorTiltErrQ2()
+
+/*!
  * \brief Install Sensor in linked list
  * The max length of the list is checked, and if there is room, the 
  * given sensor is inserted at the head of the list.

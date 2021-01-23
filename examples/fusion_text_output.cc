@@ -38,8 +38,8 @@
 
 // I2C details - indicate which pins the sensor is connected to
 #ifdef ESP8266
-  #define PIN_I2C_SDA   (12)  //Adjust to your board. A value of -1
-  #define PIN_I2C_SCL   (14)  // will use default Arduino pins.
+  #define PIN_I2C_SDA   (13)  //Adjust to your board. A value of -1
+  #define PIN_I2C_SCL   (12)  // will use default Arduino pins.
 #endif
 #ifdef ESP32
   #define PIN_I2C_SDA   (23)  //Adjust to your board. A value of -1
@@ -52,7 +52,7 @@
 //pin that can be twiddled for debugging
 #ifdef ESP8266
   //ESP8266 has different nomenclature for its GPIO pins and directions
-  #define DEBUG_OUTPUT_PIN 13
+  #define DEBUG_OUTPUT_PIN 14
   #define GPIO_MODE_OUTPUT OUTPUT
 #endif
 #ifdef ESP32
@@ -205,12 +205,12 @@ void loop() {
 
     //create and send Toolbox format packet if fusion has produced new data
     //This call is optional - if you don't want Toolbox packets, omit it
-//    sensor_fusion->ProduceToolboxOutput();
+    sensor_fusion->ProduceToolboxOutput();
 
     //Process any incoming commands arriving over serial or TCP port.
     //See control_input.c for list of available commands.
     //This call is optional - if you don't need external control, omit it
-//    sensor_fusion->ProcessCommands();
+    sensor_fusion->ProcessCommands();
 
 //    sfg.applyPerturbation(
 //            &sfg);  // apply debug perturbation (if testing mode enabled)
@@ -223,12 +223,36 @@ void loop() {
     
   if ((millis() - last_print_time) > kPrintIntervalMs) {
     last_print_time += kPrintIntervalMs;
-    snprintf(output_str, 99, "%lu,%03.1f,%+5.1f,%+5.1f,%5.1f,%+4.0f\n\r",
-            millis(), sensor_fusion->GetHeadingDegrees(),
-            sensor_fusion->GetPitchDegrees(),
-            sensor_fusion->GetRollDegrees(),
-            sensor_fusion->GetTemperatureC(),
-            sensor_fusion->GetTurnRateDegPerS());
+    snprintf(
+        output_str, 164,
+/*        "%lu:%03.1f,%+5.1f,%+5.1f,%4.1fC,T%+4.0f,%6f,%3.1f,B%5.1f,B%5.1f,T%f,T%f,T%f,M%f\n\r",
+        millis(), sensor_fusion->GetHeadingDegrees(),
+        sensor_fusion->GetPitchDegrees(), 
+        sensor_fusion->GetRollDegrees(),
+        sensor_fusion->GetTemperatureC(), 
+        sensor_fusion->GetTurnRateDegPerS(),
+        sensor_fusion->GetMagneticFitError(),
+        sensor_fusion->GetMagneticFitError2(), 
+        sensor_fusion->GetMagneticBMag(),
+        sensor_fusion->GetMagneticBMag2(),
+        sensor_fusion->GetMagneticVectorTiltErrQ0(),
+        sensor_fusion->GetMagneticVectorTiltErrQ1(),
+        sensor_fusion->GetMagneticVectorTiltErrQ2(),
+        (float)(fabs(sensor_fusion->GetMagneticVectorTiltErrQ0()) +
+            fabs(sensor_fusion->GetMagneticVectorTiltErrQ1()) +
+            fabs(sensor_fusion->GetMagneticVectorTiltErrQ2()))
+*/      "%lu:B%5.1f,B%5.1f,T%f,T%f,T%f,M%f\n\r",
+        millis(),
+        sensor_fusion->GetMagneticBMag(),
+        sensor_fusion->GetMagneticBMag2(),
+        sensor_fusion->GetMagneticVectorTiltErrQ0(),
+        sensor_fusion->GetMagneticVectorTiltErrQ1(),
+        sensor_fusion->GetMagneticVectorTiltErrQ2(),
+        (float)(fabs(sensor_fusion->GetMagneticVectorTiltErrQ0()) +
+            fabs(sensor_fusion->GetMagneticVectorTiltErrQ1()) +
+            fabs(sensor_fusion->GetMagneticVectorTiltErrQ2())) 
+   );
+
     Serial.print( output_str ); //simplest way to see library output
     /* If preferred, the library's input/output subsystem can be used
     to output data. This is useful, for example, to send the data
@@ -241,6 +265,7 @@ void loop() {
     and that the call to InitializeInputOutputSubsystem() in setup()
     references the desired stream(s).
     */
+   Serial.println( sensor_fusion->SystemStatus() );
 //    if (!sensor_fusion->SendArbitraryData(output_str,
 //                                 strlen(output_str))) {
 //    Serial.println("couldn't send output");

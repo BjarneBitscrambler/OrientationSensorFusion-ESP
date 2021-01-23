@@ -81,17 +81,26 @@ class SensorFusion {
   float GetTemperatureC(void);
   float GetTemperatureK(void);
   void  GetOrientationQuaternion(Quaternion *quat);
+  float GetMagneticFitError(void);
+  float GetMagneticFitErrorTrial(void);
+  float GetMagneticBMag(void);
+  float GetMagneticBMagTrial(void);
+  float GetMagneticCalOrder(void);
+  float GetMagneticVectorTiltErrQ0(void);
+  float GetMagneticVectorTiltErrQ1(void);
+  float GetMagneticVectorTiltErrQ2(void);
 
-  private:
-    void InitializeStatusSubsystem(void);
-    void InitializeSensorFusionGlobals(void);
+ private:
+  void InitializeStatusSubsystem(void);
+  void InitializeSensorFusionGlobals(void);
 
-    SensorFusionGlobals *sfg_;             ///< Primary sensor fusion data structure
-    ControlSubsystem *control_subsystem_;  ///< command and data streaming structure
-    StatusSubsystem *status_subsystem_;    ///< visual status indicator structure
-    PhysicalSensor *sensors_;              ///< linked list of up to 4 sensors
-    uint8_t num_sensors_installed_ =
-        0;  ///< tracks how many sensors have been added to list
+  SensorFusionGlobals *sfg_;  ///< Primary sensor fusion data structure
+  ControlSubsystem
+      *control_subsystem_;             ///< command and data streaming structure
+  StatusSubsystem *status_subsystem_;  ///< visual status indicator structure
+  PhysicalSensor *sensors_;            ///< linked list of up to 4 sensors
+  uint8_t num_sensors_installed_ =
+      0;  ///< tracks how many sensors have been added to list
 
   /*!
    * Constants of the form kLoopsPer_____ set the relationship between
@@ -101,18 +110,18 @@ class SensorFusion {
    * read,...) The rate at which main loop() executes is set by
    * LOOP_RATE_HZ in build.h
    */
-    const uint8_t kLoopsPerMagRead =
-        1;  ///< how often a magnetometer read is performed
-    const uint8_t kLoopsPerThermRead =
-        1;  ///< how often a thermometer read is performed
-    const uint8_t kLoopsPerAccelRead =
-        1;  ///< how often an accelerometer read is performed
-    const uint8_t kLoopsPerGyroRead =
-        1;  ///< how often a gyroscope read is performed
-    const uint8_t kLoopsPerFusionCalc =
-        1;  ///< how often to fuse. Usually the max of previous 3 constants.
-    uint8_t loops_per_fuse_counter_ =
-        0;  ///< counts how many times through loop have been done
+  const uint8_t kLoopsPerMagRead =
+      1;  ///< how often a magnetometer read is performed
+  const uint8_t kLoopsPerThermRead =
+      1;  ///< how often a thermometer read is performed
+  const uint8_t kLoopsPerAccelRead =
+      1;  ///< how often an accelerometer read is performed
+  const uint8_t kLoopsPerGyroRead =
+      1;  ///< how often a gyroscope read is performed
+  const uint8_t kLoopsPerFusionCalc =
+      1;  ///< how often to fuse. Usually the max of previous 3 constants.
+  uint8_t loops_per_fuse_counter_ =
+      0;  ///< counts how many times through loop have been done
 
 };  // end SensorFusion
 

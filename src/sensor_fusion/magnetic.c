@@ -310,7 +310,45 @@ void fInvertMagCal(struct MagSensor *pthisMag, struct MagCalibration *pthisMagCa
     return;
 } // end fInvertMagCal()
 
-// function runs the magnetic calibration
+/**
+ * @brief Run the magnetic calibration.
+ * Calibration is done in time-slices, to avoid excessive CPU load during
+ * each fusion cycle. Three versions of calibration exist, differing in 
+ * complexity and referred to as 4, 7, and 10 element solvers. 
+ * 
+ * If a calibration is in progress, indicated by the 
+ * flag iCalInProgress, then it continues to completion using the same
+ * solver. If a calibration is not in progress and has not been done previously,
+ * then one is started using the most complex solver suited to the number
+ * of measurements available in the buffer. If a calibration is not in progress 
+ * but has been done previously, then at CAL_INTERVAL_SECS one is started
+ * using the most complex solver suited to the number of measurements
+ * available in the buffer.
+ * 
+ * When a solver completes, it indicates this via iNewCalibrationAvailable.
+ *
+ * A new calibration is accepted if: mag field strength is within reasonable
+ * limits; AND the fit error ftrFitErrorpc is less than 15%; AND
+ * the fit error is better than existing cal OR 
+ * (be from higher-order solver AND fit error less than 3.5%).
+ * If (the mag field strength is outside reasonable
+ * limits OR the fit error ftrFitErrorpc is greater than 15%) 
+ * AND the 10-order solver was used, then it is assumed some
+ * readings were corrupted so the buffer is cleared and the cal process
+ * restarts from the top.
+ * 
+ * The fit error of the existing calibration is 'aged' slowly, 
+ * increasing by 1% every 24 hours. This causes a new calibration 
+ * to be favoured over the old one after sufficient time elapses.
+ * I am unsure whether this is desirable in a nautical application
+ * where it is conceivable for the vessel to be on a consistent
+ * heading for long periods. 
+ * 
+ * @param pthisMagCal struct containing details of the current calibration.
+ * @param pthisMagBuffer buffer of readings to be used for new calibration.
+ * @param pthisMag current magnetic reading.
+ * @param loopcounter counts iterations of fusion algorithm. Used in timeslicing.
+ */
 void fRunMagCalibration(struct MagCalibration *pthisMagCal, struct MagBuffer *pthisMagBuffer,
                         struct MagSensor *pthisMag, int32_t loopcounter)
 {
