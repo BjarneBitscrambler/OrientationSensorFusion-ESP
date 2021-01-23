@@ -85,7 +85,7 @@ class SensorFusion {
   float GetMagneticFitErrorTrial(void);
   float GetMagneticBMag(void);
   float GetMagneticBMagTrial(void);
-  int32_t GetMagneticCalOrderTrial(void);
+  float GetMagneticCalOrder(void);
   float GetMagneticVectorTiltErrQ0(void);
   float GetMagneticVectorTiltErrQ1(void);
   float GetMagneticVectorTiltErrQ2(void);

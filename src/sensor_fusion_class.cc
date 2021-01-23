@@ -453,8 +453,8 @@ float SensorFusion::GetMagneticBMagTrial(void) {
 /*!
  * \brief \return Return order [0,4,7,10] of trial calibration
  */
-int32_t SensorFusion::GetMagneticCalOrderTrial(void) {
-  return sfg_->MagCal.iValidMagCal;
+float SensorFusion::GetMagneticCalOrder(void) {
+  return (float)(sfg_->MagCal.iValidMagCal);
 }  // end GetMagneticCalOrderTrial()
 
 /*!
