@@ -82,9 +82,10 @@ class SensorFusion {
   float GetTemperatureK(void);
   void  GetOrientationQuaternion(Quaternion *quat);
   float GetMagneticFitError(void);
-  float GetMagneticFitError2(void);
+  float GetMagneticFitErrorTrial(void);
   float GetMagneticBMag(void);
-  float GetMagneticBMag2(void);
+  float GetMagneticBMagTrial(void);
+  int32_t GetMagneticCalOrderTrial(void);
   float GetMagneticVectorTiltErrQ0(void);
   float GetMagneticVectorTiltErrQ1(void);
   float GetMagneticVectorTiltErrQ2(void);

@@ -421,53 +421,60 @@ void  SensorFusion::GetOrientationQuaternion(Quaternion *quat) {
 }  // end GetOrientationQuaternion()
 
 /*!
- * \brief \return Return magnetic fit error - a measure of magnetic interference
+ * \brief \return Return magnetic fit error of trial calibration
+ */
+float SensorFusion::GetMagneticFitErrorTrial(void) {
+  return sfg_->MagCal.ftrFitErrorpc;
+}  // end GetMagneticFitErrorTrial()
+
+/*!
+ * \brief \return Return magnetic fit error of current calibration
  */
 float SensorFusion::GetMagneticFitError(void) {
-  return sfg_->MagCal.ftrFitErrorpc;
+  return sfg_->MagCal.fFitErrorpc;
 }  // end GetMagneticFitError()
 
-/*!
- * \brief \return Return magnetic fit error - a measure of magnetic interference
- */
-float SensorFusion::GetMagneticFitError2(void) {
-  return sfg_->MagCal.fFitErrorpc;
-}  // end GetMagneticFitError2()
-
 
 /*!
- * \brief \return Return magnetic fit error - a measure of magnetic interference
+ * \brief \return Return geomagnetic field magnitude in uT of current calibration
  */
 float SensorFusion::GetMagneticBMag(void) {
   return sfg_->MagCal.fB;
-}  // end GetMagneticFitError2()
+}  // end GetMagneticBMag()
 
 
 /*!
- * \brief \return Return magnetic fit error - a measure of magnetic interference
+ * \brief \return Return geomagnetic field magnitude in uT of trial calibration
  */
-float SensorFusion::GetMagneticBMag2(void) {
+float SensorFusion::GetMagneticBMagTrial(void) {
   return sfg_->MagCal.ftrB;
-}  // end GetMagneticFitError2()
+}  // end GetMagneticBMagTrial()
 
 /*!
- * \brief \return Return magnetic fit error - a measure of magnetic interference
+ * \brief \return Return order [0,4,7,10] of trial calibration
+ */
+int32_t SensorFusion::GetMagneticCalOrderTrial(void) {
+  return sfg_->MagCal.iValidMagCal;
+}  // end GetMagneticCalOrderTrial()
+
+/*!
+ * \brief \return Return magnetic vector tilt error - X
  */
 float SensorFusion::GetMagneticVectorTiltErrQ0(void) {
   return sfg_->SV_9DOF_GBY_KALMAN.fqmErrPl[0];
-}  // end GetMagneticFitError2()
+}  // end GetMagneticVectorTiltErrQ0()
 /*!
- * \brief \return Return magnetic fit error - a measure of magnetic interference
+ * \brief \return Return magnetic vector tilt error - Y
  */
 float SensorFusion::GetMagneticVectorTiltErrQ1(void) {
   return sfg_->SV_9DOF_GBY_KALMAN.fqmErrPl[1];
-}  // end GetMagneticFitError2()
+}  // end GetMagneticVectorTiltErrQ1()
 /*!
- * \brief \return Return magnetic fit error - a measure of magnetic interference
+ * \brief \return Return magnetic fvector tilt error - Z
  */
 float SensorFusion::GetMagneticVectorTiltErrQ2(void) {
   return sfg_->SV_9DOF_GBY_KALMAN.fqmErrPl[2];
-}  // end GetMagneticFitError2()
+}  // end GetMagneticVectorTiltErrQ2()
 
 /*!
  * \brief Install Sensor in linked list
