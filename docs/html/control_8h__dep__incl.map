@@ -7,5 +7,5 @@
 <area shape="rect" id="node7" href="$control__output_8c.html" title="Implements output streaming for the control &amp; status subsystem. Data is packaged up in format compati..." alt="" coords="701,80,885,121"/>
 <area shape="rect" id="node8" href="$fusion__testing_8c.html" title="ApplyPerturbation function used to analyze dynamic performance." alt="" coords="909,80,1088,121"/>
 <area shape="rect" id="node9" href="$sensor__fusion_8c.html" title="The sensor_fusion.c file implements the top level programming interface." alt="" coords="1113,80,1295,121"/>
-<area shape="rect" id="node3" href="$main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class." alt="" coords="12,169,108,196"/>
+<area shape="rect" id="node3" href="$main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class This file creates a SensorFusion ob..." alt="" coords="12,169,108,196"/>
 </map>

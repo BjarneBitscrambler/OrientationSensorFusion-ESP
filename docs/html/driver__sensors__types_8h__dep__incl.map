@@ -7,7 +7,7 @@
 <area shape="rect" id="node3" href="$board_8h.html" title="Board configuration file." alt="" coords="430,184,525,211"/>
 <area shape="rect" id="node16" href="$driver__fxos8700_8c.html" title="Defines commands to perform various tasks (e.g. read Device ID, Initialize, Read Data) for the FXOS87..." alt="" coords="2846,348,3024,389"/>
 <area shape="rect" id="node4" href="$sensor__fusion__class_8h.html" title=" " alt="" coords="450,355,636,382"/>
-<area shape="rect" id="node5" href="$main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class." alt="" coords="314,445,410,471"/>
+<area shape="rect" id="node5" href="$main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class This file creates a SensorFusion ob..." alt="" coords="314,445,410,471"/>
 <area shape="rect" id="node14" href="$control__output_8c.html" title="Implements output streaming for the control &amp; status subsystem. Data is packaged up in format compati..." alt="" coords="26,348,210,389"/>
 <area shape="rect" id="node23" href="$status_8c.html" title="Application&#45;specific status subsystem." alt="" coords="234,355,425,382"/>
 <area shape="rect" id="node6" href="$sensor__fusion__class_8cc.html" title="An easy&#45;to&#45;use interface to the NXP Sensor Fusion version 7 library algorithms." alt="" coords="626,445,820,471"/>

@@ -19,5 +19,5 @@
 <area shape="rect" id="node19" href="$orientation_8c.html" title="Functions to convert between various orientation representations." alt="" coords="1816,177,2037,203"/>
 <area shape="rect" id="node20" href="$precisionAccelerometer_8c.html" title="Implements accelerometer calibration routines." alt="" coords="2062,169,2261,211"/>
 <area shape="rect" id="node21" href="$status_8c.html" title="Application&#45;specific status subsystem." alt="" coords="2285,177,2475,203"/>
-<area shape="rect" id="node4" href="$main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class." alt="" coords="2635,266,2731,293"/>
+<area shape="rect" id="node4" href="$main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class This file creates a SensorFusion ob..." alt="" coords="2635,266,2731,293"/>
 </map>

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['outputbufappenditem_905',['OutputBufAppendItem',['../control_8h.html#af9b2900e9277b457cea45461f8dce3ef',1,'OutputBufAppendItem(uint8_t *pDest, uint16_t *pIndex, uint8_t *pSource, uint16_t iBytesToCopy):&#160;control_output.c'],['../control__output_8c.html#af9b2900e9277b457cea45461f8dce3ef',1,'OutputBufAppendItem(uint8_t *pDest, uint16_t *pIndex, uint8_t *pSource, uint16_t iBytesToCopy):&#160;control_output.c']]]
+  ['processcommands_883',['ProcessCommands',['../classSensorFusion.html#adb9854e0dc23586327c7cbf9377a7d72',1,'SensorFusion']]],
+  ['producetoolboxoutput_884',['ProduceToolboxOutput',['../classSensorFusion.html#a639c646f972bb29bccd60ef1926735dc',1,'SensorFusion']]]
 ];

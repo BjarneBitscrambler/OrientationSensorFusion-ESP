@@ -19,5 +19,5 @@
 <area shape="rect" id="node17" href="$magnetic_8c.html" title="Lower level magnetic calibration interface." alt="" coords="2092,177,2303,203"/>
 <area shape="rect" id="node20" href="$precisionAccelerometer_8c.html" title="Implements accelerometer calibration routines." alt="" coords="2326,169,2525,211"/>
 <area shape="rect" id="node21" href="$status_8c.html" title="Application&#45;specific status subsystem." alt="" coords="2549,177,2739,203"/>
-<area shape="rect" id="node4" href="$main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class." alt="" coords="12,266,108,293"/>
+<area shape="rect" id="node4" href="$main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class This file creates a SensorFusion ob..." alt="" coords="12,266,108,293"/>
 </map>

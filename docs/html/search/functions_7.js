@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['loop_904',['loop',['../main_8cc.html#afe461d27b9c48d5921c00d521181f12f',1,'main.cc']]]
+  ['outputbufappenditem_882',['OutputBufAppendItem',['../control_8h.html#af9b2900e9277b457cea45461f8dce3ef',1,'OutputBufAppendItem(uint8_t *pDest, uint16_t *pIndex, uint8_t *pSource, uint16_t iBytesToCopy):&#160;control_output.c'],['../control__output_8c.html#af9b2900e9277b457cea45461f8dce3ef',1,'OutputBufAppendItem(uint8_t *pDest, uint16_t *pIndex, uint8_t *pSource, uint16_t iBytesToCopy):&#160;control_output.c']]]
 ];

@@ -1,14 +1,15 @@
-/**
- * Copyright (c) 2020-2021 Bjarne Hansen
+/*
+ * Copyright (c) 2020 Bjarne Hansen
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
  */
-/**
- * @file sensor_fusion_class.h
+
+/*! 
+ *  \file sensor_fusion_class.h
  *
- * Wrapper for the NXP Sensor Fusion v7 functions.
+ *  Wrapper for the NXP Sensor Fusion v 7 functions.
  */
 
 #ifndef SENSOR_FUSION_CLASS_H_
@@ -22,7 +23,7 @@
 #include "sensor_fusion/control.h"
 #include "sensor_fusion/status.h"
 
-/**
+/*!
  *  enum constants used to indicate what type of sensor is being installed
  *  when calling InstallSensor().
  */
@@ -37,7 +38,7 @@ enum class SensorType {
 
 #define MAX_NUM_SENSORS  4    //TODO can replace with vector for arbitrary num sensors
 
-/**
+/*!
  *  Class that wraps the various mostly-C-style functions of the
  *  sensor fusion code into easier to use methods. Not all the
  *  lower-level functions are exposed however; for more advanced
@@ -47,9 +48,9 @@ class SensorFusion {
  public:
   SensorFusion();
   bool InstallSensor(uint8_t sensor_i2c_addr, SensorType sensor_type);
+  void Begin(int pin_i2c_sda = -1, int pin_i2c_scl = -1);
   bool InitializeInputOutputSubsystem(const Stream *serial_port = NULL,
                                       const void *tcp_client = NULL);
-  void Begin(int pin_i2c_sda = -1, int pin_i2c_scl = -1);
   void UpdateWiFiStream(void *tcp_client);
   void ReadSensors(void);
   void RunFusion(void);
@@ -57,9 +58,8 @@ class SensorFusion {
   bool SendArbitraryData(const char *buffer, uint16_t data_length);
   void ProcessCommands(void);
   void InjectCommand(const char *command);
-  void SaveMagneticCalibration(void);
   bool IsDataValid(void);
-  int GetSystemStatus(void);
+  int SystemStatus(void);
   float GetHeadingDegrees(void);
   float GetPitchDegrees(void);
   float GetRollDegrees(void);
@@ -85,10 +85,10 @@ class SensorFusion {
   float GetMagneticFitErrorTrial(void);
   float GetMagneticBMag(void);
   float GetMagneticBMagTrial(void);
-  float GetMagneticInclinationDeg(void);
-  float GetMagneticInclinationRad(void);
-  float GetMagneticNoiseCovariance(void);
-  float GetMagneticCalSolver(void);
+  float GetMagneticCalOrder(void);
+  float GetMagneticVectorTiltErrQ0(void);
+  float GetMagneticVectorTiltErrQ1(void);
+  float GetMagneticVectorTiltErrQ2(void);
 
  private:
   void InitializeStatusSubsystem(void);
@@ -102,7 +102,7 @@ class SensorFusion {
   uint8_t num_sensors_installed_ =
       0;  ///< tracks how many sensors have been added to list
 
-  /**
+  /*!
    * Constants of the form kLoopsPer_____ set the relationship between
    * number of sensor reads and each execution of the fusion algorithm.
    * Normally there is a 1:1 relationship (i.e. read, fuse, read, fuse,...)

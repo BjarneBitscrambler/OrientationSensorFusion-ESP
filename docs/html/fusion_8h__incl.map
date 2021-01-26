@@ -1,18 +1,17 @@
 <map id="src/sensor_fusion/fusion.h" name="src/sensor_fusion/fusion.h">
-<area shape="rect" id="node1" title="Lower level sensor fusion interface." alt="" coords="355,5,546,32"/>
-<area shape="rect" id="node2" href="$sensor__fusion_8h.html" title="The sensor_fusion.h file implements the top level programming interface." alt="" coords="388,80,512,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="43,237,127,263"/>
-<area shape="rect" id="node4" title=" " alt="" coords="38,155,106,181"/>
-<area shape="rect" id="node5" title=" " alt="" coords="130,155,213,181"/>
-<area shape="rect" id="node6" title=" " alt="" coords="255,393,326,420"/>
-<area shape="rect" id="node7" title=" " alt="" coords="288,155,354,181"/>
-<area shape="rect" id="node8" href="$board_8h.html" title="Board configuration file." alt="" coords="379,155,450,181"/>
-<area shape="rect" id="node10" href="$driver__sensors__types_8h.html" title="The driver_sensors_types.h file contains sensor state structs and error definitions." alt="" coords="267,319,439,345"/>
-<area shape="rect" id="node12" href="$build_8h.html" title="Build configuration file." alt="" coords="525,155,592,181"/>
-<area shape="rect" id="node13" href="$magnetic_8h.html" title="Lower level magnetic calibration interface." alt="" coords="616,155,711,181"/>
-<area shape="rect" id="node14" href="$matrix_8h.html" title="Matrix manipulation functions." alt="" coords="736,155,813,181"/>
-<area shape="rect" id="node15" href="$orientation_8h.html" title="Functions to convert between various orientation representations." alt="" coords="838,155,943,181"/>
-<area shape="rect" id="node16" href="$precisionAccelerometer_8h.html" title="Implements accelerometer calibration routines." alt="" coords="675,319,863,345"/>
-<area shape="rect" id="node9" href="$driver__fxos8700_8h.html" title="Describes the fxos8700 driver interface and structures." alt="" coords="152,229,306,271"/>
-<area shape="rect" id="node11" href="$driver__fxas21002_8h.html" title="Contains the fxas21002 sensor register definitions and its bit mask." alt="" coords="330,229,485,271"/>
+<area shape="rect" id="node1" title="Lower level sensor fusion interface." alt="" coords="424,5,615,32"/>
+<area shape="rect" id="node2" href="$sensor__fusion_8h.html" title="The sensor_fusion.h file implements the top level programming interface." alt="" coords="457,80,581,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,155,73,181"/>
+<area shape="rect" id="node4" title=" " alt="" coords="98,155,181,181"/>
+<area shape="rect" id="node5" title=" " alt="" coords="359,393,429,420"/>
+<area shape="rect" id="node6" title=" " alt="" coords="319,155,386,181"/>
+<area shape="rect" id="node7" href="$board_8h.html" title="Board configuration file." alt="" coords="411,155,481,181"/>
+<area shape="rect" id="node9" href="$driver__sensors__types_8h.html" title="The driver_sensors_types.h file contains sensor state structs and error definitions." alt="" coords="371,319,543,345"/>
+<area shape="rect" id="node11" href="$build_8h.html" title="Build configuration file." alt="" coords="557,155,623,181"/>
+<area shape="rect" id="node12" href="$magnetic_8h.html" title="Lower level magnetic calibration interface." alt="" coords="648,155,743,181"/>
+<area shape="rect" id="node13" href="$matrix_8h.html" title="Matrix manipulation functions." alt="" coords="767,155,845,181"/>
+<area shape="rect" id="node14" href="$orientation_8h.html" title="Functions to convert between various orientation representations." alt="" coords="869,155,975,181"/>
+<area shape="rect" id="node15" href="$precisionAccelerometer_8h.html" title="Implements accelerometer calibration routines." alt="" coords="711,319,899,345"/>
+<area shape="rect" id="node8" href="$driver__fxos8700_8h.html" title="Describes the fxos8700 driver interface and structures." alt="" coords="255,229,410,271"/>
+<area shape="rect" id="node10" href="$driver__fxas21002_8h.html" title="Contains the fxas21002 sensor register definitions and its bit mask." alt="" coords="434,229,589,271"/>
 </map>
