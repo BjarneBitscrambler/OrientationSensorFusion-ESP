@@ -88,7 +88,7 @@ Processor</h1>
 <h1><a class="anchor" id="autotoc_md15"></a>
 Dependencies</h1>
 <p>The fusion code and associated project files have been written for and tested in the <em>PlatformIO</em> development environment, as an <em>Arduino</em> framework project for an ESP32 board.</p>
-<p>In addition to the standard Arduino environment, this project uses these libraries:</p><ul>
+<p>In addition to the standard Arduino environment, this project uses these libraries, which are automatically installed in the Arduino framework:</p><ul>
 <li><b>Wire (I2C)</b> library (<em>used for communicating with the sensor ICs</em>)</li>
 <li><b>EEPROM</b> library (<em>used to store calibration values in non-volatile memory</em>)</li>
 <li><b>WiFi</b> libraries (<em>only needed if WiFi output is enabled</em>)</li>
@@ -96,10 +96,10 @@ Dependencies</h1>
 <h1><a class="anchor" id="autotoc_md16"></a>
 Where To Find...</h1>
 <ul>
-<li><b>Documentation</b> for the fusion code is html-based; open the project's <a href="/html/index.html"><code>/html/index.html</code></a> file in your favourite browser. Documentation is auto-generated from comments in the code itself, using Doxygen.</li>
+<li><b>Documentation</b> for the fusion code is html-based; open the project's <a href="/docs/html/index.html"><code>docs/html/index.html</code></a> file in your favourite browser. Documentation is auto-generated from comments in the code itself, using Doxygen.</li>
 <li><b>Test plans, data, results</b>, etc are on <a href="https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki">this project's Github Wiki</a></li>
 <li><b>NXP's version 7 sensor fusion</b> for ESP32 processors is under the <a href="https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP">Code tab</a> of this Github repository. It is fully functional with <a href="https://www.nxp.com/webapp/sps/download/license.jsp?colCode=SENSORFUSIONREV7">NXP's Windows-based Sensor Fusion Toolbox</a> software application.</li>
-<li><b>Adafruit's AHRS port of NXP's version 4.2 sensor fusion</b> as integrated with the SensESP project is on the <a href="https://github.com/SignalK/SensESP">Upstream</a> and <a href="https://github.com/BjarneBitscrambler/SensESP">author's</a> project pages</li>
+<li><b>Orientation data output in Signal K format</b> using the SensESP project is on the <a href="https://github.com/BjarneBitscrambler/SignalK-Orientation">SignalK-Orientation</a> project page. This project provides an example that uses the ORientation library.</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md17"></a>
 Contributions</h1>
@@ -108,7 +108,7 @@ Contributions</h1>
 How-To Use</h1>
 <p>To use this library follow these steps (some untested - let me know of any changes you needed to make to get things to work on your setup):</p><ul>
 <li>setup the <em>PlatformIO</em> development environment</li>
-<li>create a new PlatformIO project, selecting the <em>Board:</em> <code>Espressif ESP-WROVER-KIT</code> and <em>Framework:</em> <code>Arduino</code> (other ESP32 boards should work without changes; Espressif CPUs like the ESP8266 may need some code adjustments - not tested)</li>
+<li>create a new PlatformIO project, selecting the <em>Board:</em> <code>Espressif ESP-WROVER-KIT</code> and <em>Framework:</em> <code>Arduino</code> (other ESP32 boards should work without changes; as does the d1_mini board with Espressif's ESP8266 CPU)</li>
 </ul>
 <p>Now follow either of these two methods to bring in the library files: </p>
 <h2><a class="anchor" id="autotoc_md19"></a>
@@ -122,7 +122,7 @@ Method 1 (gets you a local clone that you can edit or base pull requests on)</h2
 Method 2 (doesn't require manual cloning into a local repository)</h2>
 <ul>
 <li>copy this project's <code>/examples/fusion_text_output.cc</code> into your new PlatformIO project's <code>/src</code> folder. You may want to rename it <code><a class="el" href="main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class This file creates a SensorFusion ob...">main.cc</a></code> or <code>main.cpp</code> to remind yourself that it contains the <code>setup()</code> and <code>loop()</code> functions.</li>
-<li>copy this project's <code>platformio.ini</code>into your new project's root directory (or use it to modify the relevant sections in your own project's <code>platformio.ini</code>). Locate the section <code>lib_deps =</code> and add the line <a href="https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP.git">https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP.git</a>. This section should also list the EEPROM and Wire libraries.</li>
+<li>copy this project's <code>platformio.ini</code>into your new project's root directory (or use it to modify the relevant sections in your own project's <code>platformio.ini</code>). Locate the section <code>lib_deps =</code> and add the line <a href="https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP.git">https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP.git</a>.</li>
 </ul>
 <p>Method 2 results in the library code being imported into PlatformIO's <code>.pio</code> folder.</p>
 <p>Then: <br  />
