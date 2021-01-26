@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['readsensors_889',['ReadSensors',['../classSensorFusion.html#a7d7573317add4ffb98231ea3f478cb75',1,'SensorFusion::ReadSensors()'],['../sensor__fusion_8c.html#a2aef17e3b5cdf8265e189bdee3b4e3e9',1,'readSensors():&#160;sensor_fusion.c']]],
-  ['runfusion_890',['RunFusion',['../classSensorFusion.html#aa1b6f69aee1de8b1514539765ef4b119',1,'SensorFusion::RunFusion()'],['../sensor__fusion_8c.html#a8b90119fee979d0309cc923bf1fad543',1,'runFusion():&#160;sensor_fusion.c']]]
+  ['qaeqaxb_908',['qAeqAxB',['../orientation_8c.html#a22a32becfcb162db012f41ff4f3bc942',1,'qAeqAxB(Quaternion *pqA, const Quaternion *pqB):&#160;orientation.c'],['../orientation_8h.html#a22a32becfcb162db012f41ff4f3bc942',1,'qAeqAxB(Quaternion *pqA, const Quaternion *pqB):&#160;orientation.c']]],
+  ['qaeqbxc_909',['qAeqBxC',['../orientation_8c.html#a12448c36b93d8f3375ce000ef4527b4a',1,'qAeqBxC(Quaternion *pqA, const Quaternion *pqB, const Quaternion *pqC):&#160;orientation.c'],['../orientation_8h.html#a12448c36b93d8f3375ce000ef4527b4a',1,'qAeqBxC(Quaternion *pqA, const Quaternion *pqB, const Quaternion *pqC):&#160;orientation.c']]],
+  ['qconjgaxb_910',['qconjgAxB',['../orientation_8c.html#adb2ea2734ac13ca77b3218d761fe45e0',1,'qconjgAxB(const Quaternion *pqA, const Quaternion *pqB):&#160;orientation.c'],['../orientation_8h.html#adb2ea2734ac13ca77b3218d761fe45e0',1,'qconjgAxB(const Quaternion *pqA, const Quaternion *pqB):&#160;orientation.c']]],
+  ['queuestatus_911',['queueStatus',['../sensor__fusion_8c.html#ae96e36747e6a1aabbec1381f15132ec6',1,'sensor_fusion.c']]]
 ];

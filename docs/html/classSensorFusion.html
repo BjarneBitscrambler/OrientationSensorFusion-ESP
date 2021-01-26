@@ -99,10 +99,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a29962faed281bc60b78c3b4b4588cda3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a29962faed281bc60b78c3b4b4588cda3">InstallSensor</a> (uint8_t sensor_i2c_addr, <a class="el" href="sensor__fusion__class_8h.html#a213c434cb928c4ca22513e2302632435">SensorType</a> sensor_type)</td></tr>
 <tr class="memdesc:a29962faed281bc60b78c3b4b4588cda3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Install Sensor in linked list The max length of the list is checked, and if there is room, the given sensor is inserted at the head of the list. An accelerometer and magnetometer may be combined in one IC - if that is the case then only one call is required to install, provided the associated *_Init() and *_Read() function reads both the accel &amp; magnetometer data. The Init() and Read() functions of each sensor are defined in driver_*.* files.  <a href="classSensorFusion.html#a29962faed281bc60b78c3b4b4588cda3">More...</a><br /></td></tr>
 <tr class="separator:a29962faed281bc60b78c3b4b4588cda3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82577e5f6df9ee41ef87aef7d1b5da19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a82577e5f6df9ee41ef87aef7d1b5da19">Begin</a> (int pin_i2c_sda=-1, int pin_i2c_scl=-1)</td></tr>
-<tr class="separator:a82577e5f6df9ee41ef87aef7d1b5da19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9675caaa9c18d47f99bbf6dba3eb8c64"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a9675caaa9c18d47f99bbf6dba3eb8c64">InitializeInputOutputSubsystem</a> (const Stream *serial_port=NULL, const void *tcp_client=NULL)</td></tr>
 <tr class="separator:a9675caaa9c18d47f99bbf6dba3eb8c64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82577e5f6df9ee41ef87aef7d1b5da19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a82577e5f6df9ee41ef87aef7d1b5da19">Begin</a> (int pin_i2c_sda=-1, int pin_i2c_scl=-1)</td></tr>
+<tr class="separator:a82577e5f6df9ee41ef87aef7d1b5da19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a493cf7acac92d0e50be057e3f6492dd3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a493cf7acac92d0e50be057e3f6492dd3">UpdateWiFiStream</a> (void *tcp_client)</td></tr>
 <tr class="memdesc:a493cf7acac92d0e50be057e3f6492dd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the TCP client pointer. Call when a new TCP connection is made, as reported by WiFiServer::available() When tcp_client is NULL, output via WiFi is not attempted.  <a href="classSensorFusion.html#a493cf7acac92d0e50be057e3f6492dd3">More...</a><br /></td></tr>
 <tr class="separator:a493cf7acac92d0e50be057e3f6492dd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,8 +126,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a5917a24ff08e6576c5e326ed0ba88e78"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a5917a24ff08e6576c5e326ed0ba88e78">InjectCommand</a> (const char *command)</td></tr>
 <tr class="memdesc:a5917a24ff08e6576c5e326ed0ba88e78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inject and process a single command in the control subsystem.  <a href="classSensorFusion.html#a5917a24ff08e6576c5e326ed0ba88e78">More...</a><br /></td></tr>
 <tr class="separator:a5917a24ff08e6576c5e326ed0ba88e78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25c7cd5259cd6a251678fb758066a032"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a25c7cd5259cd6a251678fb758066a032">SaveMagneticCalibration</a> (void)</td></tr>
+<tr class="memdesc:a25c7cd5259cd6a251678fb758066a032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save current magnetic calibration to non-volatile memory.  <a href="classSensorFusion.html#a25c7cd5259cd6a251678fb758066a032">More...</a><br /></td></tr>
+<tr class="separator:a25c7cd5259cd6a251678fb758066a032"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d9724a1a32226b71add454076d26265"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a6d9724a1a32226b71add454076d26265">IsDataValid</a> (void)</td></tr>
 <tr class="separator:a6d9724a1a32226b71add454076d26265"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af954f3cfbdb7cd0643e8d01a7ecc7f88"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#af954f3cfbdb7cd0643e8d01a7ecc7f88">GetSystemStatus</a> (void)</td></tr>
+<tr class="separator:af954f3cfbdb7cd0643e8d01a7ecc7f88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeacc830ce9871cb60ee4086068d5cec7"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#aeacc830ce9871cb60ee4086068d5cec7">GetHeadingDegrees</a> (void)</td></tr>
 <tr class="separator:aeacc830ce9871cb60ee4086068d5cec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b97277eb26e5cb28c4c8a12af1ed8b6"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a3b97277eb26e5cb28c4c8a12af1ed8b6">GetPitchDegrees</a> (void)</td></tr>
@@ -171,6 +176,22 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:ab30264ee4bb539bb7ac3bc9080f62a1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#ab30264ee4bb539bb7ac3bc9080f62a1f">GetOrientationQuaternion</a> (<a class="el" href="structQuaternion.html">Quaternion</a> *quat)</td></tr>
 <tr class="memdesc:ab30264ee4bb539bb7ac3bc9080f62a1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the orientation as a quaternion.  <a href="classSensorFusion.html#ab30264ee4bb539bb7ac3bc9080f62a1f">More...</a><br /></td></tr>
 <tr class="separator:ab30264ee4bb539bb7ac3bc9080f62a1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f760ac7f2eeb8105d46db73bda11445"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a8f760ac7f2eeb8105d46db73bda11445">GetMagneticFitError</a> (void)</td></tr>
+<tr class="separator:a8f760ac7f2eeb8105d46db73bda11445"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b1d4e130933657f32536cb72907b8d1"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a7b1d4e130933657f32536cb72907b8d1">GetMagneticFitErrorTrial</a> (void)</td></tr>
+<tr class="separator:a7b1d4e130933657f32536cb72907b8d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8a194e241edac38a501e46ab11f2cc2"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#aa8a194e241edac38a501e46ab11f2cc2">GetMagneticBMag</a> (void)</td></tr>
+<tr class="separator:aa8a194e241edac38a501e46ab11f2cc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c495de9bf3e660bb6d165a079c2709e"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a0c495de9bf3e660bb6d165a079c2709e">GetMagneticBMagTrial</a> (void)</td></tr>
+<tr class="separator:a0c495de9bf3e660bb6d165a079c2709e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4675d4b57a9d545c22d3bacdc3cea3b3"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a4675d4b57a9d545c22d3bacdc3cea3b3">GetMagneticInclinationDeg</a> (void)</td></tr>
+<tr class="separator:a4675d4b57a9d545c22d3bacdc3cea3b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e37c45e33306faa4b70f14f05c0faf6"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a3e37c45e33306faa4b70f14f05c0faf6">GetMagneticInclinationRad</a> (void)</td></tr>
+<tr class="separator:a3e37c45e33306faa4b70f14f05c0faf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78c909d71e1555fd06666b2527c82b68"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a78c909d71e1555fd06666b2527c82b68">GetMagneticNoiseCovariance</a> (void)</td></tr>
+<tr class="separator:a78c909d71e1555fd06666b2527c82b68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a114f0f74df7136aa18a8b23d6c05d18f"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSensorFusion.html#a114f0f74df7136aa18a8b23d6c05d18f">GetMagneticCalSolver</a> (void)</td></tr>
+<tr class="separator:a114f0f74df7136aa18a8b23d6c05d18f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -426,6 +447,169 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aa8a194e241edac38a501e46ab11f2cc2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8a194e241edac38a501e46ab11f2cc2">&#9670;&nbsp;</a></span>GetMagneticBMag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SensorFusion::GetMagneticBMag </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Return geomagnetic field magnitude in uT of current calibration.</dd></dl>
+<p>This value does not change with each sensor reading - it only updates if a new calibration parameter set is calculated and becomes the currently-used calibration. </p>
+
+</div>
+</div>
+<a id="a0c495de9bf3e660bb6d165a079c2709e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c495de9bf3e660bb6d165a079c2709e">&#9670;&nbsp;</a></span>GetMagneticBMagTrial()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SensorFusion::GetMagneticBMagTrial </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Return geomagnetic field magnitude in uT of trial calibration.</dd></dl>
+<p>This value is the current best-estimate of the B field using recent magnetic sensor readings. It updates with each new sensor reading added to the buffer. If the new trial calibration parameters are accepted and replace the current calibration, then this B field becomes associated with that set.</p>
+<p>This parameter provides an indication of magnetic interference; if it differs widely from the B value of the current calibration then one can conclude that the current calibration is not valid for the present magnetic environment. </p>
+
+</div>
+</div>
+<a id="a114f0f74df7136aa18a8b23d6c05d18f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a114f0f74df7136aa18a8b23d6c05d18f">&#9670;&nbsp;</a></span>GetMagneticCalSolver()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SensorFusion::GetMagneticCalSolver </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Return solver used for current calibration [0,4,7,10]</dd></dl>
+<p>The solver is the number of elements (complexity) of the calibration algorithm. 0 means no calibration; 10 is the most complex. </p>
+
+</div>
+</div>
+<a id="a8f760ac7f2eeb8105d46db73bda11445"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f760ac7f2eeb8105d46db73bda11445">&#9670;&nbsp;</a></span>GetMagneticFitError()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SensorFusion::GetMagneticFitError </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Return magnetic fit error of current calibration</dd></dl>
+<p>This function returns the measure of the goodness of fit of the currently-used calibration parameter set. Units are in % and a value less than 3.5% is considered good. If no calibration is available on startup (i.e. none saved in EEPROM) then a value of 0 is returned briefly during program startup, indicating that insufficient data are available to calculate a fit. </p>
+
+</div>
+</div>
+<a id="a7b1d4e130933657f32536cb72907b8d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b1d4e130933657f32536cb72907b8d1">&#9670;&nbsp;</a></span>GetMagneticFitErrorTrial()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SensorFusion::GetMagneticFitErrorTrial </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Return magnetic fit error of trial calibration</dd></dl>
+<p>The background calibration task uses recent magnetic readings to periodically calculate a new set of calibration parameters. This function returns the measure of goodness of fit of the new calibration parameter set. Units are in % and a value less than 3.5% is considered good. A value of 0 is returned briefly during program startup, indicating that insufficient data are available to calculate a fit. </p>
+
+</div>
+</div>
+<a id="a4675d4b57a9d545c22d3bacdc3cea3b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4675d4b57a9d545c22d3bacdc3cea3b3">&#9670;&nbsp;</a></span>GetMagneticInclinationDeg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SensorFusion::GetMagneticInclinationDeg </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Return geomagnetic field inclination from horizontal in degrees.</dd></dl>
+<p>This is the a posteriori value from Kalman filter output and updates with each sensor reading. It can be used as an indication of magnetic interference; if its value changes by more than, say, 10 degrees from recent previous values then it indicates a disturbance in the magnetic environment.</p>
+<p>Magnetic inclination values vary over the earth's surface and are available from sources such as NOAA. </p>
+
+</div>
+</div>
+<a id="a3e37c45e33306faa4b70f14f05c0faf6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e37c45e33306faa4b70f14f05c0faf6">&#9670;&nbsp;</a></span>GetMagneticInclinationRad()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SensorFusion::GetMagneticInclinationRad </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Return geomagnetic field inclination from horizontal in radians.</dd></dl>
+<p>This is the a posteriori value from Kalman filter output and updates with each sensor reading. It can be used as an indication of magnetic interference; if its value changes by more than, say, 10 degrees from recent previous values then it indicates a disturbance in the magnetic environment.</p>
+<p>Magnetic inclination values vary over the earth's surface and are available from sources such as NOAA. </p>
+
+</div>
+</div>
+<a id="a78c909d71e1555fd06666b2527c82b68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78c909d71e1555fd06666b2527c82b68">&#9670;&nbsp;</a></span>GetMagneticNoiseCovariance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SensorFusion::GetMagneticNoiseCovariance </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Return measurement noise covariance value for magnetic field.</dd></dl>
+<p>This is proportional to how heavily the magnetic readings are weighted in calculating the a posteriori orientation. This is a good measure of magnetic interference; when the noise covariance value rises above about 0.00056 it indicates the current magnetic reading does not lie close to the surface of the calibrated geomagnetic sphere. </p>
+
+</div>
+</div>
 <a id="ab30264ee4bb539bb7ac3bc9080f62a1f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab30264ee4bb539bb7ac3bc9080f62a1f">&#9670;&nbsp;</a></span>GetOrientationQuaternion()</h2>
 
@@ -445,7 +629,7 @@ Private Attributes</h2></td></tr>
 <p>Return the orientation as a quaternion. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pointer</td><td>to quaternion structure, to be filled by this method </td></tr>
+    <tr><td class="paramname">quat</td><td>pointer to quaternion structure, to be filled by this method </td></tr>
   </table>
   </dd>
 </dl>
@@ -604,6 +788,26 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="af954f3cfbdb7cd0643e8d01a7ecc7f88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af954f3cfbdb7cd0643e8d01a7ecc7f88">&#9670;&nbsp;</a></span>GetSystemStatus()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SensorFusion::GetSystemStatus </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Fusion System status</dd></dl>
+<p>System status is indicated by an integer. See <a class="el" href="sensor__fusion_8h.html" title="The sensor_fusion.h file implements the top level programming interface.">sensor_fusion.h</a> for details. Common values are: 1 (Initializing); 3 (Normal); and 7 (Soft Fault - usually caused by communications fault with sensor IC) </p>
+
+</div>
+</div>
 <a id="a8b1cbaa9afd39ac9cbd6e10f69c07ebf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8b1cbaa9afd39ac9cbd6e10f69c07ebf">&#9670;&nbsp;</a></span>GetTemperatureC()</h2>
 
@@ -619,7 +823,8 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>Return the Temperature in degrees C </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Return the Temperature in degrees C</dd></dl>
+<p>This is the temperature of the sensor IC die. It is not factory-trimmed, so it very likely has an offset that should be calibrated out for best accuracy. </p>
 
 </div>
 </div>
@@ -638,7 +843,8 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>Return the Temperature in degrees K </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Return the Temperature in degrees K</dd></dl>
+<p>This is the temperature of the sensor IC die. It is not factory-trimmed, so it very likely has an offset that should be calibrated out for best accuracy. </p>
 
 </div>
 </div>
@@ -733,10 +939,10 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Inject and process a single command in the control subsystem. </p>
-<p>Command provided by this call bypasses the usual input route (serial UART or WiFi) and is instead provided directly in this function call. This provides an alterative way of manipulating the fusion algortithm without needing to use the entire control or input subsystem, For a list of valid commands, see <a class="el" href="control__input_8c.html" title="Command interpreter which interfaces to the Sensor Fusion Toolbox. Commands sent from the Toolbox (e....">control_input.c</a> in the Oroientation library.</p>
+<p>Command provided by this call bypasses the usual input route (serial UART or WiFi) and is instead provided directly in this function call. This provides an alterative way of manipulating the fusion algortithm without needing to use the entire control or input subsystem, For a list of valid commands, see <a class="el" href="control__input_8c.html" title="Command interpreter which interfaces to the Sensor Fusion Toolbox. Commands sent from the Toolbox (e....">control_input.c</a> in the Orientation library.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">const</td><td>char * command is a four-character sequence selected from the list of valid commands. Illegal commands are ignored without any action taken. </td></tr>
+    <tr><td class="paramname">command</td><td>is a four-character sequence selected from the list of valid commands. Illegal commands are ignored without any action taken. </td></tr>
   </table>
   </dd>
 </dl>
@@ -820,6 +1026,29 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a25c7cd5259cd6a251678fb758066a032"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25c7cd5259cd6a251678fb758066a032">&#9670;&nbsp;</a></span>SaveMagneticCalibration()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SensorFusion::SaveMagneticCalibration </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Save current magnetic calibration to non-volatile memory. </p>
+<p>Passes to the fusion control subsystem the command to save the current magnetic calibration parameters to EEPROM. This calibration will then be loaded each time the system restarts.</p>
+<p>One can pass this command directly using <a class="el" href="classSensorFusion.html#a5917a24ff08e6576c5e326ed0ba88e78" title="Inject and process a single command in the control subsystem.">InjectCommand()</a>, but <a class="el" href="classSensorFusion.html#a25c7cd5259cd6a251678fb758066a032" title="Save current magnetic calibration to non-volatile memory.">SaveMagneticCalibration()</a> is provided as a convenience.</p>
+<p>The fusion system continuously runs a time-sliced calibration routine in the background, and if a superior set of calibration parameters are calculated based on recent magnetic measurements, then these new parameters replace the current ones in RAM. However, it is only via this command that the parameters can be caused to persist beyond the next system reset. </p>
+
+</div>
+</div>
 <a id="a8bdd5942ef9cc5d3392fec0cbd3e51c9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8bdd5942ef9cc5d3392fec0cbd3e51c9">&#9670;&nbsp;</a></span>SendArbitraryData()</h2>
 
@@ -896,7 +1125,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">        1</div>
+<div class="line">      1</div>
 </div><!-- fragment -->
 <p>how often an accelerometer read is performed </p>
 
@@ -922,7 +1151,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">        1</div>
+<div class="line">      1</div>
 </div><!-- fragment -->
 <p>how often to fuse. Usually the max of previous 3 constants. </p>
 
@@ -948,7 +1177,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">        1</div>
+<div class="line">      1</div>
 </div><!-- fragment -->
 <p>how often a gyroscope read is performed </p>
 
@@ -974,10 +1203,10 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">        1</div>
+<div class="line">      1</div>
 </div><!-- fragment -->
 <p>how often a magnetometer read is performed </p>
-<p>Constants of the form kLoopsPer_____ set the relationship between number of sensor reads and each execution of the fusion algorithm. Normally there is a 1:1 relationship (i.e. read, fuse, read, fuse,...) but other arrangements are possible (e.g. read, read, fuse, read, read,...) The rate at which main loop() executes is set by LOOP_RATE_HZ in <a class="el" href="build_8h.html" title="Build configuration file.">build.h</a> </p>
+<p>Constants of the form kLoopsPer_____ set the relationship between number of sensor reads and each execution of the fusion algorithm. Normally there is a 1:1 relationship (i.e. read, fuse, read, fuse,...) but other arrangements are possible (e.g. read, read, fuse, read, read,...) The rate at which main <a class="el" href="main_8cc.html#afe461d27b9c48d5921c00d521181f12f">loop()</a> executes is set by LOOP_RATE_HZ in <a class="el" href="build_8h.html" title="Build configuration file.">build.h</a> </p>
 
 </div>
 </div>
@@ -1001,7 +1230,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">        1</div>
+<div class="line">      1</div>
 </div><!-- fragment -->
 <p>how often a thermometer read is performed </p>
 
@@ -1027,7 +1256,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">        0</div>
+<div class="line">      0</div>
 </div><!-- fragment -->
 <p>counts how many times through loop have been done </p>
 
@@ -1053,7 +1282,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">        0</div>
+<div class="line">      0</div>
 </div><!-- fragment -->
 <p>tracks how many sensors have been added to list </p>
 
