@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['sendarbitrarydata_892',['SendArbitraryData',['../classSensorFusion.html#a8bdd5942ef9cc5d3392fec0cbd3e51c9',1,'SensorFusion']]],
-  ['sensor_5fi2c_5fread_893',['Sensor_I2C_Read',['../hal__i2c_8cc.html#ac43d9c407874143a16bd4518ddf8a0f4',1,'Sensor_I2C_Read(registerDeviceInfo_t *devInfo, uint16_t peripheralAddress, const registerReadlist_t *pReadList, uint8_t *pOutBuffer):&#160;hal_i2c.cc'],['../hal__i2c_8h.html#a7262a7e9e93bd55dac52c6293bf56ee0',1,'Sensor_I2C_Read(registerDeviceInfo_t *devInfo, uint16_t slaveAddress, const registerReadlist_t *pReadList, uint8_t *pOutBuffer):&#160;hal_i2c.cc']]],
-  ['sensor_5fi2c_5fwrite_5flist_894',['Sensor_I2C_Write_List',['../hal__i2c_8cc.html#a8c3e499896c83cb718f52386bde0a481',1,'Sensor_I2C_Write_List(registerDeviceInfo_t *devInfo, uint16_t peripheralAddress, const registerwritelist_t *pRegWriteList):&#160;hal_i2c.cc'],['../hal__i2c_8h.html#a5bfdba785d5db0ff26918346dbceb3cc',1,'Sensor_I2C_Write_List(registerDeviceInfo_t *devInfo, uint16_t slaveAddress, const registerwritelist_t *pRegWriteList):&#160;hal_i2c.cc']]],
-  ['sensorfusion_895',['SensorFusion',['../classSensorFusion.html#ad193998535aeea57d9e2bd468e37ee12',1,'SensorFusion']]],
-  ['setstatus_896',['setStatus',['../sensor__fusion_8c.html#a741fd2193cc58c09b692d1ae2b7a81e8',1,'sensor_fusion.c']]],
-  ['systemstatus_897',['SystemStatus',['../classSensorFusion.html#a48442be2ee0413014f02715a900fd522',1,'SensorFusion']]]
+  ['readsensors_912',['ReadSensors',['../classSensorFusion.html#a7d7573317add4ffb98231ea3f478cb75',1,'SensorFusion::ReadSensors()'],['../sensor__fusion_8c.html#a2aef17e3b5cdf8265e189bdee3b4e3e9',1,'readSensors():&#160;sensor_fusion.c']]],
+  ['runfusion_913',['RunFusion',['../classSensorFusion.html#aa1b6f69aee1de8b1514539765ef4b119',1,'SensorFusion::RunFusion()'],['../sensor__fusion_8c.html#a8b90119fee979d0309cc923bf1fad543',1,'runFusion():&#160;sensor_fusion.c']]]
 ];

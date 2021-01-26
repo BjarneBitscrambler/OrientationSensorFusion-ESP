@@ -1,7 +1,7 @@
 <map id="src/build.h" name="src/build.h">
 <area shape="rect" id="node1" title="Build configuration file." alt="" coords="510,5,599,32"/>
 <area shape="rect" id="node2" href="$sensor__fusion__class_8h.html" title=" " alt="" coords="25,177,212,203"/>
-<area shape="rect" id="node3" href="$main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class This file creates a SensorFusion ob..." alt="" coords="5,266,101,293"/>
+<area shape="rect" id="node3" href="$main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class." alt="" coords="5,266,101,293"/>
 <area shape="rect" id="node5" href="$sensor__fusion_8h.html" title="The sensor_fusion.h file implements the top level programming interface." alt="" coords="1566,80,1749,121"/>
 <area shape="rect" id="node7" href="$control_8cc.html" title="Defines control sub&#45;system." alt="" coords="236,177,439,203"/>
 <area shape="rect" id="node12" href="$control__output_8c.html" title="Implements output streaming for the control &amp; status subsystem. Data is packaged up in format compati..." alt="" coords="463,169,647,211"/>

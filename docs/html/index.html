@@ -69,15 +69,16 @@ $(function() {
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="autotoc_md11"></a>
 Introduction</h1>
-<p>An easy-to-use interface to the <b>NXP Sensor Fusion version 7</b> algorithms.</p>
+<p>An easy-to-use interface to the <b>NXP Sensor Fusion version 7</b> algorithms, providing orientation data derived from a 9 degrees-of-Freedom motion sensor.</p>
 <p>It is configured to work with the Adafruit breakout board #3643 using the <em>NXP FXOS8700</em> magnetometer/accelerometer and <em>FXAS21002</em> gyroscope sensor ICs, but can be modified to work with other sensors having an I2C interface. With additional modification, it can also work with SPI interface sensors.</p>
-<p>The library runs on Espressif's ESP32 and ESP8266 processors and outputs orientation data using the serial and WiFi interfaces.</p>
-<p>A C++ class provides simple access to the most common sensor fusion functions, but it is also possible to directly interface with the library methods contained in the underlying C files, which are based on those provided by NXP in their version 7.20 release.</p>
+<p>The library runs on Espressif's ESP32 and ESP8266 processors. Library output is via Get___() methods that return the various orientation parameters (e.g. <code>GetHeadingDegrees(void)</code>, <code>GetPitchDegrees(void)</code>, <code>GetAccelXGees(void)</code>, etc). A choice of units is provided (e.g. Degrees, Radians, quaternions, Gees or m/s^2). The IC temperature is also available.</p>
+<p>An example <code>main.cpp</code> (see <code>examples/fusion_text_output.cc</code>) illustrates how to use this library, and outputs orientation data in text format using serial and WiFi interfaces. For a slightly more complex example, see the adjunct library <a href="https://github.com/BjarneBitscrambler/SignalK-Orientation">https://github.com/BjarneBitscrambler/SignalK-Orientation</a> which uses this one to generate the orientation data, then packages it up and sends it via WiFi to a Signal K server.</p>
+<p>A C++ class (<code><a class="el" href="sensor__fusion__class_8h.html">src/sensor_fusion_class.h</a></code>) provides simple access to the most common sensor fusion functions, but it is also possible to directly interface with the library methods contained in the underlying C files, which are based on those provided by NXP in their version 7.20 release.</p>
 <h1><a class="anchor" id="autotoc_md12"></a>
 Background</h1>
 <p>Orientation sensing using combined accelerometer + gyroscope + magnetometer sensors has become quite accurate when coupled with the right sensor fusion software. <a href="https://www.nxp.com/">NXP</a> manufactures these types of sensors, and have written an excellent sensor fusion library for their Kinetis 32-bit microcontrollers. Their library, which is released under the BSD-3-Clause license, was ported in 2015 to the Arduino environment by Adafruit as their <a href="https://learn.adafruit.com/how-to-fuse-motion-sensor-data-into-ahrs-orientation-euler-quaternions">AHRS (Attitude and Heading Reference System)</a>. The AHRS port uses NXP's version 4.2 fusion code.</p>
 <p>A newer version of the NXP sensor fusion library (version 7.2) is available, which is what this present project is using. This newer library has several improvements, including the ability to perform magnetic calibration while in use (as opposed to needing a separate software tool).</p>
-<p>My motivation for porting NXP's library is to create an orientation sensor for marine use, using off-the-shelf hardware and the <a href="https://github.com/SignalK/SensESP">Signal K / SensESP project</a> to provide orientation data (e.g. magnetic heading, roll, and pitch) on a vessel. I have targeted this project for the Espressif ESP32 microcontroller and the NXP sensors.</p>
+<p>My motivation for porting NXP's library is to create an orientation sensor for marine use, using off-the-shelf hardware and the <a href="https://github.com/SignalK/SensESP">Signal K / SensESP project</a> to provide orientation data (e.g. magnetic heading, roll, and pitch) on a vessel. I have targeted this project for the Espressif ESP32/ESP8266 microcontrollers and the NXP sensors.</p>
 <h1><a class="anchor" id="autotoc_md13"></a>
 Sensors</h1>
 <p>The present software works with the NXP 9DOF (9 Degrees-Of-Freedom) sensor combination consisting of <b>FXOS8700 magnetometer + accelerometer</b> and <b>FXAS21002 gyroscope</b>. These are conveniently available mounted together on the <b>Adafruit #3463 breakout</b> board.</p>
@@ -87,11 +88,11 @@ Processor</h1>
 <p>The present software is written for the ESP32 and ESP8266 processors. With some rewriting of the I2C and timing routines, the code can be ported to other processors.</p>
 <h1><a class="anchor" id="autotoc_md15"></a>
 Dependencies</h1>
-<p>The fusion code and associated project files have been written for and tested in the <em>PlatformIO</em> development environment, as an <em>Arduino</em> framework project for an ESP32 board.</p>
-<p>In addition to the standard Arduino environment, this project uses these libraries, which are automatically installed in the Arduino framework:</p><ul>
+<p>The fusion code and associated project files have been written for and tested in the <em>PlatformIO</em> development environment, as an <em>Arduino</em> framework project on an ESP32 board and on an ESP8266 board.</p>
+<p>In addition to the standard Arduino environment, this project uses the following libraries which are automatically installed in the Arduino framework:</p><ul>
 <li><b>Wire (I2C)</b> library (<em>used for communicating with the sensor ICs</em>)</li>
 <li><b>EEPROM</b> library (<em>used to store calibration values in non-volatile memory</em>)</li>
-<li><b>WiFi</b> libraries (<em>only needed if WiFi output is enabled</em>)</li>
+<li><b>WiFi</b> libraries (<em>only needed by the example main.cpp if WiFi output is enabled</em>)</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md16"></a>
 Where To Find...</h1>
@@ -99,7 +100,7 @@ Where To Find...</h1>
 <li><b>Documentation</b> for the fusion code is html-based; open the project's <a href="/docs/html/index.html"><code>docs/html/index.html</code></a> file in your favourite browser. Documentation is auto-generated from comments in the code itself, using Doxygen.</li>
 <li><b>Test plans, data, results</b>, etc are on <a href="https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki">this project's Github Wiki</a></li>
 <li><b>NXP's version 7 sensor fusion</b> for ESP32 processors is under the <a href="https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP">Code tab</a> of this Github repository. It is fully functional with <a href="https://www.nxp.com/webapp/sps/download/license.jsp?colCode=SENSORFUSIONREV7">NXP's Windows-based Sensor Fusion Toolbox</a> software application.</li>
-<li><b>Orientation data output in Signal K format</b> using the SensESP project is on the <a href="https://github.com/BjarneBitscrambler/SignalK-Orientation">SignalK-Orientation</a> project page. This project provides an example that uses the ORientation library.</li>
+<li><b>Orientation data output in Signal K format</b> using the SensESP project is on the <a href="https://github.com/BjarneBitscrambler/SignalK-Orientation">SignalK-Orientation</a> project page. This project provides an example that uses this Orientation library.</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md17"></a>
 Contributions</h1>
@@ -108,7 +109,7 @@ Contributions</h1>
 How-To Use</h1>
 <p>To use this library follow these steps (some untested - let me know of any changes you needed to make to get things to work on your setup):</p><ul>
 <li>setup the <em>PlatformIO</em> development environment</li>
-<li>create a new PlatformIO project, selecting the <em>Board:</em> <code>Espressif ESP-WROVER-KIT</code> and <em>Framework:</em> <code>Arduino</code> (other ESP32 boards should work without changes; as does the d1_mini board with Espressif's ESP8266 CPU)</li>
+<li>create a new PlatformIO project, selecting the <em>Board:</em> <code>Espressif ESP-WROVER-KIT</code> and <em>Framework:</em> <code>Arduino</code> (other ESP32 boards should work without changes; as does the <em>d1_mini</em> board with Espressif's ESP8266 CPU)</li>
 </ul>
 <p>Now follow either of these two methods to bring in the library files: </p>
 <h2><a class="anchor" id="autotoc_md19"></a>
@@ -116,24 +117,24 @@ Method 1 (gets you a local clone that you can edit or base pull requests on)</h2
 <ul>
 <li>create a local clone of this repository on your computer</li>
 <li>from your local repository, copy the contents of <code>/src</code> into your new project's <code>/src</code> folder. Ensure you get all the files as well as the subfolder <code>/src/sensor_fusion</code>.</li>
-<li>from your local repository, copy <code>/examples/fusion_text_output.cc</code> into your new PlatformIO project's <code>/src</code> folder. You may want to rename it <code><a class="el" href="main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class This file creates a SensorFusion ob...">main.cc</a></code> or <code>main.cpp</code> to remind yourself that it contains the <code>setup()</code> and <code>loop()</code> functions.</li>
+<li>from your local repository, copy <code>/examples/fusion_text_output.cc</code> into your new PlatformIO project's <code>/src</code> folder. You may want to rename it <code><a class="el" href="main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class.">main.cc</a></code> or <code>main.cpp</code> to remind yourself that it contains the <code><a class="el" href="main_8cc.html#a4fc01d736fe50cf5b977f755b675f11d">setup()</a></code> and <code><a class="el" href="main_8cc.html#afe461d27b9c48d5921c00d521181f12f">loop()</a></code> functions.</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md20"></a>
 Method 2 (doesn't require manual cloning into a local repository)</h2>
 <ul>
-<li>copy this project's <code>/examples/fusion_text_output.cc</code> into your new PlatformIO project's <code>/src</code> folder. You may want to rename it <code><a class="el" href="main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class This file creates a SensorFusion ob...">main.cc</a></code> or <code>main.cpp</code> to remind yourself that it contains the <code>setup()</code> and <code>loop()</code> functions.</li>
+<li>copy this project's <code>/examples/fusion_text_output.cc</code> into your new PlatformIO project's <code>/src</code> folder. You may want to rename it <code><a class="el" href="main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class.">main.cc</a></code> or <code>main.cpp</code> to remind yourself that it contains the <code><a class="el" href="main_8cc.html#a4fc01d736fe50cf5b977f755b675f11d">setup()</a></code> and <code><a class="el" href="main_8cc.html#afe461d27b9c48d5921c00d521181f12f">loop()</a></code> functions.</li>
 <li>copy this project's <code>platformio.ini</code>into your new project's root directory (or use it to modify the relevant sections in your own project's <code>platformio.ini</code>). Locate the section <code>lib_deps =</code> and add the line <a href="https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP.git">https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP.git</a>.</li>
 </ul>
 <p>Method 2 results in the library code being imported into PlatformIO's <code>.pio</code> folder.</p>
 <p>Then: <br  />
 </p><ul>
 <li>edit your new project's <code>platformio.ini</code> file for your specific board and environment. Use this project's <code>platformio.ini</code> file as an example.</li>
-<li>edit the <code>#defines</code> at the top of your <code>fusion_text_output.cc</code> (the sample <code><a class="el" href="main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class This file creates a SensorFusion ob...">main.cc</a></code>)) to reflect your particular hardware. The I2C pins connecting your processor to your sensor ICs will likely be different, and you may also need to change the I2C addresses that the ICs are configured for.</li>
+<li>edit the <code>#defines</code> at the top of your <code>fusion_text_output.cc</code> (the sample <code><a class="el" href="main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class.">main.cc</a></code>) to reflect your particular hardware. The I2C pins connecting your processor to your sensor ICs will likely be different, and you may also need to change the I2C addresses that the ICs are configured for.</li>
 <li>compile and download to your processor</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md21"></a>
 Initial Text Output</h2>
-<p>To confirm that the software is communicating with your sensors, observe the serial port output of the ESP processor. Use a USB connection to a PC running a terminal program at 115200 baud, 8 bits, No parity, 1 stop bit. Several progress messages should appear as the fusion software configures the sensors. Once the algorithm is running, lines of text containing a timestamp and orientation data should scroll by. See the <code><a class="el" href="main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class This file creates a SensorFusion ob...">main.cc</a></code> program's <code>loop()</code> for details.</p>
+<p>To confirm that the software is communicating with your sensors, observe the serial port output of the ESP processor. Use a USB connection to a PC running a terminal program at 115200 baud, 8 bits, No parity, 1 stop bit. Several progress messages should appear as the fusion software configures the sensors. Once the algorithm is running, lines of text containing a timestamp and orientation data should scroll by. See the <code><a class="el" href="main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class.">main.cc</a></code> program's <code><a class="el" href="main_8cc.html#afe461d27b9c48d5921c00d521181f12f">loop()</a></code> for details.</p>
 <p>However, the best way to visualize operation of the orientation algorithm is by using the NXP Sensor Fusion Toolbox.</p>
 <h2><a class="anchor" id="autotoc_md22"></a>
 NXP Sensor Fusion Toolbox</h2>
@@ -141,7 +142,7 @@ NXP Sensor Fusion Toolbox</h2>
 <p>The <b>Toolbox</b> when working shows a graphic of a PCB rotating on the screen in synchronization with motion of your own board. If there is no motion at all, then check that the data packets are arriving on the expected COM: port of your computer. A terminal program (like HyperTerminal or PuTTY) can help display traffic on a COM: port, but note that the data packets are in binary format (not ASCII text) so you won't be able to interpret them visually. If the <b>Toolbox</b> shows motion but it is jerky or reversed from the actual board motion, then likely one or more of your board's axes are not oriented according to how the fusion software expects. Different sensor board manufacturers will have placed the sensor ICs in orientations particular to their own needs. The file <code><a class="el" href="hal__axis__remap_8c.html" title="Hardware Abstraction layer for the particular sensors used. Depending on the design of the sensor PCB...">hal_axis_remap.c</a></code> is used to invert or swap axes to conform to what the fusion algorithm expects. For more details, see that file, and also NXP's <em>Application Note AN5017 (Coordinate Systems)</em>.</p>
 <h2><a class="anchor" id="autotoc_md23"></a>
 WiFi Data Streaming</h2>
-<p>Because testing an orientation sensor with a USB cable tethering it to your development computer is a pain, the software also supports streaming the data over WiFi. In the main <code>setup()</code> code, a WiFi AP (Access Point) is started, which means the ESP processor will broadcast its SSID and you should be able to connect to it with your development system using the password you provide in the <code><a class="el" href="main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class This file creates a SensorFusion ob...">main.cc</a></code> file. Once a WiFi connection is established, you can open a TCP connection to port 23 of the ESP and the orientation data will then stream over your TCP connection. A few hints:</p><ul>
+<p>Because testing an orientation sensor with a USB cable tethering it to your development computer is a pain, the software also supports streaming the data over WiFi. In the main <code><a class="el" href="main_8cc.html#a4fc01d736fe50cf5b977f755b675f11d">setup()</a></code> code, a WiFi AP (Access Point) is started, which means the ESP processor will broadcast its SSID and you should be able to connect to it with your development system using the password you provide in the <code><a class="el" href="main_8cc.html" title="Example main program, demonstrating how to use SensorFusion class.">main.cc</a></code> file. Once a WiFi connection is established, you can open a TCP connection to port 23 of the ESP and the orientation data will then stream over your TCP connection. A few hints:</p><ul>
 <li>view the ESP's serial output (e.g. using that USB connection) to find out what IP address the ESP has assigned itself</li>
 <li>on a linux system, an easy way to make a TCP connection is the command <code>telnet 192.168.4.1</code>, where you replace the example IP address with the one the ESP has indicated in its serial output.</li>
 <li>Once you have noted the IP address, it shouldn't change between reboots of the ESP.</li>
