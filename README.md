@@ -2,7 +2,7 @@
 
 ## Introduction
 An easy-to-use interface to the **NXP Sensor Fusion version 7** algorithms, providing
-orientation data derived from a 9 degrees-of-Freedom motion sensor.
+orientation data derived from a 9 Degrees-of-Freedom (9-DoF) motion sensor.
 
 It is configured to work with the Adafruit breakout board #3643
 using the *NXP FXOS8700* magnetometer/accelerometer and *FXAS21002* gyroscope
@@ -13,7 +13,7 @@ sensors.
 The library runs on Espressif's ESP32 and ESP8266 processors. Library output is via Get___()
 methods that return the various orientation parameters (e.g. `GetHeadingDegrees(void)`, 
 `GetPitchDegrees(void)`, `GetAccelXGees(void)`, etc). A choice of units is provided 
-(e.g. Degrees, Radians, quaternions, Gees or m/s^2). The IC temperature is also available. 
+(e.g. Degrees, Radians, quaternions, Gs or m/s^2). The IC temperature is also available. 
 
 An example `main.cpp` (see `examples/fusion_text_output.cc`) illustrates how to use
 this library, and outputs orientation data in text format using serial and WiFi
@@ -29,7 +29,7 @@ by NXP in their version 7.20 release.
 
 
 ## Background
-Orientation sensing using combined accelerometer + gyroscope + magnetometer sensors has become quite accurate when coupled with the right sensor fusion software. [NXP](https://www.nxp.com/) manufactures these types of sensors, and have written an excellent sensor fusion library for their Kinetis 32-bit microcontrollers. Their library, which is released under the BSD-3-Clause license, was ported in 2015 to the Arduino environment by Adafruit as their [AHRS (Attitude and Heading Reference System)](https://learn.adafruit.com/how-to-fuse-motion-sensor-data-into-ahrs-orientation-euler-quaternions). The AHRS port uses NXP's version 4.2 fusion code.
+Orientation sensing using combined accelerometer + gyroscope + magnetometer sensors has become quite accurate when coupled with the right sensor fusion software. [NXP](https://www.nxp.com/) manufactures these types of sensors, and have written an excellent sensor fusion library for their Kinetis 32-bit microcontrollers. Their library, released under the BSD-3-Clause license, was ported in 2015 to the Arduino environment by Adafruit as their [AHRS (Attitude and Heading Reference System)](https://learn.adafruit.com/how-to-fuse-motion-sensor-data-into-ahrs-orientation-euler-quaternions). Adafruit's AHRS port uses NXP's version 4.2 fusion code.
 
 A newer version of the NXP sensor fusion library (version 7.2) is available, which is what this present project is using. This newer library has several improvements, including the ability to perform magnetic calibration while in use (as opposed to needing a separate software tool).
 
@@ -37,7 +37,7 @@ My motivation for porting NXP's library is to create an orientation sensor for m
 
 
 ## Sensors
-The present software works with the NXP 9DOF (9 Degrees-Of-Freedom) sensor combination consisting of **FXOS8700 magnetometer + accelerometer** and **FXAS21002 gyroscope**. These are conveniently available mounted together on the **Adafruit #3463 breakout** board. 
+The present software works with the NXP 9DoF (9 Degrees-of-Freedom) sensor combination consisting of **FXOS8700 magnetometer + accelerometer** and **FXAS21002 gyroscope**. These are conveniently available mounted together on the **Adafruit #3463 breakout** board. 
 
 Other sensors could be used. Note that only the I2C interface has been implemented and tested; a SPI interface is possible with additional work and testing.
 
@@ -73,14 +73,14 @@ To use this library follow these steps (some untested - let me know of any chang
 Now follow either of these two methods to bring in the library files:
 ### Method 1 (gets you a local clone that you can edit or base pull requests on)
 - create a local clone of this repository on your computer
-- from your local repository, copy the contents of `/src` into your new project's `/src` folder. Ensure you get all the files as well as the subfolder `/src/sensor_fusion`.
-- from your local repository, copy `/examples/fusion_text_output.cc` into your new PlatformIO project's `/src` folder. You may want to rename it `main.cc` or `main.cpp` to remind yourself that it contains the `setup()` and `loop()` functions.
+- from your local cloned repository, copy the contents of `/src` into your new project's `/src` folder. Ensure you get all the files as well as the subfolder `/src/sensor_fusion`.
+- from your local cloned repository, copy `/examples/fusion_text_output.cc` into your new PlatformIO project's `/src` folder. You may want to rename it `main.cc` or `main.cpp` to remind yourself that it contains the `setup()` and `loop()` functions.
 
 ### Method 2 (doesn't require manual cloning into a local repository)
 - copy this project's `/examples/fusion_text_output.cc` into your new PlatformIO project's `/src` folder. You may want to rename it `main.cc`  or `main.cpp` to remind yourself that it contains the `setup()` and `loop()` functions.
 - copy this project's `platformio.ini`into your new project's root directory (or use it to modify the relevant sections in your own project's `platformio.ini`). Locate the section `lib_deps =` and add the line https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP.git. 
 
-Method 2 results in the library code being imported into PlatformIO's `.pio` folder.
+Method 2 results in this library's code being imported into PlatformIO's `.pio` folder.
 
 Then:  
 - edit your new project's `platformio.ini` file for your specific board and environment. Use this project's `platformio.ini` file as an example.
@@ -93,7 +93,7 @@ To confirm that the software is communicating with your sensors, observe the ser
 However, the best way to visualize operation of the orientation algorithm is by using the NXP Sensor Fusion Toolbox.
 
 ### NXP Sensor Fusion Toolbox
-The out-of-the-box software is configured to send data packets containing the sensor fusion results at a rate of 40 Hz over the processor's Serial UART interface (connected to the USB port on my WROVER development kit). These packets are formatted for NXP's **Sensor Fusion Toolbox** Windows application (available for download from NXP at no cost) which will display the data and can even be used to send commands back to the processor running the fusion algorithms. See the User's Guide under the Help tab of the Toolbox for details.
+This library's out-of-the-box firmware is configured to send data packets containing the sensor fusion results at a rate of 40 Hz over the processor's Serial UART interface (connected to the USB port on my WROVER development kit). These packets are formatted for NXP's **Sensor Fusion Toolbox** MS Windows application (available for download from NXP at no cost) which will display the data and can even be used to send commands back to the processor running the fusion algorithms. See the User's Guide under the Help tab of the Toolbox for details.
 
 The **Toolbox** when working shows a graphic of a PCB rotating on the screen in synchronization with motion of your own board. If there is no motion at all, then check that the data packets are arriving on the expected COM: port of your computer. A terminal program (like HyperTerminal or PuTTY) can help display traffic on a COM: port, but note that the data packets are in binary format (not ASCII text) so you won't be able to interpret them visually. If the **Toolbox** shows motion but it is jerky or reversed from the actual board motion, then likely one or more of your board's axes are not oriented according to how the fusion software expects. Different sensor board manufacturers will have placed the sensor ICs in orientations particular to their own needs.  The file `hal_axis_remap.c` is used to invert or swap axes to conform to what the fusion algorithm expects. For more details, see that file, and also NXP's *Application Note AN5017 (Coordinate Systems)*.
 
@@ -106,7 +106,7 @@ Because testing an orientation sensor with a USB cable tethering it to your deve
 
 I did earlier try having the ESP connect as a client to our WiFi router, rather than acting as an AP itself. Unfortunately, this caused delays in delivery of the streamed traffic that would intermittently freeze the *Sensor Toolbox*. Performing a `ping` from the development computer to the ESP showed trip times sometimes exceeded 1000 ms when going through the router.  So, using the ESP as an AP is better for timely data delivery on my hardware.
 
-Using WiFi (even when ESP is acting as AP) *does* introduce noticeable lag in the Toolbox graphic response, compared to a USB connection. It looks like about a 200 ms lag on my system.
+Using WiFi (even when the ESP is acting as AP) *does* introduce noticeable lag in the Toolbox graphic response, compared to a USB connection. It looks like about a 200 ms lag on my system.
 
 ### Additional Debugging
 You can use the GPIO output that toggles each time through the data collection and sending loop to confirm whether your ESP is collecting and transmitting data regularly. Using the default software, the output should toggle every 25 ms (i.e. a 20 Hz square wave). See `fusion_text_output.cc` for details.
@@ -124,7 +124,7 @@ If you want to **change how the fusion algorithm operates**, have a look at `con
 Bjarne Hansen
 
 ## License
-Copyright (c) 2020, Bjarne Hansen
+Copyright (c) 2026, Bjarne Hansen
 All rights reserved.
 
 SPDX-License-Identifier: BSD-3-Clause
