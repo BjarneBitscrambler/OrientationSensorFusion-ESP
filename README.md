@@ -58,6 +58,7 @@ which are automatically installed in the Arduino framework:
 ## Where To Find...
 - **Documentation** for the fusion code is html-based; open the project's [`docs/html/index.html`](/docs/html/index.html) file in your favourite browser. Documentation is auto-generated from comments in the code itself, using Doxygen. 
 - **Test plans, data, results**, etc are on [this project's Github Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki)
+- **Details on Magnetic Calibration** are also on [this project's Github Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki)
 - **NXP's version 7 sensor fusion** for ESP32 processors is under the [Code tab](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP) of this Github repository. It is fully functional with [NXP's Windows-based Sensor Fusion Toolbox](https://www.nxp.com/webapp/sps/download/license.jsp?colCode=SENSORFUSIONREV7) software application. 
 - **Orientation data output in Signal K format** using the SensESP project is on the [SignalK-Orientation](https://github.com/BjarneBitscrambler/SignalK-Orientation) project page. This project provides an example that uses this Orientation library.
 
