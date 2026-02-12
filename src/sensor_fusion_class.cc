@@ -143,8 +143,10 @@ bool SensorFusion::InitializeInputOutputSubsystem(const Stream *serial_port,
 void SensorFusion::Begin(int pin_i2c_sda, int pin_i2c_scl) {
   sfg_->initializeFusionEngine(
       sfg_, pin_i2c_sda, pin_i2c_scl);                      // Initialize sensors and magnetic calibration
+      //if nothing connected to I2C, won't return.
   sfg_->setStatus(sfg_, NORMAL);  // Set status state to NORMAL
-//TODO - setStatus should check whether initialize worked.
+  //try reading sensors, this will update the status to see if initialize worked.
+  sfg_->readSensors(sfg_,0);
 
 }  // end InitializeFusionEngine()
 
