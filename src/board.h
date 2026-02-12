@@ -18,6 +18,8 @@
 
 #include <Arduino.h>
 
+#define BOARD_USES_HW_GPIO_NUMBERS
+
 #if defined(__cplusplus)
 extern "C" {
 #endif /* __cplusplus */

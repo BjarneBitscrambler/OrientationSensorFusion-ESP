@@ -37,13 +37,14 @@
 #endif
 
 // I2C details - indicate which pins the sensor is connected to
+//Pin numbers are specified using the GPIO## scheme, not the Arduino D## scheme.
 #ifdef ESP8266
   #define PIN_I2C_SDA   (12)  //Adjust to your board. A value of -1
   #define PIN_I2C_SCL   (14)  // will use default Arduino pins.
 #endif
 #ifdef ESP32
-  #define PIN_I2C_SDA   (23)  //Adjust to your board. A value of -1
-  #define PIN_I2C_SCL   (25)  // will use default Arduino pins.
+  #define PIN_I2C_SDA   (-1)  //Adjust to your board. A value of -1
+  #define PIN_I2C_SCL   (-1)  // will use default Arduino pins.
 #endif
 // sensor hardware details       
 #define BOARD_ACCEL_MAG_I2C_ADDR    (0x1F) //I2C address on Adafruit breakout board
@@ -56,7 +57,8 @@
   #define GPIO_MODE_OUTPUT OUTPUT
 #endif
 #ifdef ESP32
-  #define DEBUG_OUTPUT_PIN GPIO_NUM_22  
+  //was GPIO_NUM_22 for esp_wrover and esp32dev boards, but not avail on nano.
+  #define DEBUG_OUTPUT_PIN GPIO_NUM_14  
 #endif
 
 /**
@@ -94,6 +96,7 @@ void setup() {
   Serial.begin(BOARD_DEBUG_UART_BAUDRATE);  // initialize serial UART
   // delay not necessary - gives time to open a serial monitor
   delay(1000);
+  Serial.println("Serial port configured.");
 
   // wifi config - using ESP as Access Point (AP)
 #if F_USE_WIRELESS_UART
@@ -171,8 +174,13 @@ void setup() {
   Serial.println("Sensors connected");
 
   sensor_fusion->Begin(PIN_I2C_SDA, PIN_I2C_SCL);
-  Serial.println("Fusion Engine Ready");
-
+  if(sensor_fusion->GetSystemStatus() == NORMAL)
+  { Serial.println("Fusion Engine Ready");
+  }else
+  { Serial.println("Problem communicating with sensors");
+    //may not see this if Begin() hangs, which it does when non-I2C pins chosen.
+    //If pins are I2C-capable, but no physical sensor attached, then will see this error.
+  }
   last_loop_time = millis(); //these will be used in loop()
   last_print_time = millis();
 
@@ -191,7 +199,7 @@ void loop() {
    * in sensor_fusion_class.h
    */
   const unsigned long kLoopIntervalMs = 1000 / LOOP_RATE_HZ;
-  const unsigned long kPrintIntervalMs = 100;
+  const unsigned long kPrintIntervalMs = 1000;
 
 #if F_USE_WIRELESS_UART
   if (!tcp_client) {
@@ -247,6 +255,7 @@ void loop() {
    );
 
     Serial.println( output_str ); //simplest way to see library output
+
     /**
      * If preferred, the library's input/output subsystem can be used
      * yo output data. This is useful, for example, to send the data
