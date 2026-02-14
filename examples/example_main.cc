@@ -177,7 +177,7 @@ void setup() {
   if(sensor_fusion->GetSystemStatus() == NORMAL)
   { Serial.println("Fusion Engine Ready");
   }else
-  { Serial.println("Problem communicating with sensors");
+  { Serial.printf("Fusion status: %d\n",(int)sensor_fusion->GetSystemStatus());
     //may not see this if Begin() hangs, which it does when non-I2C pins chosen.
     //If pins are I2C-capable, but no physical sensor attached, then will see this error.
   }
