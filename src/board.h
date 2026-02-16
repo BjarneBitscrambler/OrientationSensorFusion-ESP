@@ -18,7 +18,9 @@
 
 #include <Arduino.h>
 
-#define BOARD_USES_HW_GPIO_NUMBERS
+#ifndef BOARD_USES_HW_GPIO_NUMBERS
+    #define BOARD_USES_HW_GPIO_NUMBERS
+#endif
 
 #if defined(__cplusplus)
 extern "C" {
