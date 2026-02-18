@@ -57,8 +57,8 @@ which are automatically installed in the Arduino framework:
 
 ## Where To Find...
 - **Documentation** for the fusion code is html-based; either browse to [here](https://bjarnebitscrambler.github.io/OrientationSensorFusion-ESP/index.html) or download the project's `docs/` directory and open [`docs/index.html`](/docs/index.html) file in your favourite browser. Documentation is auto-generated from comments in the code itself, using Doxygen. 
-- **Test plans, data, results**, etc are on [this project's Github Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki)
-- **Details on Magnetic Calibration** are on [this project's Github Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki)
+- **Test plans, data, results**, etc are in [this project's Github Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki), and duplicated the Related Pages of the html-based documentation.
+- **Details on Magnetic Calibration** are in [this project's Github Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki), and duplicated the Related Pages of the html-based documentation.
 - **NXP's version 7 sensor fusion** for ESP32 processors is under the [Code tab](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP) of this Github repository. It is fully functional with [NXP's Windows-based Sensor Fusion Toolbox](https://www.nxp.com/webapp/sps/download/license.jsp?colCode=SENSORFUSIONREV7) software application. 
 - **Orientation data output in Signal K format** using the SensESP project is on the [SignalK-Orientation](https://github.com/BjarneBitscrambler/SignalK-Orientation) project page. The SignalK-Orientation project uses this Orientation library.
 
