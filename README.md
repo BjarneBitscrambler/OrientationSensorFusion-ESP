@@ -15,7 +15,7 @@ methods that return the various orientation parameters (e.g. `GetHeadingDegrees(
 `GetPitchDegrees(void)`, `GetAccelXGees(void)`, etc). A choice of units is provided 
 (e.g. Degrees, Radians, quaternions, Gs or m/s^2). The IC temperature is also available. 
 
-An example `main.cpp` (see `examples/fusion_text_output.cc`) illustrates how to use
+The file `examples/example_main.cc`) illustrates how to use
 this library, and outputs orientation data in text format using serial and WiFi
 interfaces. For a slightly more complex example, see the adjunct library 
 https://github.com/BjarneBitscrambler/SignalK-Orientation
@@ -42,7 +42,7 @@ The present software works with the NXP 9DoF (9 Degrees-of-Freedom) sensor combi
 Other sensors could be used. Note that only the I2C interface has been implemented and tested; a SPI interface is possible with additional work and testing.
 
 ## Processor
-The present software is written for the ESP32 and ESP8266 processors. With some rewriting of the I2C and timing routines, the code can be ported to other processors.
+The present software is written for the ESP32 and ESP8266 processors. If wanting to send the orientation data via Signal K, then you should choose the ESP32 processor, as the SensESP/Signal K library is not intended for the ESP8266. With some rewriting of the I2C and timing routines, the code can be ported to other processors.
 
 ## Dependencies
 The fusion code and associated project files have been written for and
@@ -58,39 +58,42 @@ which are automatically installed in the Arduino framework:
 ## Where To Find...
 - **Documentation** for the fusion code is html-based; open the project's [`docs/html/index.html`](/docs/html/index.html) file in your favourite browser. Documentation is auto-generated from comments in the code itself, using Doxygen. 
 - **Test plans, data, results**, etc are on [this project's Github Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki)
-- **Details on Magnetic Calibration** are also on [this project's Github Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki)
+- **Details on Magnetic Calibration** are on [this project's Github Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki)
 - **NXP's version 7 sensor fusion** for ESP32 processors is under the [Code tab](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP) of this Github repository. It is fully functional with [NXP's Windows-based Sensor Fusion Toolbox](https://www.nxp.com/webapp/sps/download/license.jsp?colCode=SENSORFUSIONREV7) software application. 
-- **Orientation data output in Signal K format** using the SensESP project is on the [SignalK-Orientation](https://github.com/BjarneBitscrambler/SignalK-Orientation) project page. This project provides an example that uses this Orientation library.
+- **Orientation data output in Signal K format** using the SensESP project is on the [SignalK-Orientation](https://github.com/BjarneBitscrambler/SignalK-Orientation) project page. The SignalK-Orientation project uses this Orientation library.
 
 ## Contributions
 Use the *Issues* and *Pull Request* tabs on this project's Github repository if you have suggestions or wish to contribute to this project.
 
 ## How-To Use
-To use this library follow these steps (some untested - let me know of any changes you needed to make to get things to work on your setup):
+To use this library as a source of orientation data by **integrating it into your own code**, follow the instructions and see the example on the [SignalK-Orientation](https://github.com/BjarneBitscrambler/SignalK-Orientation) project page.
+
+To use this library as a **standalone program with orientation data output in text format** follow these steps:
 - setup the *PlatformIO* development environment
 - create a new PlatformIO project, selecting the *Board:* `Espressif ESP-WROVER-KIT` and *Framework:* `Arduino` (other ESP32 boards should work without changes; as does the *d1_mini* board with Espressif's ESP8266 CPU)
+- test your development environment and board by compiling and loading a "Hello World" program.
 
-Now follow either of these two methods to bring in the library files:
+Then follow either of these two methods to bring in the library files:
 ### Method 1 (gets you a local clone that you can edit or base pull requests on)
 - create a local clone of this repository on your computer
 - from your local cloned repository, copy the contents of `/src` into your new project's `/src` folder. Ensure you get all the files as well as the subfolder `/src/sensor_fusion`.
-- from your local cloned repository, copy `/examples/fusion_text_output.cc` into your new PlatformIO project's `/src` folder. You may want to rename it `main.cc` or `main.cpp` to remind yourself that it contains the `setup()` and `loop()` functions.
+- from your local cloned repository, copy `/examples/example_main.cc` into your new PlatformIO project's `/src` folder. It contains the `setup()` and `loop()` functions, and you can rename it `main.cc` or `main.cpp` if desired. 
 
 ### Method 2 (doesn't require manual cloning into a local repository)
-- copy this project's `/examples/fusion_text_output.cc` into your new PlatformIO project's `/src` folder. You may want to rename it `main.cc`  or `main.cpp` to remind yourself that it contains the `setup()` and `loop()` functions.
+- copy this project's `/examples/example_main.cc` into your new PlatformIO project's `/src` folder. It contains the `setup()` and `loop()` functions, and you can rename it `main.cc` or `main.cpp` if desired.
 - copy this project's `platformio.ini`into your new project's root directory (or use it to modify the relevant sections in your own project's `platformio.ini`). Locate the section `lib_deps =` and add the line https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP.git. 
 
 Method 2 results in this library's code being imported into PlatformIO's `.pio` folder.
 
 Then:  
 - edit your new project's `platformio.ini` file for your specific board and environment. Use this project's `platformio.ini` file as an example.
-- edit the `#defines` at the top of your `fusion_text_output.cc` (the sample `main.cc`) to reflect your particular hardware. The I2C pins connecting your processor to your sensor ICs will likely be different, and you may also need to change the I2C addresses that the ICs are configured for.
+- edit the `#defines` at the top of your `example_main.cc` to reflect your particular hardware. The I2C pins connecting your processor to your sensor ICs will likely be different, and you may also need to change the I2C addresses that the ICs are configured for.
 - compile and download to your processor
 
 ### Initial Text Output
-To confirm that the software is communicating with your sensors, observe the serial port output of the ESP processor. Use a USB connection to a PC running a terminal program at 115200 baud, 8 bits, No parity, 1 stop bit. Several progress messages should appear as the fusion software configures the sensors. Once the algorithm is running, lines of text containing a timestamp and orientation data should scroll by. See the `main.cc` program's `loop()` for details.
+To confirm that the software is communicating with your sensors, observe the serial port output of the ESP processor. Use a USB connection to a PC running a terminal program at 115200 baud, 8 bits, No parity, 1 stop bit. Several progress messages should appear as the fusion software configures the sensors. Once the algorithm is running, lines of text containing a timestamp and orientation data should scroll by. See the `example_main.cc` program's `loop()` for details.
 
-However, the best way to visualize operation of the orientation algorithm is by using the NXP Sensor Fusion Toolbox.
+However, the best way to visualize operation of the orientation algorithm is by using the **NXP Sensor Fusion Toolbox**.
 
 ### NXP Sensor Fusion Toolbox
 This library's out-of-the-box firmware is configured to send data packets containing the sensor fusion results at a rate of 40 Hz over the processor's Serial UART interface (connected to the USB port on my WROVER development kit). These packets are formatted for NXP's **Sensor Fusion Toolbox** MS Windows application (available for download from NXP at no cost) which will display the data and can even be used to send commands back to the processor running the fusion algorithms. See the User's Guide under the Help tab of the Toolbox for details.
@@ -113,7 +116,7 @@ You can use the GPIO output that toggles each time through the data collection a
 
 ### Customizing and Modifying
 
-The file`/sensor_fusion/build.h` contains defines for various functionality, such as whether the software outputs its data via hardware serial UART or WiFi TCP connections, or both (default). Edit this file as desired, but note that not all combinations of features may be valid or been tested.
+The file `/sensor_fusion/build.h` contains defines for various functionality, such as whether the software outputs its data via hardware serial UART or WiFi TCP connections, or both (default). Edit this file as desired, but note that not all combinations of features may be valid or been tested.
 
 Changes to **adapt to other hardware** are confined to a few files, as the majority of the fusion code is generic C-code that is pretty platform-independent. 
 Files that would be expected to change when using different hardware are the `hal_*.*` files, `board.h`, and `build.h`.  As well, new sensor IC driver files may be needed, patterned on the existing `driver_fxos8700.*` and `driver_fxas21002.*` files. Finally, `calibration_storage.*` may need changing depending on how non-volatile memory functions on the different hardware.
