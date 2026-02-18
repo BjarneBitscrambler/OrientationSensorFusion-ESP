@@ -1,0 +1,11 @@
+<map id="src/sensor_fusion/hal_i2c.h" name="src/sensor_fusion/hal_i2c.h">
+<area shape="rect" id="Node000001" title="The hal_i2c.h file declares low&#45;level interface functions for reading and writing sensor registers us..." alt="" coords="312,5,471,45"/>
+<area shape="rect" id="Node000002" href="$driver__fxas21002_8c.html" title="Provides init() and read() functions for the FXAS21002 gyroscope." alt="" coords="5,93,183,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="314,52,160,96,158,91,312,47"/>
+<area shape="rect" id="Node000003" href="$driver__fxos8700_8c.html" title="Defines commands to perform various tasks (e.g. read Device ID, Initialize, Read Data) for the FXOS87..." alt="" coords="207,93,384,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="361,57,318,95,315,91,358,53"/>
+<area shape="rect" id="Node000004" href="$hal__i2c_8cc.html" title="The hal_i2c.cc file contains definitions for low&#45;level interface functions for reading and writing da..." alt="" coords="408,93,567,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="425,53,468,91,464,95,421,57"/>
+<area shape="rect" id="Node000005" href="$sensor__fusion_8c.html" title="The sensor_fusion.c file implements the top level programming interface." alt="" coords="591,93,773,133"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="469,47,619,91,618,96,467,52"/>
+</map>

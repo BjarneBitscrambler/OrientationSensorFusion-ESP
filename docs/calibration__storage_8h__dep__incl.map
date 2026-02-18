@@ -1,0 +1,13 @@
+<map id="src/sensor_fusion/calibration_storage.h" name="src/sensor_fusion/calibration_storage.h">
+<area shape="rect" id="Node000001" title="Provides functions to store calibration to NVM, which on ESP devices is provided by EEPROM." alt="" coords="437,5,645,45"/>
+<area shape="rect" id="Node000002" href="$calibration__storage_8cc.html" title="Provides functions to store calibration to NVM." alt="" coords="5,93,213,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="434,51,204,96,203,91,433,45"/>
+<area shape="rect" id="Node000003" href="$control__input_8c.html" title="Command interpreter which interfaces to the Sensor Fusion Toolbox. Commands sent from the Toolbox (e...." alt="" coords="237,93,421,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="483,53,377,96,375,91,481,48"/>
+<area shape="rect" id="Node000004" href="$fusion_8c.html" title="Lower level sensor fusion interface." alt="" coords="446,101,637,126"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="544,59,544,100,539,100,539,59"/>
+<area shape="rect" id="Node000005" href="$magnetic_8c.html" title="Lower level magnetic calibration interface." alt="" coords="661,101,872,126"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="605,48,738,98,736,103,603,53"/>
+<area shape="rect" id="Node000006" href="$precisionAccelerometer_8c.html" title="Implements accelerometer calibration routines." alt="" coords="895,93,1094,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="655,45,896,91,895,96,654,51"/>
+</map>

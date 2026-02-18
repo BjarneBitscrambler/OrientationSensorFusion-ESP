@@ -1,0 +1,25 @@
+<map id="SensorFusion" name="SensorFusion">
+<area shape="rect" id="Node000001" title=" " alt="" coords="653,284,761,309"/>
+<area shape="rect" id="Node000002" href="$structSensorFusionGlobals.html" title="The top level fusion structure." alt="" coords="408,196,565,221"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="530,224,678,281,676,286,528,229"/>
+<area shape="rect" id="Node000003" href="$structControlSubsystem.html" title="The ControlSubsystem encapsulates command and data streaming functions." alt="" coords="5,108,147,133"/>
+<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="90,144,112,170,150,193,182,204,262,219,370,242,478,261,653,286,652,292,477,267,369,247,261,224,181,209,147,198,109,174,86,147"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="98,141,118,157,141,170,190,182,259,191,408,202,408,207,259,196,189,187,139,174,115,161,95,145"/>
+<area shape="rect" id="Node000004" href="$structStatusSubsystem.html" title="StatusSubsystem() provides an object&#45;like interface for communicating status to the user." alt="" coords="678,108,813,133"/>
+<area shape="poly" id="edge12_Node000001_Node000004" title=" " alt="" coords="742,147,712,284,707,283,737,146"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="676,139,605,160,574,174,517,198,515,194,572,170,603,155,675,134"/>
+<area shape="rect" id="Node000005" href="$structPhysicalSensor.html" title="An instance of PhysicalSensor structure type should be allocated for each physical sensors (combo dev..." alt="" coords="852,108,972,133"/>
+<area shape="poly" id="edge13_Node000001_Node000005" title=" " alt="" coords="907,148,891,186,865,223,838,245,807,263,749,286,747,282,805,258,835,241,861,220,887,183,902,146"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="865,140,735,175,648,190,566,201,566,196,647,185,734,169,863,135"/>
+<area shape="poly" id="edge6_Node000005_Node000005" title=" " alt="" coords="987,112,999,121,990,128,972,131,972,126,988,124,993,121,984,117"/>
+<area shape="rect" id="Node000006" href="$structregisterDeviceInfo__t.html" title="This structure defines the device specific info required by register I/O." alt="" coords="835,5,989,31"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="915,45,915,108,909,108,909,45"/>
+<area shape="rect" id="Node000007" href="$structMagSensor.html" title="The MagSensor structure stores raw and processed measurements for a 3&#45;axis magnetic sensor." alt="" coords="413,108,507,133"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="457,147,459,171,475,194,471,197,453,173,451,147"/>
+<area shape="rect" id="Node000008" href="$structMagCalibration.html" title="Magnetic Calibration Structure." alt="" coords="531,108,653,133"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="549,141,522,159,506,178,494,197,490,194,501,175,518,155,546,137"/>
+<area shape="rect" id="Node000009" href="$structMagBuffer.html" title=" " alt="" coords="173,108,262,133"/>
+<area shape="poly" id="edge9_Node000002_Node000009" title=" " alt="" coords="247,139,277,155,309,169,359,184,408,195,407,200,357,189,307,175,274,160,245,143"/>
+<area shape="rect" id="Node000010" href="$structTempSensor.html" title="The TempSensor structure stores raw temperature readings." alt="" coords="287,108,388,133"/>
+<area shape="poly" id="edge10_Node000002_Node000010" title=" " alt="" coords="364,140,409,170,459,193,456,198,407,174,361,144"/>
+</map>

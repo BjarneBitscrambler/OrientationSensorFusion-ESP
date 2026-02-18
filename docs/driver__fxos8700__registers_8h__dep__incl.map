@@ -1,0 +1,5 @@
+<map id="src/sensor_fusion/driver_fxos8700_registers.h" name="src/sensor_fusion/driver_fxos8700_registers.h">
+<area shape="rect" id="Node000001" title="Contains the register definitions for FXOS8700." alt="" coords="5,5,183,45"/>
+<area shape="rect" id="Node000002" href="$driver__fxos8700_8c.html" title="Defines commands to perform various tasks (e.g. read Device ID, Initialize, Read Data) for the FXOS87..." alt="" coords="5,93,183,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,59,97,93,91,93,91,59"/>
+</map>

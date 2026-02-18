@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['page_20apparatus_20and_20setup_0',['[[Apparatus and Setup sub-page|Apparatus and Setup]]',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Home.html#autotoc_md42',1,'']]],
+  ['page_20magnetic_20calibration_1',['[[Magnetic Calibration sub-page|Magnetic Calibration]]',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Home.html#autotoc_md43',1,'']]],
+  ['page_20parameters_20tested_2',['[[Performance and Testing sub-page|Parameters Tested]]',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Home.html#autotoc_md41',1,'']]],
+  ['parameters_3',['parameters',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Parameters-Tested.html',1,'Key Parameters'],['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Magnetic-Calibration.html#autotoc_md47',1,'Magnetic Calibration Parameters'],['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Parameters-Tested.html#autotoc_md65',1,'Secondary Parameters']]],
+  ['parameters_20tested_4',['[[Performance and Testing sub-page|Parameters Tested]]',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Home.html#autotoc_md41',1,'']]],
+  ['performance_20and_20testing_20sub_20page_20parameters_20tested_5',['[[Performance and Testing sub-page|Parameters Tested]]',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Home.html#autotoc_md41',1,'']]],
+  ['physicalsensor_6',['PhysicalSensor',['../structPhysicalSensor.html',1,'']]],
+  ['pi_7',['PI',['../sensor__fusion_8h.html#a598a3330b3c21701223ee0ca14316eca',1,'sensor_fusion.h']]],
+  ['piover2_8',['PIOVER2',['../sensor__fusion_8h.html#a8546c61523760057efea38efda6ee4c7',1,'sensor_fusion.h']]],
+  ['pitch_20and_20roll_20changes_9',['Tolerance to pitch and roll changes',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Motion-Immunity.html#autotoc_md60',1,'']]],
+  ['pledge_10',['Our Pledge',['../md_CODE__OF__CONDUCT.html#autotoc_md1',1,'']]],
+  ['precisionaccelerometer_2ec_11',['precisionAccelerometer.c',['../precisionAccelerometer_8c.html',1,'']]],
+  ['precisionaccelerometer_2eh_12',['precisionAccelerometer.h',['../precisionAccelerometer_8h.html',1,'']]],
+  ['pressuresensor_13',['PressureSensor',['../structPressureSensor.html',1,'']]],
+  ['previous_14',['previous',['../structStatusSubsystem.html#a0feea32ce70cb0a55b029f1a66030f1e',1,'StatusSubsystem']]],
+  ['previous_20testing_15',['Previous Testing',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Step-Response.html#autotoc_md80',1,'']]],
+  ['procedure_16',['Procedure',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Stationary-Drift.html#autotoc_md69',1,'']]],
+  ['processcommands_17',['ProcessCommands',['../classSensorFusion.html#adb9854e0dc23586327c7cbf9377a7d72',1,'SensorFusion']]],
+  ['processor_18',['Processor',['../index.html#autotoc_md13',1,'']]],
+  ['producetoolboxoutput_19',['ProduceToolboxOutput',['../classSensorFusion.html#a639c646f972bb29bccd60ef1926735dc',1,'SensorFusion']]],
+  ['progress_20',['Work-In-Progress',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Home.html#autotoc_md39',1,'']]],
+  ['psensors_21',['pSensors',['../structSensorFusionGlobals.html#a25362d243d0775d13864e2015b558602',1,'SensorFusionGlobals']]],
+  ['pull_20requests_20on_22',['Method 1 (gets you a local clone that you can edit or base pull requests on)',['../index.html#autotoc_md18',1,'']]]
+];

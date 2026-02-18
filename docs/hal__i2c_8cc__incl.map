@@ -1,0 +1,17 @@
+<map id="src/sensor_fusion/hal_i2c.cc" name="src/sensor_fusion/hal_i2c.cc">
+<area shape="rect" id="Node000001" title="The hal_i2c.cc file contains definitions for low&#45;level interface functions for reading and writing da..." alt="" coords="101,5,260,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,93,89,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,48,80,89,77,84,147,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="114,93,178,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,47,159,82,154,79,170,44"/>
+<area shape="rect" id="Node000004" href="$driver__sensors__types_8h.html" title="The driver_sensors_types.h file contains sensor state structs and error definitions." alt="" coords="117,167,289,192"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="186,45,202,153,197,153,181,46"/>
+<area shape="rect" id="Node000006" href="$hal__i2c_8h.html" title="The hal_i2c.h file declares low&#45;level interface functions for reading and writing sensor registers us..." alt="" coords="275,93,355,119"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="214,43,285,84,282,89,212,48"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="229,240,300,265"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="215,191,248,228,244,231,211,194"/>
+<area shape="poly" id="edge8_Node000006_Node000004" title=" " alt="" coords="299,121,235,161,232,157,296,116"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="318,119,314,153,304,193,284,230,280,227,300,191,309,152,312,119"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="365,167,447,192"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="332,117,382,156,379,160,328,121"/>
+</map>

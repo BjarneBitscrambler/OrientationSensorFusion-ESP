@@ -1,0 +1,5 @@
+<map id="SV_3DOF_B_BASIC" name="SV_3DOF_B_BASIC">
+<area shape="rect" id="Node000001" title="This is the 3DOF basic magnetometer state vector structure/." alt="" coords="5,108,149,133"/>
+<area shape="rect" id="Node000002" href="$structQuaternion.html" title="quaternion structure definition" alt="" coords="30,5,125,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,45,80,108,75,108,75,45"/>
+</map>

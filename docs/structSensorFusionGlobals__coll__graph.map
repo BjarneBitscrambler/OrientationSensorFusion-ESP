@@ -1,0 +1,20 @@
+<map id="SensorFusionGlobals" name="SensorFusionGlobals">
+<area shape="rect" id="Node000001" title="The top level fusion structure." alt="" coords="599,192,756,217"/>
+<area shape="rect" id="Node000002" href="$structControlSubsystem.html" title="The ControlSubsystem encapsulates command and data streaming functions." alt="" coords="277,5,419,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="433,26,505,45,542,60,576,78,608,105,636,136,671,190,667,193,632,140,605,109,573,83,540,64,504,50,432,31"/>
+<area shape="rect" id="Node000003" href="$structStatusSubsystem.html" title="StatusSubsystem() provides an object&#45;like interface for communicating status to the user." alt="" coords="281,55,415,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="400,82,420,89,499,114,576,145,657,190,655,194,574,150,497,120,418,94,399,87"/>
+<area shape="rect" id="Node000004" href="$structPhysicalSensor.html" title="An instance of PhysicalSensor structure type should be allocated for each physical sensors (combo dev..." alt="" coords="288,143,408,168"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="422,162,575,183,610,189,609,195,574,189,421,167"/>
+<area shape="poly" id="edge5_Node000004_Node000004" title=" " alt="" coords="322,128,330,119,348,116,363,118,372,125,375,134,370,144,365,141,369,134,368,128,361,123,348,121,333,124,326,131"/>
+<area shape="rect" id="Node000005" href="$structregisterDeviceInfo__t.html" title="This structure defines the device specific info required by register I/O." alt="" coords="5,143,160,168"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="174,153,288,153,288,158,174,158"/>
+<area shape="rect" id="Node000006" href="$structMagSensor.html" title="The MagSensor structure stores raw and processed measurements for a 3&#45;axis magnetic sensor." alt="" coords="301,192,395,217"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="409,202,598,202,598,207,409,207"/>
+<area shape="rect" id="Node000007" href="$structMagCalibration.html" title="Magnetic Calibration Structure." alt="" coords="287,241,409,267"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="422,243,574,222,615,215,616,220,575,227,422,248"/>
+<area shape="rect" id="Node000008" href="$structMagBuffer.html" title=" " alt="" coords="303,291,393,316"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="406,296,487,283,574,259,619,238,656,215,659,220,622,243,576,265,488,288,407,301"/>
+<area shape="rect" id="Node000009" href="$structTempSensor.html" title="The TempSensor structure stores raw temperature readings." alt="" coords="297,340,399,365"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="412,349,492,338,534,326,573,309,603,288,630,263,666,216,670,219,633,266,607,292,576,314,536,331,493,343,413,354"/>
+</map>

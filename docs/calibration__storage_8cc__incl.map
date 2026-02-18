@@ -1,0 +1,45 @@
+<map id="src/sensor_fusion/calibration_storage.cc" name="src/sensor_fusion/calibration_storage.cc">
+<area shape="rect" id="Node000001" title="Provides functions to store calibration to NVM." alt="" coords="352,5,560,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,167,72,192"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="403,48,269,96,83,164,81,159,267,91,402,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="281,93,370,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="426,48,358,88,355,84,423,43"/>
+<area shape="rect" id="Node000004" href="$sensor__fusion_8h.html" title="The sensor_fusion.h file implements the top level programming interface." alt="" coords="394,93,518,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="459,46,459,79,453,79,453,46"/>
+<area shape="rect" id="Node000018" href="$calibration__storage_8h.html" title="Provides functions to store calibration to NVM, which on ESP devices is provided by EEPROM." alt="" coords="542,93,701,119"/>
+<area shape="poly" id="edge23_Node000001_Node000018" title=" " alt="" coords="497,43,586,85,584,90,494,48"/>
+<area shape="rect" id="Node000019" href="$debug__print_8h.html" title="defines function debug_print() that outputs to serial port Can disable these prints by compiling with..." alt="" coords="725,93,835,119"/>
+<area shape="poly" id="edge24_Node000001_Node000019" title=" " alt="" coords="534,43,720,88,719,93,533,48"/>
+<area shape="poly" id="edge8_Node000004_Node000002" title=" " alt="" coords="394,120,86,169,85,164,393,114"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="705,247,789,273"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="459,119,464,155,471,174,483,190,508,210,532,221,555,226,578,228,630,228,660,230,693,237,703,240,701,246,691,243,659,236,630,233,578,233,554,232,530,226,505,214,479,194,466,176,459,156,453,119"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="97,167,165,192"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="401,121,178,169,177,164,400,116"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="189,167,272,192"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="421,121,281,165,279,160,419,116"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="629,401,699,427"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="406,121,367,139,350,152,337,168,322,197,317,224,322,250,337,279,364,310,396,336,432,358,471,374,549,396,615,407,614,412,547,401,469,379,430,362,393,341,360,314,332,281,317,252,311,224,317,196,332,165,347,148,364,134,404,116"/>
+<area shape="rect" id="Node000009" href="$board_8h.html" title="Board configuration file." alt="" coords="347,167,418,192"/>
+<area shape="poly" id="edge9_Node000004_Node000009" title=" " alt="" coords="446,121,406,159,403,155,442,117"/>
+<area shape="rect" id="Node000011" href="$driver__sensors__types_8h.html" title="The driver_sensors_types.h file contains sensor state structs and error definitions." alt="" coords="641,328,813,353"/>
+<area shape="poly" id="edge17_Node000004_Node000011" title=" " alt="" coords="519,114,530,116,620,119,738,120,797,123,850,130,895,144,912,153,926,165,939,190,937,215,923,239,899,260,837,298,773,326,771,321,834,293,896,256,919,235,932,213,934,191,922,168,909,158,893,149,849,136,796,128,737,125,620,125,529,121,518,120"/>
+<area shape="rect" id="Node000013" href="$build_8h.html" title="Build configuration file." alt="" coords="493,167,560,192"/>
+<area shape="poly" id="edge16_Node000004_Node000013" title=" " alt="" coords="470,117,508,155,504,159,466,121"/>
+<area shape="rect" id="Node000014" href="$magnetic_8h.html" title="Lower level magnetic calibration interface." alt="" coords="585,167,679,192"/>
+<area shape="poly" id="edge18_Node000004_Node000014" title=" " alt="" coords="485,116,591,159,589,164,483,121"/>
+<area shape="rect" id="Node000015" href="$matrix_8h.html" title="Matrix manipulation functions." alt="" coords="704,167,781,192"/>
+<area shape="poly" id="edge19_Node000004_Node000015" title=" " alt="" coords="503,116,691,163,690,168,501,121"/>
+<area shape="rect" id="Node000016" href="$orientation_8h.html" title="Functions to convert between various orientation representations." alt="" coords="806,167,911,192"/>
+<area shape="poly" id="edge20_Node000004_Node000016" title=" " alt="" coords="518,116,793,164,792,169,518,121"/>
+<area shape="rect" id="Node000017" href="$precisionAccelerometer_8h.html" title="Implements accelerometer calibration routines." alt="" coords="872,328,1059,353"/>
+<area shape="poly" id="edge21_Node000004_Node000017" title=" " alt="" coords="519,115,530,116,625,119,749,120,811,123,868,130,916,143,935,153,950,165,963,181,972,200,980,241,979,281,974,315,969,314,974,281,974,242,966,202,958,184,946,169,932,158,914,148,867,135,811,128,749,125,625,125,529,121,518,120"/>
+<area shape="poly" id="edge10_Node000009_Node000005" title=" " alt="" coords="419,186,438,189,566,211,622,221,693,237,703,241,702,246,691,243,621,226,565,216,437,195,418,191"/>
+<area shape="rect" id="Node000010" href="$driver__fxos8700_8h.html" title="Describes the fxos8700 driver interface and structures." alt="" coords="525,240,680,280"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="416,189,538,233,536,238,414,195"/>
+<area shape="rect" id="Node000012" href="$driver__fxas21002_8h.html" title="Contains the fxas21002 sensor register definitions and its bit mask." alt="" coords="347,240,501,280"/>
+<area shape="poly" id="edge15_Node000009_Node000012" title=" " alt="" coords="391,191,410,227,405,229,386,193"/>
+<area shape="poly" id="edge12_Node000010_Node000008" title=" " alt="" coords="609,280,617,314,630,352,650,388,646,391,626,354,612,315,604,281"/>
+<area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="634,278,698,318,695,323,631,282"/>
+<area shape="poly" id="edge14_Node000011_Node000008" title=" " alt="" coords="718,355,685,393,681,389,714,352"/>
+<area shape="poly" id="edge22_Node000017_Node000008" title=" " alt="" coords="918,356,713,404,712,399,916,351"/>
+</map>

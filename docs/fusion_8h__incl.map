@@ -1,0 +1,38 @@
+<map id="src/sensor_fusion/fusion.h" name="src/sensor_fusion/fusion.h">
+<area shape="rect" id="Node000001" title="Lower level sensor fusion interface." alt="" coords="356,5,546,31"/>
+<area shape="rect" id="Node000002" href="$sensor__fusion_8h.html" title="The sensor_fusion.h file implements the top level programming interface." alt="" coords="389,79,513,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="454,31,454,65,448,65,448,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="44,233,128,258"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="413,107,349,127,277,154,227,180,123,229,121,224,224,175,275,150,347,122,412,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="38,152,106,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="389,105,120,155,119,149,388,100"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="131,152,214,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="407,107,227,152,226,147,406,101"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="256,387,326,412"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="389,94,294,96,185,105,133,112,88,123,51,136,28,154,16,169,9,190,12,221,33,264,53,289,77,311,133,347,191,371,243,386,242,391,189,376,131,351,74,316,49,293,29,267,7,223,4,190,12,166,24,150,49,132,86,118,132,107,184,99,293,91,389,89"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="288,152,355,177"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="431,106,356,147,354,143,429,102"/>
+<area shape="rect" id="Node000008" href="$board_8h.html" title="Board configuration file." alt="" coords="380,152,450,177"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="447,106,429,141,425,138,443,103"/>
+<area shape="rect" id="Node000010" href="$driver__sensors__types_8h.html" title="The driver_sensors_types.h file contains sensor state structs and error definitions." alt="" coords="268,313,440,339"/>
+<area shape="poly" id="edge15_Node000002_Node000010" title=" " alt="" coords="462,103,482,133,503,175,510,198,512,222,510,245,500,267,472,294,438,311,435,306,469,290,495,264,505,244,507,222,504,199,498,177,478,136,458,106"/>
+<area shape="rect" id="Node000012" href="$build_8h.html" title="Build configuration file." alt="" coords="526,152,592,177"/>
+<area shape="poly" id="edge14_Node000002_Node000012" title=" " alt="" coords="470,102,531,142,528,147,467,106"/>
+<area shape="rect" id="Node000013" href="$magnetic_8h.html" title="Lower level magnetic calibration interface." alt="" coords="617,152,712,177"/>
+<area shape="poly" id="edge16_Node000002_Node000013" title=" " alt="" coords="486,101,618,145,616,150,484,107"/>
+<area shape="rect" id="Node000014" href="$matrix_8h.html" title="Matrix manipulation functions." alt="" coords="736,152,814,177"/>
+<area shape="poly" id="edge17_Node000002_Node000014" title=" " alt="" coords="504,101,723,149,722,155,502,107"/>
+<area shape="rect" id="Node000015" href="$orientation_8h.html" title="Functions to convert between various orientation representations." alt="" coords="838,152,944,177"/>
+<area shape="poly" id="edge18_Node000002_Node000015" title=" " alt="" coords="514,100,825,149,824,155,513,105"/>
+<area shape="rect" id="Node000016" href="$precisionAccelerometer_8h.html" title="Implements accelerometer calibration routines." alt="" coords="676,313,863,339"/>
+<area shape="poly" id="edge19_Node000002_Node000016" title=" " alt="" coords="513,93,633,100,772,111,893,128,935,138,958,150,972,175,970,199,956,223,934,244,874,282,814,310,812,306,872,278,930,240,952,219,965,198,966,176,954,154,933,143,892,133,772,116,632,105,513,98"/>
+<area shape="poly" id="edge8_Node000008_Node000003" title=" " alt="" coords="380,177,368,180,254,202,141,228,131,231,129,226,140,223,253,197,366,175,379,172"/>
+<area shape="rect" id="Node000009" href="$driver__fxos8700_8h.html" title="Describes the fxos8700 driver interface and structures." alt="" coords="152,225,307,265"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="389,180,288,222,286,218,387,175"/>
+<area shape="rect" id="Node000011" href="$driver__fxas21002_8h.html" title="Contains the fxas21002 sensor register definitions and its bit mask." alt="" coords="331,225,486,265"/>
+<area shape="poly" id="edge13_Node000008_Node000011" title=" " alt="" coords="417,178,414,212,408,211,411,177"/>
+<area shape="poly" id="edge10_Node000009_Node000006" title=" " alt="" coords="236,265,244,299,257,338,277,374,273,376,253,340,239,301,231,266"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="261,263,325,304,322,308,258,268"/>
+<area shape="poly" id="edge12_Node000010_Node000006" title=" " alt="" coords="345,341,312,378,308,374,341,337"/>
+<area shape="poly" id="edge20_Node000016_Node000006" title=" " alt="" coords="693,341,341,393,340,388,692,336"/>
+</map>

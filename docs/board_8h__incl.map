@@ -1,0 +1,14 @@
+<map id="src/board.h" name="src/board.h">
+<area shape="rect" id="Node000001" title="Board configuration file." alt="" coords="144,5,239,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,86,89,111"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,33,82,82,79,77,169,28"/>
+<area shape="rect" id="Node000003" href="$driver__fxos8700_8h.html" title="Describes the fxos8700 driver interface and structures." alt="" coords="114,79,269,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="194,31,194,65,189,65,189,31"/>
+<area shape="rect" id="Node000006" href="$driver__fxas21002_8h.html" title="Contains the fxas21002 sensor register definitions and its bit mask." alt="" coords="293,79,447,119"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="218,28,316,71,313,76,216,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="155,240,225,265"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="180,120,167,142,157,167,154,179,157,191,175,228,170,230,151,193,149,179,151,166,162,140,175,117"/>
+<area shape="rect" id="Node000005" href="$driver__sensors__types_8h.html" title="The driver_sensors_types.h file contains sensor state structs and error definitions." alt="" coords="167,167,339,192"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="208,117,237,154,233,157,204,121"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="244,194,211,231,207,228,240,191"/>
+</map>

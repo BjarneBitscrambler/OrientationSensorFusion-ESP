@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['read_0',['read',['../structPhysicalSensor.html#a888d77b8a368051617d438dda404494e',1,'PhysicalSensor']]],
+  ['readsensors_1',['readsensors',['../structSensorFusionGlobals.html#ab0037a4a465eaec402402a4141e6bcb2',1,'SensorFusionGlobals::readSensors'],['../classSensorFusion.html#a7d7573317add4ffb98231ea3f478cb75',1,'SensorFusion::ReadSensors()'],['../sensor__fusion_8c.html#a2aef17e3b5cdf8265e189bdee3b4e3e9',1,'readSensors(SensorFusionGlobals *sfg, uint8_t read_loop_counter):&#160;sensor_fusion.c']]],
+  ['receiving_5fwired_2',['RECEIVING_WIRED',['../sensor__fusion_8h.html#a69ee883e1c22b117df163c0bd83f66dda07ce7fbb8426233b33e7e7512bb0f55d',1,'sensor_fusion.h']]],
+  ['receiving_5fwireless_3',['RECEIVING_WIRELESS',['../sensor__fusion_8h.html#a69ee883e1c22b117df163c0bd83f66dda60ca895e5ed18a6e1928d4750c7968a0',1,'sensor_fusion.h']]],
+  ['registerdeviceinfo_5ft_4',['registerDeviceInfo_t',['../structregisterDeviceInfo__t.html',1,'']]],
+  ['registeridlefunction_5ft_5',['registeridlefunction_t',['../driver__sensors__types_8h.html#a5deff6bd688b60b97b84fc7e78d3ea63',1,'driver_sensors_types.h']]],
+  ['registerreadlist_5ft_6',['registerReadlist_t',['../structregisterReadlist__t.html',1,'']]],
+  ['registerwritelist_5ft_7',['registerwritelist_t',['../structregisterwritelist__t.html',1,'']]],
+  ['repeatability_20and_20linearity_8',['Accuracy, Repeatability, and Linearity',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Accuracy.html',1,'']]],
+  ['reporting_9',['Reporting',['../md_CODE__OF__CONDUCT.html#autotoc_md5',1,'']]],
+  ['repository_10',['Method 2 (doesn&apos;t require manual cloning into a local repository)',['../index.html#autotoc_md19',1,'']]],
+  ['requests_20on_11',['Method 1 (gets you a local clone that you can edit or base pull requests on)',['../index.html#autotoc_md18',1,'']]],
+  ['require_20manual_20cloning_20into_20a_20local_20repository_12',['Method 2 (doesn&apos;t require manual cloning into a local repository)',['../index.html#autotoc_md19',1,'']]],
+  ['resetflag_13',['resetflag',['../structSV__6DOF__GB__BASIC.html#a47af0539db856552426ac4564be0511b',1,'SV_6DOF_GB_BASIC::resetflag'],['../structSV__1DOF__P__BASIC.html#a59d75e8b7c8a93d8a4fea92d15612e3d',1,'SV_1DOF_P_BASIC::resetflag'],['../structSV__3DOF__G__BASIC.html#aacc604429856228b624e8352244a549f',1,'SV_3DOF_G_BASIC::resetflag'],['../structSV__3DOF__B__BASIC.html#a19b3fb620150bcc86256285b06a44abf',1,'SV_3DOF_B_BASIC::resetflag'],['../structSV__9DOF__GBY__KALMAN.html#acc8c88191ae34255a22ff68a0cfe8ef2',1,'SV_9DOF_GBY_KALMAN::resetflag'],['../structSV__6DOF__GY__KALMAN.html#ad2ee347d18e4365e209ceef2473eaaa4',1,'SV_6DOF_GY_KALMAN::resetflag'],['../structSV__3DOF__Y__BASIC.html#a8f2f353e14ccf45da9e82f29f13e28c1',1,'SV_3DOF_Y_BASIC::resetflag']]],
+  ['resources_14',['Resources',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Home.html#autotoc_md44',1,'']]],
+  ['response_15',['Stationary Response',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Stationary-Drift.html',1,'']]],
+  ['response_20version_204_202_20algorithm_16',['Step Response - Version 4.2 Algorithm',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Step-Response.html#autotoc_md81',1,'']]],
+  ['response_20version_207_202_20algorithm_17',['Step Response - Version 7.2 Algorithm',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Step-Response.html',1,'']]],
+  ['responsibilities_18',['Our Responsibilities',['../md_CODE__OF__CONDUCT.html#autotoc_md3',1,'']]],
+  ['results_19',['results',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Step-Response.html#autotoc_md83',1,'Results'],['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Step-Response.html#autotoc_md78',1,'Results'],['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Stationary-Drift.html#autotoc_md70',1,'Results'],['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Motion-Immunity.html#autotoc_md62',1,'Results'],['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Magnetic-Interference.html#autotoc_md57',1,'Results']]],
+  ['results_20accuracy_20',['Results - Accuracy',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Accuracy.html#autotoc_md31',1,'']]],
+  ['results_20linearity_21',['Results - Linearity',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Accuracy.html#autotoc_md29',1,'']]],
+  ['roll_20changes_22',['Tolerance to pitch and roll changes',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Motion-Immunity.html#autotoc_md60',1,'']]],
+  ['runfusion_23',['runfusion',['../sensor__fusion_8c.html#a8b90119fee979d0309cc923bf1fad543',1,'runFusion():&#160;sensor_fusion.c'],['../classSensorFusion.html#aa1b6f69aee1de8b1514539765ef4b119',1,'SensorFusion::RunFusion()'],['../structSensorFusionGlobals.html#a903191d34ab2f428e6807bb8ac731e84',1,'SensorFusionGlobals::runFusion']]],
+  ['running_20magnetic_20calibration_24',['Running magnetic calibration',['../md__2media_2bhansen_2MyFiles_2PlatformIO_2Projects_2OSF__Wiki_2OrientationSensorFusion-ESP_8wiki_2Magnetic-Calibration.html#autotoc_md46',1,'']]]
+];

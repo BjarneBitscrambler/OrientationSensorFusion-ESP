@@ -1,0 +1,51 @@
+<map id="src/board.h" name="src/board.h">
+<area shape="rect" id="Node000001" title="Board configuration file." alt="" coords="279,5,373,31"/>
+<area shape="rect" id="Node000002" href="$example__main_8cc_source.html" title=" " alt="" coords="82,262,287,287"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="266,31,203,46,133,72,99,90,67,112,38,138,15,168,9,185,11,199,21,213,36,225,79,245,127,259,126,264,77,250,33,230,17,217,6,201,3,184,10,165,34,134,63,108,96,86,131,68,201,41,264,26"/>
+<area shape="rect" id="Node000003" href="$control__output_8c.html" title="Implements output streaming for the control &amp; status subsystem. Data is packaged up in format compati..." alt="" coords="25,167,209,207"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="302,41,142,169,139,164,299,37"/>
+<area shape="rect" id="Node000004" href="$sensor__fusion_8h.html" title="The sensor_fusion.h file implements the top level programming interface." alt="" coords="1561,79,1744,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="388,20,1561,89,1561,95,387,26"/>
+<area shape="rect" id="Node000019" href="$status_8c.html" title="Application&#45;specific status subsystem." alt="" coords="3033,174,3224,199"/>
+<area shape="poly" id="edge27_Node000001_Node000019" title=" " alt="" coords="387,17,775,23,1421,44,1804,62,2208,88,2619,121,3021,164,3070,171,3069,177,3020,169,2618,127,2208,93,1804,68,1421,49,775,29,387,22"/>
+<area shape="rect" id="Node000021" href="$sensor__fusion__class_8h.html" title=" " alt="" coords="233,174,419,199"/>
+<area shape="poly" id="edge28_Node000001_Node000021" title=" " alt="" coords="329,44,329,174,323,174,323,44"/>
+<area shape="poly" id="edge7_Node000004_Node000003" title=" " alt="" coords="1548,103,1310,106,981,116,603,136,410,151,221,169,209,171,209,165,220,164,410,145,603,130,980,110,1310,101,1548,98"/>
+<area shape="rect" id="Node000005" href="$calibration__storage_8cc.html" title="Provides functions to store calibration to NVM." alt="" coords="1181,167,1389,207"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1559,124,1366,169,1365,164,1558,119"/>
+<area shape="rect" id="Node000006" href="$control_8cc.html" title="Defines control sub&#45;system." alt="" coords="1413,174,1615,199"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="1612,128,1534,176,1531,172,1609,124"/>
+<area shape="rect" id="Node000007" href="$control__input_8c.html" title="Command interpreter which interfaces to the Sensor Fusion Toolbox. Commands sent from the Toolbox (e...." alt="" coords="1705,255,1889,295"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="1675,128,1732,205,1778,252,1774,256,1728,208,1670,132"/>
+<area shape="rect" id="Node000008" href="$driver__fxas21002_8c.html" title="Provides init() and read() functions for the FXAS21002 gyroscope." alt="" coords="2008,167,2185,207"/>
+<area shape="poly" id="edge8_Node000004_Node000008" title=" " alt="" coords="1758,118,2008,166,2007,171,1757,123"/>
+<area shape="rect" id="Node000009" href="$driver__fxos8700_8c.html" title="Defines commands to perform various tasks (e.g. read Device ID, Initialize, Read Data) for the FXOS87..." alt="" coords="2209,167,2387,207"/>
+<area shape="poly" id="edge9_Node000004_Node000009" title=" " alt="" coords="1758,108,1962,132,2198,164,2210,166,2209,171,2198,169,1961,137,1757,113"/>
+<area shape="rect" id="Node000010" href="$fusion_8c.html" title="Lower level sensor fusion interface." alt="" coords="1913,262,2104,287"/>
+<area shape="poly" id="edge10_Node000004_Node000010" title=" " alt="" coords="1758,101,1805,108,1854,121,1902,139,1946,165,1969,187,1987,214,2008,261,2003,263,1983,217,1965,191,1943,169,1900,144,1852,126,1804,114,1757,107"/>
+<area shape="rect" id="Node000011" href="$fusion_8h.html" title="Lower level sensor fusion interface." alt="" coords="1741,174,1932,199"/>
+<area shape="poly" id="edge11_Node000004_Node000011" title=" " alt="" coords="1707,122,1813,172,1811,176,1704,127"/>
+<area shape="rect" id="Node000012" href="$sensor__fusion_8c.html" title="The sensor_fusion.c file implements the top level programming interface." alt="" coords="1497,255,1680,295"/>
+<area shape="poly" id="edge21_Node000004_Node000012" title=" " alt="" coords="1650,133,1642,169,1630,208,1604,256,1599,253,1625,206,1637,168,1645,132"/>
+<area shape="rect" id="Node000013" href="$fusion__testing_8c.html" title="ApplyPerturbation function used to analyze dynamic performance." alt="" coords="2411,167,2590,207"/>
+<area shape="poly" id="edge15_Node000004_Node000013" title=" " alt="" coords="1758,104,2048,126,2224,143,2400,164,2412,166,2411,171,2399,169,2223,148,2047,131,1758,109"/>
+<area shape="rect" id="Node000014" href="$hal__axis__remap_8c.html" title="Hardware Abstraction layer for the particular sensors used. Depending on the design of the sensor PCB..." alt="" coords="2615,167,2773,207"/>
+<area shape="poly" id="edge16_Node000004_Node000014" title=" " alt="" coords="1758,100,2132,119,2366,137,2602,164,2615,166,2614,171,2602,169,2366,143,2131,124,1758,106"/>
+<area shape="rect" id="Node000015" href="$magnetic_8c.html" title="Lower level magnetic calibration interface." alt="" coords="2798,174,3009,199"/>
+<area shape="poly" id="edge17_Node000004_Node000015" title=" " alt="" coords="1757,100,2205,119,2494,138,2786,164,2839,171,2839,177,2786,169,2494,143,2205,124,1757,105"/>
+<area shape="rect" id="Node000016" href="$matrix_8c.html" title="Matrix manipulation functions." alt="" coords="444,174,637,199"/>
+<area shape="poly" id="edge18_Node000004_Node000016" title=" " alt="" coords="1548,106,1153,126,902,144,650,169,601,177,600,171,650,164,902,139,1152,120,1548,101"/>
+<area shape="rect" id="Node000017" href="$orientation_8c.html" title="Functions to convert between various orientation representations." alt="" coords="662,174,883,199"/>
+<area shape="poly" id="edge19_Node000004_Node000017" title=" " alt="" coords="1548,110,1255,133,897,169,844,177,843,171,896,164,1254,128,1548,105"/>
+<area shape="rect" id="Node000018" href="$precisionAccelerometer_8c.html" title="Implements accelerometer calibration routines." alt="" coords="908,167,1107,207"/>
+<area shape="poly" id="edge20_Node000004_Node000018" title=" " alt="" coords="1548,115,1125,169,1107,172,1107,167,1124,164,1547,110"/>
+<area shape="poly" id="edge22_Node000004_Node000019" title=" " alt="" coords="1758,98,1986,102,2300,113,2658,132,3021,164,3071,171,3070,177,3020,169,2658,138,2299,118,1986,108,1758,103"/>
+<area shape="rect" id="Node000020" href="$sensor__fusion__class_8cc.html" title="An easy&#45;to&#45;use interface to the NXP Sensor Fusion version 7 library algorithms." alt="" coords="369,262,563,287"/>
+<area shape="poly" id="edge23_Node000004_Node000020" title=" " alt="" coords="1548,110,1338,133,1239,149,1170,169,1155,178,1146,189,1136,200,1120,209,1074,223,1013,235,863,254,703,266,563,273,563,268,702,261,863,249,1013,230,1073,218,1118,204,1133,195,1142,185,1152,174,1168,164,1238,144,1337,128,1547,105"/>
+<area shape="poly" id="edge24_Node000004_Node000021" title=" " alt="" coords="1548,104,1342,109,1064,120,750,140,432,169,383,177,382,171,431,164,749,134,1064,115,1342,104,1548,99"/>
+<area shape="poly" id="edge12_Node000011_Node000007" title=" " alt="" coords="1828,213,1808,255,1803,253,1823,210"/>
+<area shape="poly" id="edge13_Node000011_Node000010" title=" " alt="" coords="1873,203,1986,259,1984,264,1871,208"/>
+<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="1791,206,1644,257,1642,252,1790,201"/>
+<area shape="poly" id="edge25_Node000021_Node000002" title=" " alt="" coords="297,209,205,264,202,259,294,204"/>
+<area shape="poly" id="edge26_Node000021_Node000020" title=" " alt="" coords="358,204,448,259,446,264,355,209"/>
+</map>

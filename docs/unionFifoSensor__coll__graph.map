@@ -1,0 +1,9 @@
+<map id="FifoSensor" name="FifoSensor">
+<area shape="rect" id="Node000001" title="The FifoSensor union allows us to use common pointers for Accel, Mag &amp; Gyro logical sensor structures..." alt="" coords="129,93,219,119"/>
+<area shape="rect" id="Node000002" href="$structGyroSensor.html" title="The GyroSensor structure stores raw and processed measurements for a 3&#45;axis gyroscope." alt="" coords="5,5,103,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,37,159,91,156,95,80,41"/>
+<area shape="rect" id="Node000003" href="$structMagSensor.html" title="The MagSensor structure stores raw and processed measurements for a 3&#45;axis magnetic sensor." alt="" coords="127,5,221,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,45,177,93,171,93,171,45"/>
+<area shape="rect" id="Node000004" href="$structAccelSensor.html" title="The AccelSensor structure stores raw and processed measurements for a 3&#45;axis accelerometer." alt="" coords="246,5,347,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="270,41,192,95,189,91,267,37"/>
+</map>

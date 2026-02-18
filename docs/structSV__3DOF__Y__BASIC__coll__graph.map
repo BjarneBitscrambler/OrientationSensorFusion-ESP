@@ -1,0 +1,5 @@
+<map id="SV_3DOF_Y_BASIC" name="SV_3DOF_Y_BASIC">
+<area shape="rect" id="Node000001" title="SV_3DOF_Y_BASIC structure is the 3DOF basic gyroscope state vector structure." alt="" coords="5,93,148,119"/>
+<area shape="rect" id="Node000002" href="$structQuaternion.html" title="quaternion structure definition" alt="" coords="29,5,124,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,45,79,93,74,93,74,45"/>
+</map>

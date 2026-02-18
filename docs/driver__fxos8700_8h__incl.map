@@ -1,0 +1,8 @@
+<map id="src/sensor_fusion/driver_fxos8700.h" name="src/sensor_fusion/driver_fxos8700.h">
+<area shape="rect" id="Node000001" title="Describes the fxos8700 driver interface and structures." alt="" coords="5,5,183,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="59,167,129,192"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,47,63,80,59,99,61,118,79,154,74,157,55,119,54,99,58,78,76,44"/>
+<area shape="rect" id="Node000003" href="$driver__sensors__types_8h.html" title="The driver_sensors_types.h file contains sensor state structs and error definitions." alt="" coords="71,93,243,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="111,44,141,81,137,84,107,47"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="148,121,115,158,111,154,144,117"/>
+</map>
