@@ -1,4 +1,0 @@
-<map id="fxos8700_i2c_sensorhandle_t" name="fxos8700_i2c_sensorhandle_t">
-<area shape="rect" id="node1" title="This defines the sensor specific information for I2C." alt="" coords="5,95,220,121"/>
-<area shape="rect" id="node2" href="$structregisterDeviceInfo__t.html" title="This structure defines the device specific info required by register I/O." alt="" coords="35,5,190,32"/>
-</map>

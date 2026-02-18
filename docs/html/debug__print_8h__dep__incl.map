@@ -1,5 +1,0 @@
-<map id="src/sensor_fusion/debug_print.h" name="src/sensor_fusion/debug_print.h">
-<area shape="rect" id="node1" title="defines function debug_print() that outputs to serial port Can disable these prints by compiling with..." alt="" coords="128,5,307,47"/>
-<area shape="rect" id="node2" href="$calibration__storage_8cc.html" title="Provides functions to store calibration to NVM." alt="" coords="5,95,213,136"/>
-<area shape="rect" id="node3" href="$debug__print_8cc.html" title="defines function debug_print() that outputs to serial port Can disable these prints by compiling with..." alt="" coords="237,95,416,136"/>
-</map>
