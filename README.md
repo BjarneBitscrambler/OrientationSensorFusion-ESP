@@ -56,7 +56,7 @@ which are automatically installed in the Arduino framework:
 - **WiFi** libraries (*only needed by the example main.cpp if WiFi output is enabled*)
 
 ## Where To Find...
-- **Documentation** for the fusion code is html-based; either browse to [] or download the project's `docs/` directory and open [`docs/index.html`](/docs/index.html) file in your favourite browser. Documentation is auto-generated from comments in the code itself, using Doxygen. 
+- **Documentation** for the fusion code is html-based; either browse to [here](https://bjarnebitscrambler.github.io/OrientationSensorFusion-ESP/index.html) or download the project's `docs/` directory and open [`docs/index.html`](/docs/index.html) file in your favourite browser. Documentation is auto-generated from comments in the code itself, using Doxygen. 
 - **Test plans, data, results**, etc are on [this project's Github Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki)
 - **Details on Magnetic Calibration** are on [this project's Github Wiki](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP/wiki)
 - **NXP's version 7 sensor fusion** for ESP32 processors is under the [Code tab](https://github.com/BjarneBitscrambler/OrientationSensorFusion-ESP) of this Github repository. It is fully functional with [NXP's Windows-based Sensor Fusion Toolbox](https://www.nxp.com/webapp/sps/download/license.jsp?colCode=SENSORFUSIONREV7) software application. 
