@@ -13,44 +13,56 @@
     Board hardware specifics, such as pinouts and I2C addresses.
 */
 
-#ifndef _BOARD_H_
+#if !defined(_BOARD_H_)
 #define _BOARD_H_
 
-#include <Arduino.h>
-
-#ifndef BOARD_USES_HW_GPIO_NUMBERS
-    #define BOARD_USES_HW_GPIO_NUMBERS
-#endif
+//#include <Arduino.h>
 
 #if defined(__cplusplus)
 extern "C" {
 #endif /* __cplusplus */
 
-#ifdef ESP8266
+#if defined(ESP8266)
+#pragma message("OrientationSensor library works with ESP8266 processors, however some other libraries (\
+    like SensESP-SignalK) require an ESP32 processor.")
 // #include "Arduino.h" has definitions for following, but if full Arduino.h is included, then some other defines
 // like PI in sensor_fusion.h will clash. Also get errors if Arduino.h is inside extern "C" {} brackets.
-    #ifndef HIGH
+    #if !defined(HIGH)
         #define HIGH (0x01)
     #endif
-    #ifndef LOW
+    #if !defined(LOW)
         #define LOW (0x00)
     #endif
-    #ifndef OUTPUT
+    #if !defined(OUTPUT)
         #define OUTPUT (0x01)
     #endif
 #endif
-#ifdef ESP32
+#if defined(ESP32)
     //#include <Arduino.h> //Can use this instead (which includes the *_hal_gpio), but then some other
     // constants get defined too (like PI) which clash with defines in sensor_fusion.h
   #include <esp32-hal-gpio.h>       //needed for pinMode() etc.
 #endif
 
+#if !defined(BOARD_USES_HW_GPIO_NUMBERS)
+    #define BOARD_USES_HW_GPIO_NUMBERS
+#endif
+
+//default to using the FXAX2100x + FXOS8700 orientation sensors
+#if !defined(SENSOR_FXAX2100x_AND_FXOS8700) && !defined(SENSOR_LSM6DSOX_LIS3MDL) 
+    #define SENSOR_FXAX2100x_AND_FXOS8700
+#endif
+
+#if defined(SENSOR_FXAX2100x_AND_FXOS8700)
 // Specify the specific sensor IC(s) used 
 #include "sensor_fusion/driver_fxos8700.h"
 #include "sensor_fusion/driver_fxas21002.h"
+#elif defined(SENSOR_LSM6DSOX_LIS3MDL)
+#include "sensor_fusion/driver_lsm6dsox.h"
+#include "sensor_fusion/driver_lis3mdl.h"
+#endif
 
-// Board name and type, passed in packets to Sensor Toolbox.  
-// Suspect these fields are only informational. 
+// Board name and type, passed in packets to NXP's Sensor Toolbox.  
+// These fields are only informational. 
 #define BOARD_NAME "ESP32 WROVER"
 #define THIS_BOARD  9   //impersonates a FRDM_K22F. Sent in packets to PC-based App.
 #define THIS_SHIELD 4   //impersonates shield AGMP03. Sent in packets to PC-based App.
@@ -65,17 +77,17 @@ extern "C" {
 #define LOGIC_LED_ON  1U
 #define LOGIC_LED_OFF 0U
 
-#ifndef BOARD_LED_RED_GPIO_PIN
+#if !defined(BOARD_LED_RED_GPIO_PIN)
 #define BOARD_LED_RED_GPIO_PIN (0)
 #endif
-#ifndef BOARD_LED_GREEN_GPIO_PIN
+#if !defined(BOARD_LED_GREEN_GPIO_PIN)
 #define BOARD_LED_GREEN_GPIO_PIN (2)
 #endif
-#ifndef BOARD_LED_BLUE_GPIO_PIN
+#if !defined(BOARD_LED_BLUE_GPIO_PIN)
 #define BOARD_LED_BLUE_GPIO_PIN (4)
 #endif
 
-#ifndef LED_BUILTIN
+#if !defined(LED_BUILTIN)
 #define LED_BUILTIN BOARD_LED_RED_GPIO_PIN
 #endif
 
