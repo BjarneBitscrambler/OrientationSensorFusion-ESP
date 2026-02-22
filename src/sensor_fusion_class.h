@@ -18,9 +18,9 @@
 
 #include "board.h"
 #include "build.h"
-#include "sensor_fusion/sensor_fusion.h"
-#include "sensor_fusion/control.h"
-#include "sensor_fusion/status.h"
+#include "fusion/sensor_fusion.h"
+#include "fusion/control.h"
+#include "fusion/status.h"
 
 /**
  *  enum constants used to indicate what type of sensor is being installed

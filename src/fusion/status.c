@@ -17,7 +17,7 @@
 
 #include "sensor_fusion.h"      // Sensor fusion structures and functions
 #include "board.h"              
-#include "driver_sensors.h"     // hardware-specific drivers
+#include "../sensors/driver_sensors.h"     // hardware-specific drivers
 #include "status.h"             // Header for this .c file
 
 // bit-field definitions

@@ -54,11 +54,11 @@ extern "C" {
 
 #if defined(SENSOR_FXAX2100x_AND_FXOS8700)
 // Specify the specific sensor IC(s) used 
-#include "sensor_fusion/driver_fxos8700.h"
-#include "sensor_fusion/driver_fxas21002.h"
+#include "sensors/driver_fxos8700.h"
+#include "sensors/driver_fxas21002.h"
 #elif defined(SENSOR_LSM6DSOX_LIS3MDL)
-#include "sensor_fusion/driver_lsm6dsox.h"
-#include "sensor_fusion/driver_lis3mdl.h"
+#include "sensors/driver_lsm6dsox.h"
+#include "sensors/driver_lis3mdl.h"
 #endif
 
 // Board name and type, passed in packets to NXP's Sensor Toolbox.  

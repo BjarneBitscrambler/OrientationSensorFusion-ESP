@@ -10,9 +10,9 @@
     \brief Provides init() and read() functions for the FXAS21002 gyroscope
 */
 
-#include "sensor_fusion.h"      // Sensor fusion structures and types
+#include "../fusion/sensor_fusion.h"      // Sensor fusion structures and types
 #include "driver_fxas21002.h"   // Definitions for FXAS21002 interface
-#include "hal_i2c.h"            //I2C interface methods
+#include "../fusion/hal_i2c.h"            //I2C interface methods
 
 // Includes support for pre-production FXAS21000 registers and constants which are not supported via IS-SDK
 #define FXAS21000_STATUS                0x00

@@ -28,10 +28,11 @@
 #include <Stream.h>
 #include <stdint.h>
 
-#include "sensor_fusion/sensor_fusion.h"
-#include "sensor_fusion/control.h"
-#include "sensor_fusion/driver_sensors.h"
-#include "sensor_fusion/status.h"
+#include "fusion/sensor_fusion.h"
+#include "fusion/control.h"
+#include "fusion/status.h"
+#include "sensors/driver_sensors.h"
+
 
 const float kDegToRads = PI / 180.0;   ///< To convert Degrees to Radians, multiply by this constant.
 const float kCelsiusToKelvin = 273.15; ///< To convert degrees C to K, add this constant.

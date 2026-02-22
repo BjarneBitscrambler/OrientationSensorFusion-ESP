@@ -21,7 +21,7 @@
 
 #include "Arduino.h"
 #include <Wire.h>
-#include "driver_sensors_types.h"
+#include "../sensors/driver_sensors_types.h"
 #include "hal_i2c.h"
 
 

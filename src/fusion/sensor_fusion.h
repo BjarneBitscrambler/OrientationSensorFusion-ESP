@@ -30,9 +30,9 @@ extern "C" {
 #include <stdint.h>
 #include <stdio.h>
 
-#include "board.h"						// Hardware-specific details (e.g. particular sensor ICs)
-#include "build.h"                      // This is where the build parameters are defined
-#include "driver_sensors_types.h"		// Typedefs for the sensor hardware
+#include "../board.h"						// Hardware-specific details (e.g. particular sensor ICs)
+#include "../build.h"                      // This is where the build parameters are defined
+#include "../sensors/driver_sensors_types.h"		// Typedefs for the sensor hardware
 #include "magnetic.h"                   // Magnetic calibration functions/structures
 #include "matrix.h"  					// Matrix math
 #include "orientation.h"                // Functions for manipulating orientations
