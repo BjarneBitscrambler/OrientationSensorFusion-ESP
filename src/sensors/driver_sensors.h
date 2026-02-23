@@ -45,6 +45,24 @@ typedef struct PhysicalSensor PhysicalSensor;
 /// in that package.  The read() function is responsible for reading those same
 /// sensors and moving the results into the standard structures contained within
 /// the SensorFusionGlobals object.
+
+#if defined(SENSOR_FXAX2100x_AND_FXOS8700)
+
+#define Accel_Init(sensor, sfg) FXOS8700_Accel_Init(sensor, sfg)
+#define Mag_Init(sensor, sfg)   FXOS8700_Mag_Init(sensor, sfg)
+#define Therm_Init(sensor, sfg) FXOS8700_Therm_Init(sensor, sfg)
+#define Gyro_Init(sensor, sfg)  FXAS21002_Gyro_Init(sensor, sfg)
+
+#define Accel_Read(sensor, sfg) FXOS8700_Accel_Read(sensor, sfg)
+#define Mag_Read(sensor, sfg)   FXOS8700_Mag_Read(sensor, sfg)
+#define Therm_Read(sensor, sfg) FXOS8700_Therm_Read(sensor, sfg)
+#define Gyro_Read(sensor, sfg)  FXAS21002_Gyro_Read(sensor, sfg)
+
+#include "driver_sensors_types.h"
+#include "driver_fxos8700_registers.h"
+#include "driver_fxos8700.h"
+#include "driver_fxas21002.h"
+
 int8_t FXOS8700_Accel_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXOS8700_Mag_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXOS8700_Therm_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
@@ -60,8 +78,28 @@ int8_t FXAS21002_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXOS8700_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 int8_t FXAS21002_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 
+// sensor hardware details
+#define GYRO_FIFO_SIZE  32	///< FXAX21000, FXAS21002 have 32 element FIFO
+#define ACCEL_FIFO_SIZE 32	///< FXOS8700 (accel), MMA8652, FXLS8952 all have 32 element FIFO
+#define MAG_FIFO_SIZE 	1	///< FXOS8700 (mag) and MAG3110 have no FIFO so equivalent to 1 element FIFO. For 
+//these ICs we save 6 bytes * 31 = 186 bytes of RAM by setting this FIFO size to 1
+
+#elif defined(SENSOR_LSM6DSOX_LIS3MDL)
+
+#define Accel_Init(sensor, sfg) LSM6DSOX_Accel_Init(sensor, sfg)
+#define Mag_Init(sensor, sfg)   LIS3MDL_Mag_Init(sensor, sfg)
+#define Therm_Init(sensor, sfg) LSM6DSOX_Therm_Init(sensor, sfg)
+#define Gyro_Init(sensor, sfg)  LSM6DSOX_Gyro_Init(sensor, sfg)
+
+#define Accel_Read(sensor, sfg) LSM6DSOX_Accel_Read(sensor, sfg)
+#define Mag_Read(sensor, sfg)   LIS3MDL_Mag_Read(sensor, sfg)
+#define Therm_Read(sensor, sfg) LSM6DSOX_Therm_Read(sensor, sfg)
+#define Gyro_Read(sensor, sfg)  LSM6DSOX_Gyro_Read(sensor, sfg)
+
+#endif //checking which sensor hardware is used
+
 #ifdef __cplusplus
 }
-#endif
+#endif //__cplusplus
 
 #endif // DRIVER_SENSORS_H
