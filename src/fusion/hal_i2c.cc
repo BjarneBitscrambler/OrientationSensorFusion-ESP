@@ -31,7 +31,7 @@
     pin_sda and pin_scl indicate the pin numbers to which the I2C SDA and SCL
     lines of the sensors are connected. Pass -1 to use the default Arduino pins.
     
-    Returns true if successful, false if problem initializing I2C.
+    @return true if successful, false if problem initializing I2C.
 */
 /**************************************************************************/
 bool I2CInitialize( int pin_sda, int pin_scl ) {
@@ -51,7 +51,7 @@ bool I2CInitialize( int pin_sda, int pin_scl ) {
 /**************************************************************************/
 /*!
     @brief  Read single byte from address and place in destination
-    Returns true if successful, false if error
+    @return true if successful, false if error
 */
 /**************************************************************************/
 bool I2CReadByte(byte address, byte reg, byte *destination) {
@@ -63,7 +63,7 @@ bool I2CReadByte(byte address, byte reg, byte *destination) {
     @brief  Read num_bytes bytes from address starting at register.
     Assumes device auto-increments the register.
     Bytes read are placed in destination.
-    Returns true if successful, false if error.
+    @return true if successful, false if error.
 */
 /**************************************************************************/
 bool I2CReadBytes(byte address, byte reg, byte *destination, int num_bytes) {
@@ -96,7 +96,7 @@ bool I2CReadBytes(byte address, byte reg, byte *destination, int num_bytes) {
 /**************************************************************************/
 /*!
     @brief  Write single byte to register at address
-    Returns true if successful, false if error.
+    @return true if successful, false if error.
 */
 /**************************************************************************/
 bool I2CWriteByte(byte address, byte reg, byte value) {
@@ -114,7 +114,7 @@ bool I2CWriteByte(byte address, byte reg, byte value) {
 /*!
     @brief  Write multiple bytes starting at register to I2C address
     Assumes device auto-increments the I2C register being written to.
-    Returns true if successful, false if error.
+    @return true if successful, false if error.
 */
 /**************************************************************************/
 bool I2CWriteBytes(byte address, byte reg, const byte *value,
@@ -140,8 +140,13 @@ Wire:::endTransmission() ->
         HAL:::i2cWrite() -> 
             HAL:::i2cProcQueue() blocks until queue empty, or bus timeout
 */
-
-//The interface function to write register data from list to a sensor.
+/**************************************************************************/
+/*!
+    @brief  Write register data from list to a sensor.
+    List includes the register addresses and the values to write.
+    @return SENSOR_ERROR_NONE if successful; else SENSOR_ERROR_BAD_ADDRESS or SENSOR_ERROR_WRITE.
+*/
+/**************************************************************************/
 int8_t Sensor_I2C_Write_List(registerDeviceInfo_t *devInfo, uint16_t peripheralAddress,
                          const registerwritelist_t *pRegWriteList) {
   // Validate handle
@@ -169,11 +174,16 @@ int8_t Sensor_I2C_Write_List(registerDeviceInfo_t *devInfo, uint16_t peripheralA
 
   return SENSOR_ERROR_NONE;
 } // end Sensor_I2C_Write_List()
-
-// Read register data from peripheralAddress, using register
-//  location and number of bytes in pReadList.
-// Iterate through pReadList until number of bytes requested == 0
-// Data is placed sequentially starting at pOutBuffer.
+ 
+/**************************************************************************/
+/*!
+    @brief  Read register data from peripheralAddress, using register
+    location and number of bytes in pReadList.
+    Iterate through pReadList until number of bytes requested == 0
+    Data is placed sequentially starting at pOutBuffer.
+    @return SENSOR_ERROR_NONE if successful, else SENSOR_ERROR_READ or SENSOR_ERROR_BAD_ADDRESS.
+*/
+/**************************************************************************/
 int32_t Sensor_I2C_Read(registerDeviceInfo_t *devInfo,
                         uint16_t peripheralAddress,
                         const registerReadlist_t *pReadList,
@@ -201,13 +211,21 @@ int32_t Sensor_I2C_Read(registerDeviceInfo_t *devInfo,
   return SENSOR_ERROR_NONE;
 }  // end Sensor_I2C_Read()
 
+/**************************************************************************/
+/*!
+    @brief  Read register data from peripheralAddress, at registerAddress
+    location and length number of bytes.
+    Data is placed sequentially starting at pOutBuffer.
+    @return SENSOR_ERROR_NONE if successful, else SENSOR_ERROR_READ or SENSOR_ERROR_BAD_ADDRESS.
+*/
+/**************************************************************************/
 int32_t Sensor_I2C_Read_Register(registerDeviceInfo_t *devInfo, 
                           uint16_t peripheralAddress, 
-                          uint8_t offset,
+                          uint8_t registerAddress,
                           uint8_t length,
                           uint8_t *pOutBuffer) {
   //TODO - can toss the devInfo parameter, or use it for peripheralAddr
-  if(I2CReadBytes((byte)peripheralAddress, (byte)offset, pOutBuffer,
+  if(I2CReadBytes((byte)peripheralAddress, (byte)registerAddress, pOutBuffer,
                       (int)length) )
   { return SENSOR_ERROR_NONE;
   } else

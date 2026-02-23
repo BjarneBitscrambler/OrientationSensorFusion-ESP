@@ -14,14 +14,13 @@
 #ifndef DRIVER_FXOS8700_H_
 #define DRIVER_FXOS8700_H_
 
+#include <stdint.h>
+#include "driver_sensors_types.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdint.h>
-
-#include "driver_sensors_types.h"
 
 /*******************************************************************************
  * Definitions

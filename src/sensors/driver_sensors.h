@@ -21,13 +21,11 @@
 #ifndef DRIVER_SENSORS_H
 #define DRIVER_SENSORS_H
 
+#include "driver_sensors_types.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-// Forward declarations of structures (redefined in sensor_fusion.h, but needed now for pointer definitions)
-typedef struct SensorFusionGlobals SensorFusionGlobals;
-typedef struct PhysicalSensor PhysicalSensor;
 
 /// @name Sensor Interface Prototypes
 /// Each physical sensor must be provided with one initialization function
@@ -48,31 +46,19 @@ typedef struct PhysicalSensor PhysicalSensor;
 
 #if defined(SENSOR_FXAX2100x_AND_FXOS8700)
 
-#include "driver_sensors_types.h"
 #include "driver_fxos8700_registers.h"
 #include "driver_fxos8700.h"
 #include "driver_fxas21002.h"
 
-/*#define Accel_Init(sensor, sfg) FXOS8700_Accel_Init(sensor, sfg)
-#define Mag_Init(sensor, sfg)   FXOS8700_Mag_Init(sensor, sfg)
-#define Therm_Init(sensor, sfg) FXOS8700_Therm_Init(sensor, sfg)
-#define Gyro_Init(sensor, sfg)  FXAS21002_Gyro_Init(sensor, sfg)
-
-#define Accel_Read(sensor, sfg) FXOS8700_Accel_Read(sensor, sfg)
-#define Mag_Read(sensor, sfg)   FXOS8700_Mag_Read(sensor, sfg)
-#define Therm_Read(sensor, sfg) FXOS8700_Therm_Read(sensor, sfg)
-#define Gyro_Read(sensor, sfg)  FXAS21002_Gyro_Read(sensor, sfg)
-*/
 #define Accel_Init FXOS8700_Accel_Init
 #define Mag_Init   FXOS8700_Mag_Init
 #define Therm_Init FXOS8700_Therm_Init
-#define Gyro_Init  FXAS21002_Gyro_Init
+#define Gyro_Init  FXAS21002_Init
 
 #define Accel_Read FXOS8700_Accel_Read
 #define Mag_Read   FXOS8700_Mag_Read
 #define Therm_Read FXOS8700_Therm_Read
-#define Gyro_Read  FXAS21002_Gyro_Read
-
+#define Gyro_Read  FXAS21002_Read
 
 // sensor hardware details
 #define GYRO_FIFO_SIZE  32	///< FXAX21000, FXAS21002 have 32 element FIFO
@@ -82,15 +68,20 @@ typedef struct PhysicalSensor PhysicalSensor;
 
 #elif defined(SENSOR_LSM6DSOX_LIS3MDL)
 
-#define Accel_Init(sensor, sfg) LSM6DSOX_Accel_Init(sensor, sfg)
-#define Mag_Init(sensor, sfg)   LIS3MDL_Mag_Init(sensor, sfg)
-#define Therm_Init(sensor, sfg) LSM6DSOX_Therm_Init(sensor, sfg)
-#define Gyro_Init(sensor, sfg)  LSM6DSOX_Gyro_Init(sensor, sfg)
+#include "driver_lis3mdl.h"
+#include "driver_lsm6dsox.h"
 
-#define Accel_Read(sensor, sfg) LSM6DSOX_Accel_Read(sensor, sfg)
-#define Mag_Read(sensor, sfg)   LIS3MDL_Mag_Read(sensor, sfg)
-#define Therm_Read(sensor, sfg) LSM6DSOX_Therm_Read(sensor, sfg)
-#define Gyro_Read(sensor, sfg)  LSM6DSOX_Gyro_Read(sensor, sfg)
+#define Accel_Init LSM6DSOX_Accel_Init
+#define Mag_Init   LIS3MDL_Mag_Init
+#define Therm_Init LSM6DSOX_Therm_Init
+#define Gyro_Init  LSM6DSOX_Gyro_Init
+
+#define Accel_Read LSM6DSOX_Accel_Read
+#define Mag_Read   LIS3MDL_Mag_Read
+#define Therm_Read LSM6DSOX_Therm_Read
+#define Gyro_Read  LSM6DSOX_Gyro_Read
+
+#define MAG_FIFO_SIZE 	1	///< LIS3MDL (mag) has no FIFO so equivalent to 1 element FIFO 
 
 #endif //checking which sensor hardware is used
 

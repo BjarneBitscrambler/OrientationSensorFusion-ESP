@@ -14,15 +14,17 @@
 #ifndef _DRIVER_SENSORS_TYPES_H
 #define _DRIVER_SENSORS_TYPES_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdint.h>
 
-/*******************************************************************************
- * Definitions
- ******************************************************************************/
+// Forward declarations of structures (redefined in sensor_fusion.h, but needed now for pointer definitions)
+typedef struct SensorFusionGlobals SensorFusionGlobals;
+typedef struct PhysicalSensor PhysicalSensor;
+
 /* @brief This enum defines Write flag for the Register Write. */
 typedef enum EWriteFlags
 {

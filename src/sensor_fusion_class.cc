@@ -5,15 +5,17 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 /**
- *  \file sensor_fusion_class.cc
+ *  @file sensor_fusion_class.cc
  *
  *  @brief    An easy-to-use interface to the
  *  NXP Sensor Fusion version 7 library algorithms.
  *
- * It is configured to work with the Adafruit breakout board #3643
+ * Initially written to work with the Adafruit breakout board #3643
  * using the NXP FXOS8700 magnetometer/accelerometer and FXAS21002 gyroscope
- * sensor ICs, but can be modified to work with other sensors having an I2C
- * interface. With additional modification, it can also work with SPI interface
+ * sensor ICs, it can work with other sensors having an I2C interface.
+ * Currently, it also works with Adafruit board #4517 using the
+ * LMS6DSOX + LIS3MDL.  See driver_sensors.h for details.
+ * With additional modification, it can also work with SPI interface
  * sensors.
  *
  *
@@ -64,10 +66,7 @@ SensorFusion::SensorFusion() {
  * @brief Install Sensor in linked list
  * The max length of the list is checked, and if there is room, the 
  * given sensor is inserted at the head of the list.
- * An accelerometer and magnetometer may be combined in one IC - if
- * that is the case then only one call is required to install, 
- * provided the associated *_Init() and *_Read() function reads both
- * the accel & magnetometer data.  The Init() and Read() functions 
+ * The Init() and Read() functions 
  * of each sensor are defined in driver_*.* files.
  * @param sensor_i2c_addr is the I2C bus address of the sensor IC
  * @param sensor_type indicates the type of sensor (e.g. magnetometer)
@@ -96,7 +95,7 @@ bool SensorFusion::InstallSensor(uint8_t sensor_i2c_addr,
     case SensorType::kGyroscope:
       sfg_->installSensor(sfg_, &sensors_[num_sensors_installed_],
                           sensor_i2c_addr, kLoopsPerGyroRead, NULL,
-                          FXAS21002_Init, FXAS21002_Read);
+                          Gyro_Init, Gyro_Read);
       ++num_sensors_installed_;
       break;
     case SensorType::kThermometer:
