@@ -47,10 +47,17 @@ extern "C" {
     #define BOARD_USES_HW_GPIO_NUMBERS
 #endif
 
-//default to using the FXAX2100x + FXOS8700 orientation sensors
+
+//Specify which sensor hardware is used in the compile environment (e.g. platformio.ini),
+// by using compiler defines (e.g. -D SENSOR_FXAX2100x_AND_FXOS8700).
+//Default to using the FXAX2100x + FXOS8700 orientation sensors.
 #if !defined(SENSOR_FXAX2100x_AND_FXOS8700) && !defined(SENSOR_LSM6DSOX_LIS3MDL) 
+    #pragma message("Defaulting to FXAX2100x and FXOS8700 sensor hardware")
     #define SENSOR_FXAX2100x_AND_FXOS8700
+#elif defined(SENSOR_FXAX2100x_AND_FXOS8700) && defined(SENSOR_LSM6DSOX_LIS3MDL)
+    #error "Only specify ONE sensor hardware: SENSOR_FXAX2100x_AND_FXOS8700 OR SENSOR_LSM6DSOX_LIS3MDL"
 #endif
+
 
 #if defined(SENSOR_FXAX2100x_AND_FXOS8700)
 // Specify the specific sensor IC(s) used 
@@ -66,12 +73,6 @@ extern "C" {
 #define BOARD_NAME "ESP32 WROVER"
 #define THIS_BOARD  9   //impersonates a FRDM_K22F. Sent in packets to PC-based App.
 #define THIS_SHIELD 4   //impersonates shield AGMP03. Sent in packets to PC-based App.
-
-// sensor hardware details
-#define GYRO_FIFO_SIZE  32	///< FXAX21000, FXAS21002 have 32 element FIFO
-#define ACCEL_FIFO_SIZE 32	///< FXOS8700 (accel), MMA8652, FXLS8952 all have 32 element FIFO
-#define MAG_FIFO_SIZE 	1	///< FXOS8700 (mag) and MAG3110 have no FIFO so equivalent to 1 element FIFO. For 
-//these ICs we save 6 bytes * 31 = 186 bytes of RAM by setting this FIFO size to 1
 
 // Board LED mappings for ESP32 WROVER-KIT
 #define LOGIC_LED_ON  1U
