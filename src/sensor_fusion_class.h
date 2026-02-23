@@ -29,7 +29,6 @@
 enum class SensorType {
   kMagnetometer,
   kAccelerometer,
-  kMagnetometerAccelerometer,
   kGyroscope,
   kBarometer,
   kThermometer

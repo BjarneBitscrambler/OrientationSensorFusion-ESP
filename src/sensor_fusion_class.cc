@@ -84,19 +84,13 @@ bool SensorFusion::InstallSensor(uint8_t sensor_i2c_addr,
     case SensorType::kAccelerometer:
       sfg_->installSensor(sfg_, &sensors_[num_sensors_installed_],
                           sensor_i2c_addr, kLoopsPerAccelRead, NULL,
-                          FXOS8700_Accel_Init, FXOS8700_Accel_Read);
+                          Accel_Init, Accel_Read);
       ++num_sensors_installed_;
       break;
     case SensorType::kMagnetometer:
       sfg_->installSensor(sfg_, &sensors_[num_sensors_installed_],
                           sensor_i2c_addr, kLoopsPerMagRead, NULL,
-                          FXOS8700_Mag_Init, FXOS8700_Mag_Read);
-      ++num_sensors_installed_;
-      break;
-    case SensorType::kMagnetometerAccelerometer:
-      sfg_->installSensor(sfg_, &sensors_[num_sensors_installed_],
-                          sensor_i2c_addr, kLoopsPerAccelRead, NULL,
-                          FXOS8700_Init, FXOS8700_Read);
+                          Mag_Init, Mag_Read);
       ++num_sensors_installed_;
       break;
     case SensorType::kGyroscope:
@@ -110,7 +104,7 @@ bool SensorFusion::InstallSensor(uint8_t sensor_i2c_addr,
       // but OK.
       sfg_->installSensor(sfg_, &sensors_[num_sensors_installed_],
                           sensor_i2c_addr, kLoopsPerThermRead, NULL,
-                          FXOS8700_Therm_Init, FXOS8700_Therm_Read);
+                          Therm_Init, Therm_Read);
       ++num_sensors_installed_;
       break;
     case SensorType::kBarometer:
