@@ -48,7 +48,12 @@ typedef struct PhysicalSensor PhysicalSensor;
 
 #if defined(SENSOR_FXAX2100x_AND_FXOS8700)
 
-#define Accel_Init(sensor, sfg) FXOS8700_Accel_Init(sensor, sfg)
+#include "driver_sensors_types.h"
+#include "driver_fxos8700_registers.h"
+#include "driver_fxos8700.h"
+#include "driver_fxas21002.h"
+
+/*#define Accel_Init(sensor, sfg) FXOS8700_Accel_Init(sensor, sfg)
 #define Mag_Init(sensor, sfg)   FXOS8700_Mag_Init(sensor, sfg)
 #define Therm_Init(sensor, sfg) FXOS8700_Therm_Init(sensor, sfg)
 #define Gyro_Init(sensor, sfg)  FXAS21002_Gyro_Init(sensor, sfg)
@@ -57,11 +62,17 @@ typedef struct PhysicalSensor PhysicalSensor;
 #define Mag_Read(sensor, sfg)   FXOS8700_Mag_Read(sensor, sfg)
 #define Therm_Read(sensor, sfg) FXOS8700_Therm_Read(sensor, sfg)
 #define Gyro_Read(sensor, sfg)  FXAS21002_Gyro_Read(sensor, sfg)
+*/
+#define Accel_Init FXOS8700_Accel_Init
+#define Mag_Init   FXOS8700_Mag_Init
+#define Therm_Init FXOS8700_Therm_Init
+#define Gyro_Init  FXAS21002_Gyro_Init
 
-#include "driver_sensors_types.h"
-#include "driver_fxos8700_registers.h"
-#include "driver_fxos8700.h"
-#include "driver_fxas21002.h"
+#define Accel_Read FXOS8700_Accel_Read
+#define Mag_Read   FXOS8700_Mag_Read
+#define Therm_Read FXOS8700_Therm_Read
+#define Gyro_Read  FXAS21002_Gyro_Read
+
 
 // sensor hardware details
 #define GYRO_FIFO_SIZE  32	///< FXAX21000, FXAS21002 have 32 element FIFO
