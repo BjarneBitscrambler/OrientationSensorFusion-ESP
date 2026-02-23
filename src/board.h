@@ -58,16 +58,6 @@ extern "C" {
     #error "Only specify ONE sensor hardware: SENSOR_FXAX2100x_AND_FXOS8700 OR SENSOR_LSM6DSOX_LIS3MDL"
 #endif
 
-
-#if defined(SENSOR_FXAX2100x_AND_FXOS8700)
-// Specify the specific sensor IC(s) used 
-#include "sensors/driver_fxos8700.h"
-#include "sensors/driver_fxas21002.h"
-#elif defined(SENSOR_LSM6DSOX_LIS3MDL)
-#include "sensors/driver_lsm6dsox.h"
-#include "sensors/driver_lis3mdl.h"
-#endif
-
 // Board name and type, passed in packets to NXP's Sensor Toolbox.  
 // These fields are only informational. 
 #define BOARD_NAME "ESP32 WROVER"

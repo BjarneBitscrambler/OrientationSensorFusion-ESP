@@ -16,7 +16,6 @@
 #include "../fusion/sensor_fusion.h"              // Sensor fusion structures and types
 #include "driver_fxos8700.h"            // FXOS8700 hardware interface
 #include "driver_fxos8700_registers.h"  // describes the FXOS8700 register definitions and bit masks
-#include "driver_sensors.h"             // prototypes for *_Init() and *_Read() methods
 #include "../fusion/hal_i2c.h"                    // I2C interface methods
 
 

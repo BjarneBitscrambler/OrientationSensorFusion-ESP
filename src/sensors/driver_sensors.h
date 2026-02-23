@@ -63,21 +63,6 @@ typedef struct PhysicalSensor PhysicalSensor;
 #include "driver_fxos8700.h"
 #include "driver_fxas21002.h"
 
-int8_t FXOS8700_Accel_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXOS8700_Mag_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXOS8700_Therm_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXOS8700_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXAS21002_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-
-int8_t FXOS8700_Accel_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXOS8700_Mag_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXOS8700_Therm_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXOS8700_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXAS21002_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-
-int8_t FXOS8700_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t FXAS21002_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-
 // sensor hardware details
 #define GYRO_FIFO_SIZE  32	///< FXAX21000, FXAS21002 have 32 element FIFO
 #define ACCEL_FIFO_SIZE 32	///< FXOS8700 (accel), MMA8652, FXLS8952 all have 32 element FIFO
