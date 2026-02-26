@@ -92,7 +92,9 @@ extern "C" {
 
 /// @name SensorParameters
 // The Output Data Rates (ODR) are set by the calls to *_Init() for each physical sensor.
-// If a sensor has a FIFO, then it can be read once/fusion cycle; if not, then read more often
+// If a sensor generates data faster than the fusion rate, then
+// multiple data samples can be stored in the software FIFO. If a sensor has a hardware FIFO,
+// it can be read once/fusion cycle; otherwise it should be read >= fusion rate.
 #define GYRO_ODR_HZ     104 ///< (int) requested gyroscope ODR Hz
 #define ACCEL_ODR_HZ    104 ///< (int) requested accelerometer ODR Hz (overrides MAG_ODR_HZ for FXOS8700)
 #define MAG_ODR_HZ      155 ///< (int) requested magnetometer ODR Hz (overridden by ACCEL_ODR_HZ for FXOS8700)

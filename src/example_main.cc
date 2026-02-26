@@ -43,12 +43,14 @@
   #define PIN_I2C_SCL   (14)  // will use default Arduino pins.
 #endif
 #ifdef ESP32
-  #define PIN_I2C_SDA   (-1)  //Adjust to your board. A value of -1
-  #define PIN_I2C_SCL   (-1)  // will use default Arduino pins.
+  #define PIN_I2C_SDA   (11)  //Adjust to your board. A value of -1
+  #define PIN_I2C_SCL   (12)  // will use default Arduino pins.
 #endif
 // sensor hardware details       
-#define BOARD_ACCEL_MAG_I2C_ADDR    (0x1F) //I2C address on Adafruit breakout board
-#define BOARD_GYRO_I2C_ADDR         (0x21) //I2C address on Adafruit breakout board
+#define BOARD_ACCEL_I2C_ADDR  (0x6A) //I2C address (0x6A Adafruit 4517; 0x1F Adafruit 3643)
+#define BOARD_MAG_I2C_ADDR    (0x1C) //I2C address (0x1C Adafruit 4517; 0x1F Adafruit 3643)
+#define BOARD_GYRO_I2C_ADDR   (0x6A) //I2C address (0x6A Adafruit 4517; 0x21 Adafruit 3643)
+#define BOARD_THERM_I2C_ADDR  (0x6A) //I2C address (0x6A Adafruit 4517; 0x1F Adafruit 3643)
 
 //pin that can be twiddled for debugging
 #ifdef ESP8266
@@ -155,15 +157,15 @@ void setup() {
 #endif
 
   // connect to the sensors.  Accelerometer and magnetometer are in same IC.
-  if(! sensor_fusion->InstallSensor(BOARD_ACCEL_MAG_I2C_ADDR,
+  if(! sensor_fusion->InstallSensor(BOARD_MAG_I2C_ADDR,
                                SensorType::kMagnetometer) ) {
     Serial.println("trouble installing Magnetometer");
   }
-  if(! sensor_fusion->InstallSensor(BOARD_ACCEL_MAG_I2C_ADDR,
+  if(! sensor_fusion->InstallSensor(BOARD_ACCEL_I2C_ADDR,
                                SensorType::kAccelerometer) ) {
     Serial.println("trouble installing Accelerometer");
   }
-  if(! sensor_fusion->InstallSensor(BOARD_ACCEL_MAG_I2C_ADDR,
+  if(! sensor_fusion->InstallSensor(BOARD_THERM_I2C_ADDR,
                                SensorType::kThermometer) ) {
     Serial.println("trouble installing Thermometer");
   }
