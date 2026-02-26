@@ -22,13 +22,13 @@
 const registerwritelist_t   LIS3MDL_Initialization[] =
 {
     // CTRL_REG1 (0x20): Set Output Data Rate (ODR), XY-axis performance mode, and enable Temp sensor.
-    { LIS3MDL_CTRL_REG1, 
-        lis3mdl_uhpm_155 | lis3mdl_temp_on | lis3mdl_selftest_off,
-        0x00 
+    { .writeTo =    LIS3MDL_CTRL_REG1, 
+      .value =      lis3mdl_uhpm_155 | lis3mdl_temp_on | lis3mdl_selftest_off,
+      .mask =       0x00 
     }, 
 
     // CTRL_REG2 (0x21): Set Full-Scale Range
-    { LIS3MDL_CTRL_REG2, 
+    {   LIS3MDL_CTRL_REG2, 
         lis3mdl_scale_4G, 
         0x00 
     },
@@ -36,14 +36,20 @@ const registerwritelist_t   LIS3MDL_Initialization[] =
     #define UT_PER_GAUSS            100     //conversion factor, since rest of code works in T and uT
 
     // CTRL_REG3 (0x22): Set Operating Mode (Continuous-conversion, Single-conversion, or Power-down).
-    { LIS3MDL_CTRL_REG3, 
+    {   LIS3MDL_CTRL_REG3, 
         lis3mdl_mode_continuous, 
         0x00 
     },   
 
     // CTRL_REG4 (0x23): Set Z-axis performance mode and Endianness. 
-    { LIS3MDL_CTRL_REG4, 
+    {   LIS3MDL_CTRL_REG4, 
         lis3mdl_zmode_ultrahigh | lis3mdl_ble_lsblow, 
+        0x00 
+    },
+
+   // CTRL_REG5 (0x24): Set Block Data Update mode so LSb and MSb updated synchronously. 
+    {   LIS3MDL_CTRL_REG5, 
+        lis3mdl_ctrlreg5_bdu, 
         0x00 
     },
 

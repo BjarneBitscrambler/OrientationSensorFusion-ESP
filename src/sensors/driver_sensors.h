@@ -60,7 +60,16 @@ extern "C" {
 #define Therm_Read FXOS8700_Therm_Read
 #define Gyro_Read  FXAS21002_Read
 
-// sensor hardware details
+/// @name SensorParameters
+// The Output Data Rates (ODR) are set by the calls to *_Init() for each physical sensor.
+// If a sensor has a FIFO, then it can be read once/fusion cycle; if not, then read more often
+#define GYRO_ODR_HZ     400 ///< (int) requested gyroscope ODR Hz
+#define ACCEL_ODR_HZ    200 ///< (int) requested accelerometer ODR Hz (overrides MAG_ODR_HZ for FXOS8700)
+#define MAG_ODR_HZ      200 ///< (int) requested magnetometer ODR Hz (overridden by ACCEL_ODR_HZ for FXOS8700)
+
+// sensor hardware details. The software FIFO is set to match the FIFO size defined here. It is possible
+// to set a smaller software FIFO size (minimum is ODR / FUSION_HZ), but there may be extra accumulated data
+// in the IC's FIFO that is lost/overrun.
 #define GYRO_FIFO_SIZE  32	///< FXAX21000, FXAS21002 have 32 element FIFO
 #define ACCEL_FIFO_SIZE 32	///< FXOS8700 (accel), MMA8652, FXLS8952 all have 32 element FIFO
 #define MAG_FIFO_SIZE 	1	///< FXOS8700 (mag) and MAG3110 have no FIFO so equivalent to 1 element FIFO. For 
@@ -81,7 +90,19 @@ extern "C" {
 #define Therm_Read LSM6DSOX_Therm_Read
 #define Gyro_Read  LSM6DSOX_Gyro_Read
 
-#define MAG_FIFO_SIZE 	1	///< LIS3MDL (mag) has no FIFO so equivalent to 1 element FIFO 
+/// @name SensorParameters
+// The Output Data Rates (ODR) are set by the calls to *_Init() for each physical sensor.
+// If a sensor has a FIFO, then it can be read once/fusion cycle; if not, then read more often
+#define GYRO_ODR_HZ     104 ///< (int) requested gyroscope ODR Hz
+#define ACCEL_ODR_HZ    104 ///< (int) requested accelerometer ODR Hz (overrides MAG_ODR_HZ for FXOS8700)
+#define MAG_ODR_HZ      155 ///< (int) requested magnetometer ODR Hz (overridden by ACCEL_ODR_HZ for FXOS8700)
+
+// sensor hardware details. The software FIFO is set to match the FIFO size defined here. It is possible
+// to set a smaller software FIFO size (minimum is ODR / FUSION_HZ), but there may be extra accumulated data
+// in the IC's FIFO that is lost/overrun.
+#define GYRO_FIFO_SIZE  (GYRO_ODR_HZ / FUSION_HZ + 1)	///< not using hardware FIFO on LSM6DSOX
+#define ACCEL_FIFO_SIZE (ACCEL_ODR_HZ / FUSION_HZ + 1)	///< not using hardware FIFO on LSM6DSOX
+#define MAG_FIFO_SIZE 	(MAG_ODR_HZ / FUSION_HZ + 1) ///< LIS3MDL (mag) has no hardware FIFO so minimum is  MAG_ODR_HZ / FUSION_HZ
 
 #endif //checking which sensor hardware is used
 

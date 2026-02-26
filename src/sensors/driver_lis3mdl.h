@@ -55,6 +55,7 @@ enum {
      LIS3MDL_CTRL_REG2          = 0x21,
      LIS3MDL_CTRL_REG3          = 0x22,
      LIS3MDL_CTRL_REG4          = 0x23,
+     LIS3MDL_CTRL_REG5          = 0x24,
      LIS3MDL_STATUS_REG         = 0x27,
      LIS3MDL_OUT_X_L            = 0x28, //X axis data low byte, two's-complement
      LIS3MDL_OUT_X_H            = 0x29, //X axis data high byte, two's-complement
@@ -93,8 +94,8 @@ typedef enum {
  * Values are for CTRL_REG1 (TEMP_EN,OM1,OM0,DO2,DO1,DO0,FAST_ODR,ST), bit b7 
  */
 typedef enum {
-    lis3mdl_temp_off   = 0x00, // low power mode at 0.625 Hz
-    lis3mdl_temp_on    = 0x80, // low power mode at 1.25 Hz
+    lis3mdl_temp_off   = 0x00, 
+    lis3mdl_temp_on    = 0x80, 
 } lis3mdl_temp_t;
 
 /**
@@ -168,6 +169,17 @@ typedef enum {
     lis3mdl_ble_lsblow  = 0x00,     // default
     lis3mdl_ble_lsbhigh = 0x02,     
 } lis3mdl_ble_t;
+
+/**
+ * @brief   CTRL_REG5 register settings
+ * CTRL_REG5 (FAST_READ,BDU,0,0,0,0,0,0)
+ * FAST_READ set to 1 to enable reading only high byte of data. Default 0.
+ * BDU Block Data Update set to 1 for output registers not updated until MSb and LSb have been read. Default 0
+ */
+typedef enum {
+    lis3mdl_ctrlreg5_fastread  = 0x80,     //b7=1 to enable reading only high byte of data. Default 0.
+    lis3mdl_ctrlreg5_bdu = 0x40,     //b6=1 for output registers not updated until MSb and LSb have been read
+} lis3mdl_ctrlreg5_t;
 
 /**
  * @brief   Status register bit positions 

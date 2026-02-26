@@ -63,7 +63,7 @@ void initSensorFusionGlobals(SensorFusionGlobals *sfg,
                 F_USING_GYRO            |
                 F_USING_PRESSURE        |
                 F_USING_TEMPERATURE     |
-                F_ALL_SENSORS           |       // refers to all applicable sensor types for the given physical unit
+//                F_ALL_SENSORS           |       // refers to all applicable sensor types for the given physical unit
                 F_1DOF_P_BASIC	        |       // 1DOF pressure (altitude) and temperature: (pressure)
                 F_3DOF_G_BASIC	        |	// 3DOF accel tilt: (accel)
                 F_3DOF_B_BASIC	        |	// 3DOF mag eCompass (vehicle): (mag)

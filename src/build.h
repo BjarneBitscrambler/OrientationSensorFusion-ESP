@@ -49,9 +49,10 @@ extern "C" {
 #define F_USING_MAG         0x0002 ///< nominally 0x0002 if an magnetometer  is to be used, 0x0000 otherwise
 #define F_USING_GYRO        0x0004 ///< nominally 0x0004 if a gyro           is to be used, 0x0000 otherwise
 #define F_USING_PRESSURE    0x0000 ///< nominally 0x0008 if altimeter        is to be used, 0x0000 otherwise
-#define F_USING_TEMPERATURE 0x0000 ///< nominally 0x0010 if temp sensor      is to be used, 0x0000 otherwise
-#define F_ALL_SENSORS       0x001F ///< refers to all applicable sensor types for the given physical unit
+#define F_USING_TEMPERATURE 0x0010 ///< nominally 0x0010 if temp sensor      is to be used, 0x0000 otherwise
+//#define F_ALL_SENSORS       0x001F ///< refers to all applicable sensor types for the given physical unit
 ///@}
+
 /// @name FusionSelectionBitFields
 /// These bit-field values are used to declare which sensor fusion algorithms are used
 /// in the application.  You can use more than one, although they all run from the same data.
@@ -73,16 +74,18 @@ extern "C" {
     0x4000 ///< 9DOF accel, mag and gyro algorithm selector                  - 0x4000 to include, 0x0000 otherwise
 ///@}
 
-/// @name SensorParameters
-// The Output Data Rates (ODR) are set by the calls to *_Init() for each physical sensor.
-// If a sensor has a FIFO, then it can be read once/fusion cycle; if not, then read more often
-#define GYRO_ODR_HZ     400 ///< (int) requested gyroscope ODR Hz
-#define ACCEL_ODR_HZ    200 ///< (int) requested accelerometer ODR Hz (overrides MAG_ODR_HZ for FXOS8700)
-#define MAG_ODR_HZ      200 ///< (int) requested magnetometer ODR Hz (overridden by ACCEL_ODR_HZ for FXOS8700)
-#define LOOP_RATE_HZ     40 //adjust according to the size of the FIFOs on sensors. If no FIFO (e.g. 
+/// @name Rates of Fusion and Sensor Reads
+/// set the rates at which the main loop() calls ReadSensors and RunFusion. It is possible to have multiple
+/// reads of a sensor for each run of the fusion algorithm, because the Output Data Rates (ODR) of each
+/// sensor are unlikely to be identical, and are usually faster than fusion data is needed. If a sensor IC
+/// has a hardware FIFO, then one may have only one read per fusion, but that single read will retrieve 
+/// multiple data points which are then stored in the sensor's software FIFO until fusion.
+///@{
+#define LOOP_RATE_HZ    40 //adjust according to the size of the FIFOs on sensors. If no FIFO (e.g. 
 //FXOS8700 magnetometer) and don't want to skip any readings then need to read at same rate as ODR. 
 //If FIFO exists or willing to skip readings, then usually set same as FUSION_HZ. See also sensor_fusion_class.h
 #define FUSION_HZ       40  ///< (int) rate of fusion algorithm execution
+///@}
 
 // Output data rate parameters
 #define MAXPACKETRATEHZ 40  //max rate at which data packets can practically be sent (e.g. to Fusion Toolbox)
