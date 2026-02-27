@@ -15,6 +15,7 @@
 #include <Arduino.h>
 #include <sstream>
 #include <string>
+#include <esp_log.h>
 
 #ifdef ESP8266
   #include <ESP8266WiFi.h>
@@ -43,8 +44,8 @@
   #define PIN_I2C_SCL   (14)  // will use default Arduino pins.
 #endif
 #ifdef ESP32
-  #define PIN_I2C_SDA   (11)  //Adjust to your board. A value of -1
-  #define PIN_I2C_SCL   (12)  // will use default Arduino pins.
+  #define PIN_I2C_SDA   (11)  //Adjust to your board. A value of -1 (11) for Nano
+  #define PIN_I2C_SCL   (12)  // will use default Arduino pins.     (12) for nano
 #endif
 // sensor hardware details       
 #define BOARD_ACCEL_I2C_ADDR  (0x6A) //I2C address (0x6A Adafruit 4517; 0x1F Adafruit 3643)
@@ -95,10 +96,8 @@ void setup() {
 
   pinMode(DEBUG_OUTPUT_PIN, GPIO_MODE_OUTPUT);
 
-  Serial.begin(BOARD_DEBUG_UART_BAUDRATE);  // initialize serial UART
-  // delay not necessary - gives time to open a serial monitor
-  delay(1000);
-  Serial.println("Serial port configured.");
+  esp_log_level_set("*", ESP_LOG_DEBUG);  //inits serial port, sets up logging
+  ESP_LOGI("setup()","Serial port configured.");
 
   // wifi config - using ESP as Access Point (AP)
 #if F_USE_WIRELESS_UART
@@ -137,49 +136,49 @@ void setup() {
 #if F_USE_WIRELESS_UART && F_USE_WIRED_UART
   // setup IO subsystem to use both Serial and WiFi
   if (!(sensor_fusion->InitializeInputOutputSubsystem(&Serial, &tcp_client))) {
-    Serial.println("trouble initting Output and Control system");
+    ESP_LOGE("setup()","trouble initting Output and Control system: wireless and wired UART");
   }
 #elif F_USE_WIRED_UART
   // setup IO subsystem to use only Serial port
   if (!(sensor_fusion->InitializeInputOutputSubsystem(&Serial, NULL))) {
-    Serial.println("trouble initting Output and Control system");
+    ESP_LOGE("setup()","trouble initting Output and Control system: wired UART");
   }
 #elif F_USE_WIRELESS_UART
   // setup IO subsystem to use only WiFi
   if (!(sensor_fusion->InitializeInputOutputSubsystem(NULL, &tcp_client))) {
-    Serial.println("trouble initting Output and Control system");
+    ESP_LOGE("setup()","trouble initting Output and Control system: wireless UART");
   }
 #else
   // setup IO subsystem for no output
   if (!(sensor_fusion->InitializeInputOutputSubsystem(NULL, NULL))) {
-    Serial.println("trouble initting Output and Control system");
+    ESP_LOGE("setup()","trouble initting Output and Control system: zero output");
   }
 #endif
 
   // connect to the sensors.  Accelerometer and magnetometer are in same IC.
   if(! sensor_fusion->InstallSensor(BOARD_MAG_I2C_ADDR,
                                SensorType::kMagnetometer) ) {
-    Serial.println("trouble installing Magnetometer");
+    ESP_LOGE("setup()","trouble installing Magnetometer");
   }
   if(! sensor_fusion->InstallSensor(BOARD_ACCEL_I2C_ADDR,
                                SensorType::kAccelerometer) ) {
-    Serial.println("trouble installing Accelerometer");
+    ESP_LOGE("setup()","trouble installing Accelerometer");
   }
   if(! sensor_fusion->InstallSensor(BOARD_THERM_I2C_ADDR,
                                SensorType::kThermometer) ) {
-    Serial.println("trouble installing Thermometer");
+    ESP_LOGE("setup()","trouble installing Thermometer");
   }
   if(! sensor_fusion->InstallSensor(BOARD_GYRO_I2C_ADDR,
                                SensorType::kGyroscope) ) {
-    Serial.println("trouble installing Gyroscope");
+    ESP_LOGE("setup()","trouble installing Gyroscope");
   }
-  Serial.println("Sensors connected");
+  ESP_LOGI("setup()","Sensors connected");
 
   sensor_fusion->Begin(PIN_I2C_SDA, PIN_I2C_SCL);
   if(sensor_fusion->GetSystemStatus() == NORMAL)
-  { Serial.println("Fusion Engine Ready");
+  { ESP_LOGI("setup()","Fusion Engine Ready");
   }else
-  { Serial.printf("Fusion status: %d\n",(int)sensor_fusion->GetSystemStatus());
+  { ESP_LOGW("setup()","Fusion status: %d\n",(int)sensor_fusion->GetSystemStatus());
     //may not see this if Begin() hangs, which it does when non-I2C pins chosen.
     //If pins are I2C-capable, but no physical sensor attached, then will see this error.
   }
@@ -244,8 +243,7 @@ void loop() {
   if ((millis() - last_print_time) > kPrintIntervalMs) {
     last_print_time += kPrintIntervalMs;
     snprintf(output_str, MAX_LEN_OUT_BUF,
-            "%lu: Heading %03.0f, Pitch %+4.0f, Roll %+4.0f, Temp %3.0fC, TurnRate %+5.0f, B %3.0f uT, Inc %3.0f deg, Status %d",
-            millis(), 
+            "Heading %03.0f, Pitch %+4.0f, Roll %+4.0f, Temp %3.0fC, TurnRate %+5.0f, B %3.0f uT, Inc %3.0f deg, Status %d",
             sensor_fusion->GetHeadingDegrees(),
             sensor_fusion->GetPitchDegrees(),
             sensor_fusion->GetRollDegrees(),
@@ -256,7 +254,7 @@ void loop() {
             sensor_fusion->GetSystemStatus()
    );
 
-    Serial.println( output_str ); //simplest way to see library output
+    ESP_LOGI("main()", "%s", output_str ); //simplest way to see library output
 
     /**
      * If preferred, the library's input/output subsystem can be used

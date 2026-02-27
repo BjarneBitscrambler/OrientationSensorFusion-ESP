@@ -11,6 +11,10 @@
     Actual I2C interface functions are in hal_i2c files.
 */
 
+#include <esp_log.h>
+
+static const char* TAG = "driver_lms6dsox";
+
 #include "../fusion/hal_i2c.h"          // I2C interface methods
 #include "../fusion/sensor_fusion.h"    // Sensor fusion structures and types
 #include "driver_lsm6dsox.h"            // LSM6DSOX hardware interface
@@ -84,6 +88,7 @@ int8_t LSM6DSOX_Gyro_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg)
         sfg->Gyro.iFIFOCount=0;
         sfg->Gyro.isEnabled = true;
     }
+    ESP_LOGI( TAG, "Ran Gyro_Init()" );
     return status;
 }//end LSM6DSOX_Gyro_Init()
 
@@ -105,6 +110,7 @@ int8_t LSM6DSOX_Accel_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg)
         sfg->Accel.iFIFOCount=0;
         sfg->Accel.isEnabled = true;
     }
+    ESP_LOGI( TAG, "Ran Accel_Init()" );
     return status;
 
 }//end LSM6DSOX_Accel_Init()
@@ -122,6 +128,7 @@ int8_t LSM6DSOX_Therm_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg)
     if( status == SENSOR_ERROR_NONE)
     {   sensor->isInitialized = F_USING_TEMPERATURE;
     }
+    ESP_LOGI( TAG, "Ran Therm_Init()" );
     return status;
 
 }//end LSM6DSOX_Therm_Init()
@@ -170,6 +177,7 @@ int8_t LSM6DSOX_All_Init( PhysicalSensor *sensor, SensorFusionGlobals *sfg, bool
         }
         status = Sensor_I2C_Write_List(&sensor->deviceInfo, sensor->addr, LSM6DSOX_Initialization );
         firstTimeRun = false;
+        ESP_LOGI( TAG, "Ran LSM6DSOC_All_Init()" );
     }
     return (status);
 }//end LSM6DSOX_All_Init()
@@ -243,6 +251,7 @@ int8_t LSM6DSOX_Therm_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg)
 {
     uint8_t                     I2C_Buffer[2];  // I2C read buffer
     int16_t                     sample;
+    static int16_t loops = 0;
 
     if(!(sensor->isInitialized & F_USING_TEMPERATURE)) 
     {   return SENSOR_ERROR_INIT;
@@ -253,6 +262,14 @@ int8_t LSM6DSOX_Therm_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg)
     sample = (I2C_Buffer[1] << 8) | (I2C_Buffer[0]);
     //convert raw reading to Celcius
     sfg->Temp.temperatureC = (float)sample / (float)LSM6DSOX_COUNTSPERDEGREEC + (float)LSM6DSOX_DEGREECOFFSET;
+
+    loops++;
+    if( loops % 40 == 0)
+    {   ESP_LOGI( "driver_lsm6dsox.h", 
+            "Temperature: %d Lowbyte: 0x%x HighByte: 0x%x",
+            sfg->Temp.temperatureC, I2C_Buffer[0], I2C_Buffer[1]
+        );
+    }
 
     return SENSOR_ERROR_NONE;
 }//end LSM6DSOX_Therm_Read()
