@@ -44,14 +44,14 @@
   #define PIN_I2C_SCL   (14)  // will use default Arduino pins.
 #endif
 #ifdef ESP32
-  #define PIN_I2C_SDA   (11)  //Adjust to your board. A value of -1 (11) for Nano
-  #define PIN_I2C_SCL   (12)  // will use default Arduino pins.     (12) for nano
+  #define PIN_I2C_SDA   (23)  //Adjust to your board. A value of -1 (11) for Nano (23) for ESP32-WROVER
+  #define PIN_I2C_SCL   (25)  // will use default Arduino pins.     (12) for nano (25) for ESP32-WROVER
 #endif
 // sensor hardware details       
-#define BOARD_ACCEL_I2C_ADDR  (0x6A) //I2C address (0x6A Adafruit 4517; 0x1F Adafruit 3643)
-#define BOARD_MAG_I2C_ADDR    (0x1C) //I2C address (0x1C Adafruit 4517; 0x1F Adafruit 3643)
-#define BOARD_GYRO_I2C_ADDR   (0x6A) //I2C address (0x6A Adafruit 4517; 0x21 Adafruit 3643)
-#define BOARD_THERM_I2C_ADDR  (0x6A) //I2C address (0x6A Adafruit 4517; 0x1F Adafruit 3643)
+#define BOARD_ACCEL_I2C_ADDR  (0x1f) //I2C address (0x6A Adafruit 4517; 0x1F Adafruit 3643)
+#define BOARD_MAG_I2C_ADDR    (0x1f) //I2C address (0x1C Adafruit 4517; 0x1F Adafruit 3643)
+#define BOARD_GYRO_I2C_ADDR   (0x21) //I2C address (0x6A Adafruit 4517; 0x21 Adafruit 3643)
+#define BOARD_THERM_I2C_ADDR  (0x1f) //I2C address (0x6A Adafruit 4517; 0x1F Adafruit 3643)
 
 //pin that can be twiddled for debugging
 #ifdef ESP8266
