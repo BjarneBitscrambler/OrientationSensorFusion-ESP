@@ -100,8 +100,8 @@ int8_t LIS3MDL_Mag_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
     sensor->isInitialized = F_USING_MAG;
     sfg->Mag.isEnabled = true;
     sfg->Mag.iCountsPeruT = (int) (LIS3MDL_COUNTSPERGAUSS / UT_PER_GAUSS);
-    sfg->Mag.fCountsPeruT = (float) (LIS3MDL_COUNTSPERGAUSS / UT_PER_GAUSS);
-    sfg->Mag.fuTPerCount = UT_PER_GAUSS / LIS3MDL_COUNTSPERGAUSS;
+    sfg->Mag.fCountsPeruT = (float)LIS3MDL_COUNTSPERGAUSS / (float)UT_PER_GAUSS;
+    sfg->Mag.fuTPerCount = (float)UT_PER_GAUSS / (float)LIS3MDL_COUNTSPERGAUSS;
        
     ESP_LOGI("driver_lis3mdl", "Magnetometer initialized");
  
