@@ -11,17 +11,13 @@
     Actual I2C interface functions are in hal_i2c files.
 */
 
+#define LOG_LOCAL_LEVEL ESP_LOG_NONE
 #include <esp_log.h>
-
 static const char* TAG = "driver_lms6dsox";
 
 #include "../fusion/hal_i2c.h"          // I2C interface methods
 #include "../fusion/sensor_fusion.h"    // Sensor fusion structures and types
 #include "driver_lsm6dsox.h"            // LSM6DSOX hardware interface
-
-int8_t LSM6DSOX_Gyro_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t LSM6DSOX_Accel_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
-int8_t LSM6DSOX_Therm_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 
 #define LSM6DSOX_BOOT_TIME_MS   11  //ms. Spec sheet says 10ms - allow a bit longer.
 #define LSM6DSOX_RESET_TIME_MS   1  //ms Spec sheet says 50us. 1 ms is min with the delay() call.
@@ -59,7 +55,7 @@ const registerwritelist_t   LSM6DSOX_Initialization[] =
     }, 
     //Set Block Data Update
     { .writeTo =    LSM6DSOX_CTRL3_C, 
-      .value =      lsm6dsox_ctrl3c_bdu,
+      .value =      lsm6dsox_ctrl3c_bdu | lsm6dsox_ctrl3c_ifinc,
       .mask =       0x00 
     }, 
     //Enable wraparound when reading output data registers
@@ -78,8 +74,8 @@ const registerwritelist_t   LSM6DSOX_Initialization[] =
 int8_t LSM6DSOX_Gyro_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg)
 {
     int32_t status;
-
-    status = LSM6DSOX_All_Init( sensor, sfg, false );
+    ESP_LOGI( TAG, "Start Gyro_Init()" );
+    status = LSM6DSOX_All_Init( sensor, sfg, true );
     if( status == SENSOR_ERROR_NONE)
     {   sensor->isInitialized = F_USING_GYRO;
         sfg->Gyro.fDegPerSecPerCount = (float) LSM6DSOX_MILLIDPSPERCOUNT / 1000.0;
@@ -101,7 +97,7 @@ int8_t LSM6DSOX_Accel_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg)
 {
    int32_t status;
 
-    status = LSM6DSOX_All_Init( sensor, sfg, false );
+    status = LSM6DSOX_All_Init( sensor, sfg, true );
     if( status == SENSOR_ERROR_NONE)
     {   sensor->isInitialized = F_USING_ACCEL;
         sfg->Accel.iCountsPerg = (int) (1000.0 / LSM6DSOX_MILLIGPERCOUNT);
@@ -124,7 +120,7 @@ int8_t LSM6DSOX_Therm_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg)
 {
    int32_t status;
 
-    status = LSM6DSOX_All_Init( sensor, sfg, false );
+    status = LSM6DSOX_All_Init( sensor, sfg, true );
     if( status == SENSOR_ERROR_NONE)
     {   sensor->isInitialized = F_USING_TEMPERATURE;
     }
@@ -148,16 +144,19 @@ int8_t LSM6DSOX_All_Init( PhysicalSensor *sensor, SensorFusionGlobals *sfg, bool
     int32_t status;
     uint8_t reg;
 
+    ESP_LOGV(TAG, "start All_Init");
     if( firstTimeRun || force )
     {   delay(LSM6DSOX_BOOT_TIME_MS); //How long device takes to power-up.  Unlikely that ESP32 is ready before LSM6DSOX
         //Check device ID
         status = Sensor_I2C_Read_Register(&sensor->deviceInfo, sensor->addr, LSM6DSOX_WHOAMI, 1, &reg);
         if (status==SENSOR_ERROR_NONE) 
         {   if (reg != LSM6DSOX_WHOAMI_RESPONSE) 
-            {  return SENSOR_ERROR_INIT;  // The whoAmI did not match
+            {   ESP_LOGE(TAG, "WhoAmI response was %x: expected %x", reg, LSM6DSOX_WHOAMI_RESPONSE);
+                return SENSOR_ERROR_INIT;  // The whoAmI did not match
             }
         }else 
-        {  // whoAmI will retain default value of zero
+        {   ESP_LOGE(TAG, "Error reading WhoAmI for sensor");
+            // whoAmI will retain default value of zero
             // return with error
             return status;
         }
@@ -165,19 +164,25 @@ int8_t LSM6DSOX_All_Init( PhysicalSensor *sensor, SensorFusionGlobals *sfg, bool
         //reboot then rest the LSM6DSOX. This sets registers to default and reloads
         //trimming values from memory. See ST's app note AN5272
         if( !I2CWriteByte(sensor->addr, LSM6DSOX_CTRL3_C, lsm6dsox_ctrl3c_reboot) )
-        {  return SENSOR_ERROR_INIT;
+        {   ESP_LOGE(TAG, "Error writing Reboot command to sensor");
+            return SENSOR_ERROR_INIT;
         }
         delay(LSM6DSOX_BOOT_TIME_MS);   //wait >10 ms per ST's AppNote AN5272
         if( !I2CWriteByte(sensor->addr, LSM6DSOX_CTRL3_C, lsm6dsox_ctrl3c_swreset) )
-        {  return SENSOR_ERROR_INIT;
+        {   ESP_LOGE(TAG, "Error writing Reset command to sensor");
+            return SENSOR_ERROR_INIT;
         }
         delay(LSM6DSOX_RESET_TIME_MS); //register reset takes 50us per AppNote AN5272. Reset bit should == 0 when complete.
         if( !I2CReadByte(sensor->addr, LSM6DSOX_CTRL3_C, &reg) || ((reg & lsm6dsox_ctrl3c_swreset) != 0x00) )
-        {   return SENSOR_ERROR_INIT;
+        {   ESP_LOGE(TAG, "Error confirming Reset command completed");
+            return SENSOR_ERROR_INIT;
         }
         status = Sensor_I2C_Write_List(&sensor->deviceInfo, sensor->addr, LSM6DSOX_Initialization );
-        firstTimeRun = false;
-        ESP_LOGI( TAG, "Ran LSM6DSOC_All_Init()" );
+        firstTimeRun = false;   //if it makes it this far, then it was successful
+        ESP_LOGI( TAG, "Done LSM6DSOC_All_Init()" );
+    }else
+    {   //not the first time run, and not forced, and it was successful
+        status = SENSOR_ERROR_NONE;
     }
     return (status);
 }//end LSM6DSOX_All_Init()
@@ -253,12 +258,16 @@ int8_t LSM6DSOX_Therm_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg)
     int16_t                     sample;
     static int16_t loops = 0;
 
+//       ESP_LOGI(TAG, "start Therm Read");
+
     if(!(sensor->isInitialized & F_USING_TEMPERATURE)) 
     {   return SENSOR_ERROR_INIT;
     }
-    if( !I2CReadBytes(sensor->addr, LSM6DSOX_OUT_TEMP_L, I2C_Buffer, 2) ) 
+
+    if( !I2CReadBytes(sensor->addr, LSM6DSOX_OUT_TEMP_L, &(I2C_Buffer[0]), 2) ) 
     {   return SENSOR_ERROR_READ;
     }
+
     sample = (I2C_Buffer[1] << 8) | (I2C_Buffer[0]);
     //convert raw reading to Celcius
     sfg->Temp.temperatureC = (float)sample / (float)LSM6DSOX_COUNTSPERDEGREEC + (float)LSM6DSOX_DEGREECOFFSET;
@@ -266,10 +275,12 @@ int8_t LSM6DSOX_Therm_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg)
     loops++;
     if( loops % 40 == 0)
     {   ESP_LOGI( "driver_lsm6dsox.h", 
-            "Temperature: %d Lowbyte: 0x%x HighByte: 0x%x",
-            sfg->Temp.temperatureC, I2C_Buffer[0], I2C_Buffer[1]
+            "Temperature: %f Lowbyte: 0x%x HighByte: 0x%x",
+            sfg->Temp.temperatureC, (uint8_t)I2C_Buffer[0], (uint8_t)I2C_Buffer[1]
         );
     }
+       ESP_LOGI(TAG,  "Temperature: %f Lowbyte: 0x%x HighByte: 0x%x",
+            sfg->Temp.temperatureC, (uint8_t)I2C_Buffer[0], (uint8_t)I2C_Buffer[1]);
 
     return SENSOR_ERROR_NONE;
 }//end LSM6DSOX_Therm_Read()

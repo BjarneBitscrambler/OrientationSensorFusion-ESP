@@ -85,18 +85,21 @@ bool SensorFusion::InstallSensor(uint8_t sensor_i2c_addr,
                           sensor_i2c_addr, kLoopsPerAccelRead, NULL,
                           Accel_Init, Accel_Read);
       ++num_sensors_installed_;
+      ESP_LOGI("sensor_fusion_class", "Installed Accelerometer.");
       break;
     case SensorType::kMagnetometer:
       sfg_->installSensor(sfg_, &sensors_[num_sensors_installed_],
                           sensor_i2c_addr, kLoopsPerMagRead, NULL,
                           Mag_Init, Mag_Read);
       ++num_sensors_installed_;
+      ESP_LOGI("sensor_fusion_class", "Installed Magnetometer.");
       break;
     case SensorType::kGyroscope:
       sfg_->installSensor(sfg_, &sensors_[num_sensors_installed_],
                           sensor_i2c_addr, kLoopsPerGyroRead, NULL,
                           Gyro_Init, Gyro_Read);
       ++num_sensors_installed_;
+      ESP_LOGI("sensor_fusion_class", "Installed Gyro.");
       break;
     case SensorType::kThermometer:
       // use the thermometer built into FXOS8700. Not precise nor calibrated,
@@ -105,6 +108,7 @@ bool SensorFusion::InstallSensor(uint8_t sensor_i2c_addr,
                           sensor_i2c_addr, kLoopsPerThermRead, NULL,
                           Therm_Init, Therm_Read);
       ++num_sensors_installed_;
+      ESP_LOGI("sensor_fusion_class", "Installed Thermometer.");
       break;
     case SensorType::kBarometer:
       // TODO define some access functions for this
@@ -166,8 +170,7 @@ void SensorFusion::ReadSensors(void) {
   sfg_->readSensors(
       sfg_,
       loops_per_fuse_counter_);  // Reads sensors, applies HAL, removes -32768
-
-}  // end ReadSensors()
+ }  // end ReadSensors()
 
 /**
  * @brief Apply fusion algorithm to sensor raw data.

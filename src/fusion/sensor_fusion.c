@@ -104,6 +104,7 @@ void initSensorFusionGlobals(SensorFusionGlobals *sfg,
 #if F_USING_PRESSURE
     sfg->Pressure.iWhoAmI = 0;
 #endif
+    ESP_LOGI("sensor_fusion.c", "Done initSensorFusionGlobals()");
 } // end initSensorFusionGlobals()
 
 /// installSensor is used to instantiate a physical sensor driver into the
@@ -118,6 +119,7 @@ int8_t installSensor(
                      initializeSensor_t *initialize,    ///< pointer to sensor initialization function
                      readSensor_t *read)        ///< pointer to sensor read function
 {
+    ESP_LOGI("sensor_fusion.c", "Started installSensor()");
     if (sfg && pSensor && initialize && read)
     {
     /* was  pSensor->deviceInfo.deviceInstance = busInfo->deviceInstance;
@@ -141,7 +143,7 @@ int8_t installSensor(
         return (0);
     }
     else
-    {
+    {   ESP_LOGI("sensor_fusion", "Installation aborted.");
         return (1);
     }
 } // end installSensor()
@@ -153,10 +155,12 @@ int8_t initializeSensors(SensorFusionGlobals *sfg)
     struct PhysicalSensor  *pSensor;
     int8_t          s;
     int8_t          status = 0;
+    ESP_LOGI("sensor_fusion.c", "starting initializeSensors()");
     for (pSensor = sfg->pSensors; pSensor != NULL; pSensor = pSensor->next)
     {
         s = pSensor->initialize(pSensor, sfg);
         if (status == 0) status = s;            // will return 1st error flag, but try all sensors
+        ESP_LOGI("sensor_fusion.c", "Done 1. Status = %d",s);
     }
     return (status);
 } // end initializeSensors()
@@ -284,14 +288,14 @@ int8_t readSensors(
     int8_t          status = SENSOR_ERROR_NONE;
 
     pSensor = sfg->pSensors;
-
+ 
     for (pSensor = sfg->pSensors; pSensor != NULL; pSensor = pSensor->next)
     {   if (pSensor->isInitialized) {
             if ( 0 == (read_loop_counter % pSensor->schedule)) {
                 //read the sensor if it is its turn (per loop_counter)
-                s = pSensor->read(pSensor, sfg);
+               s = pSensor->read(pSensor, sfg);  //seems to do this OK
                 if(s != SENSOR_ERROR_NONE) {
-                    //sensor reported error, so mark it uninitialized.
+                   //sensor reported error, so mark it uninitialized.
                     //If it becomes reinitialized next loop, init function will set flag back to sensor type
                     pSensor->isInitialized = F_USING_NONE; 
                 }
@@ -300,7 +304,7 @@ int8_t readSensors(
         }else {
             //sensor not initialized. Make one attempt to init it.
             //If init succeeds, next time through a sensor read will be attempted
-            s = pSensor->initialize(pSensor, sfg);
+           s = pSensor->initialize(pSensor, sfg);
             if (s != SENSOR_ERROR_NONE) {
               //note that there is still an error
               status = s;
@@ -557,12 +561,16 @@ void conditionSample(int16_t sample[3])
     if (sample[CHZ] == -32768) sample[CHZ]++;
 } // end conditionSample()
 
+
+/**
+ * @brief Place one sample vector (X,Y,Z values) into Gyro, Mag, or Accel FIFOs.
+ * 
+ */
 void addToFifo(union FifoSensor *sensor, uint16_t maxFifoSize, int16_t sample[3])
 {
   // Note that FifoSensor is a union of GyroSensor, MagSensor and AccelSensor.
   // All contain FIFO structures in the same location.  We use the Accel
   // structure to index here.
-
   // example usage: if (status==SENSOR_ERROR_NONE) addToFifo((FifoSensor*) &(sfg->Mag), MAG_FIFO_SIZE, sample);
     uint8_t fifoCount = sensor->Accel.iFIFOCount;
     if (fifoCount < maxFifoSize) {
@@ -575,6 +583,7 @@ void addToFifo(union FifoSensor *sensor, uint16_t maxFifoSize, int16_t sample[3]
     } else {
         //there is no room for a new sample
         sensor->Accel.iFIFOExceeded += 1;
+        ESP_LOGW("sensor_fusion.c", "FIFO full.");
     }
 } // end addToFifo()
 

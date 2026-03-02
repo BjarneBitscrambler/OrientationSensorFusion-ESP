@@ -90,6 +90,7 @@ typedef enum {
 typedef enum {
     lsm6dsox_ctrl3c_reboot  = 0x80, //Reboot memory content. Bit automatically clears after boot.
     lsm6dsox_ctrl3c_bdu     = 0x40, //Output data MSB and LSB update & read synchronously
+    lsm6dsox_ctrl3c_ifinc   = 0x04, //auto-increment register address for multi-byte reads. Default = 1 = increment.
     lsm6dsox_ctrl3c_swreset = 0x01, //Software reset. Bit automatically clears after reset.
 } lsm6dsox_ctrl3c_t;
 

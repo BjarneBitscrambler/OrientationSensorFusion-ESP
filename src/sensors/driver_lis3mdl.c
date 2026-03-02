@@ -67,15 +67,16 @@ int8_t LIS3MDL_Mag_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
     uint8_t reg;
 
     status = Sensor_I2C_Read_Register(&sensor->deviceInfo, sensor->addr, LIS3MDL_WHOAMI, 1, &reg);
-
     if (status==SENSOR_ERROR_NONE) 
     {  sfg->Mag.iWhoAmI = reg;
        if (reg != LIS3MDL_WHOAMI_RESPONSE) 
-       {  return SENSOR_ERROR_INIT;  // The whoAmI did not match
+       {    ESP_LOGE("driver_lis3mdl", "Unexpected response %x to WhoAmI from Magnetometer. Expected %x", (uint8_t) reg, (uint8_t) LIS3MDL_WHOAMI_RESPONSE);
+            return SENSOR_ERROR_INIT;  // The whoAmI did not match
        }
     } else 
     {  // whoAmI will retain default value of zero
        // return with error
+       ESP_LOGE("driver_lis3mdl", "Error fetching WhoAmI from Magnetometer: %d", status);
        return status;
     }
 
@@ -101,7 +102,9 @@ int8_t LIS3MDL_Mag_Init(struct PhysicalSensor *sensor, SensorFusionGlobals *sfg)
     sfg->Mag.iCountsPeruT = (int) (LIS3MDL_COUNTSPERGAUSS / UT_PER_GAUSS);
     sfg->Mag.fCountsPeruT = (float) (LIS3MDL_COUNTSPERGAUSS / UT_PER_GAUSS);
     sfg->Mag.fuTPerCount = UT_PER_GAUSS / LIS3MDL_COUNTSPERGAUSS;
-
+       
+    ESP_LOGI("driver_lis3mdl", "Magnetometer initialized");
+ 
     return (status);
 } // end LIS3MDL_Mag_Init()
 
@@ -141,8 +144,10 @@ int8_t LIS3MDL_Mag_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg)
         conditionSample(sample);  // truncate negative values to -32767
         addToFifo((union FifoSensor*) &(sfg->Mag), MAG_FIFO_SIZE, sample);
         status = SENSOR_ERROR_NONE;
-    }
-        
+//        ESP_LOGI("driver_lis3mdl", "Magnetometer data: %02x %02x, %02x %02x, %02x %02x",
+//            (uint8_t)I2C_Buffer[0],(uint8_t)I2C_Buffer[1],(uint8_t)I2C_Buffer[2],
+//            (uint8_t)I2C_Buffer[3],(uint8_t)I2C_Buffer[4],(uint8_t)I2C_Buffer[5]);
+    }        
     return status;
 }//end LIS3MDL_Mag_Read()
 

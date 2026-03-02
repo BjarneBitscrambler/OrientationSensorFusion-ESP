@@ -80,7 +80,12 @@ extern "C" {
 #include "driver_lis3mdl.h"
 #include "driver_lsm6dsox.h"
 
-#define Accel_Init LSM6DSOX_Accel_Init
+/** @brief Include here the specific device driver files - usually a .c and a .h
+  * When multiple sensors exist in one IC, the easiest approach is to create one
+  * init routine, that then calls the individual sensor inits.  See 
+  * driver_lsm6dsox.c for example.
+  */
+#define Accel_Init LSM6DSOX_Accel_Init   
 #define Mag_Init   LIS3MDL_Mag_Init
 #define Therm_Init LSM6DSOX_Therm_Init
 #define Gyro_Init  LSM6DSOX_Gyro_Init
