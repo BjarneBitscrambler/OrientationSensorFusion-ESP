@@ -104,12 +104,9 @@ void setup() {
   // init WiFi connection
   WiFi.softAP(ssid, password);
   IPAddress myIP = WiFi.softAPIP();
-  Serial.print("My AP IP address: ");
-  Serial.println(myIP);
+  ESP_LOGI("setup()","My AP IP address: %s", myIP);
   server.begin(23);
-  Serial.print("TCP server started. Connect to ");
-  Serial.print(myIP);
-  Serial.println(" on port 23.");
+  ESP_LOGI("setup()","TCP server started. Connect to %s on port 23.", myIP);
 #endif
 
   //create our fusion engine instance
@@ -230,7 +227,7 @@ void loop() {
 
 //    sfg.applyPerturbation(
 //            &sfg);  // apply debug perturbation (if testing mode enabled)
-              //      Serial.println("applied perturbation");
+              //      ESP_LOGI("loop()","applied perturbation");
 
     digitalWrite(DEBUG_OUTPUT_PIN, i % 2);  // toggle pin for debugging
     i++;
@@ -276,7 +273,7 @@ void loop() {
      * references the desired stream(s).
      */
 //    if (!sensor_fusion->SendArbitraryData(output_str, strlen(output_str))) {
-//    Serial.println("couldn't send output");
+//    ESP_LOGW("loop()","couldn't send output in SendArbitraryData()");
 //    }
 
   } // end timed if() that prints data as text
