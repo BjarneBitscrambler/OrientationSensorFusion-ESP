@@ -1,7 +1,9 @@
 
-/*! \file debug_print.h
-    \brief defines function debug_print() that outputs to serial port
-    Can disable these prints by compiling without defining ENABLE_DEBUG_LOG
+/** @file debug_print.h
+    @brief Declares function debug_log() that outputs using ESP_LOGx()
+    Usually this outputs to serial port - see system file esp_log.h
+    Can change the definition in debug_print.cc to send messages via
+    another method, e.g. if porting to a different platform.
 */
 
 #ifndef DEBUG_PRINT_H

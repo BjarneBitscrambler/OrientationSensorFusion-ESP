@@ -25,6 +25,7 @@ extern "C" {
 
 // print debug messages to serial output. Set to 1 to enable, 0 to disable
 #define ENABLE_DEBUG_LOG 0
+#define LOGGING_LEVEL ESP_LOG_DEBUG
 
 /// @name CoordinateSystemBitFields
 /// These defines determine the frame of reference (x, y, z axes and Euler angles) standard

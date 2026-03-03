@@ -96,7 +96,7 @@ void setup() {
 
   pinMode(DEBUG_OUTPUT_PIN, GPIO_MODE_OUTPUT);
 
-  esp_log_level_set("*", ESP_LOG_DEBUG);  //inits serial port, sets up logging
+  esp_log_level_set("*", LOGGING_LEVEL);  //init serial port, set up logging at level selected in build.h
   ESP_LOGI("setup()","Serial port configured.");
 
   // wifi config - using ESP as Access Point (AP)
@@ -136,41 +136,41 @@ void setup() {
 #if F_USE_WIRELESS_UART && F_USE_WIRED_UART
   // setup IO subsystem to use both Serial and WiFi
   if (!(sensor_fusion->InitializeInputOutputSubsystem(&Serial, &tcp_client))) {
-    ESP_LOGE("setup()","trouble initting Output and Control system: wireless and wired UART");
+    ESP_LOGE("setup()","trouble initting Output and Control system for wireless and wired UART");
   }
 #elif F_USE_WIRED_UART
   // setup IO subsystem to use only Serial port
   if (!(sensor_fusion->InitializeInputOutputSubsystem(&Serial, NULL))) {
-    ESP_LOGE("setup()","trouble initting Output and Control system: wired UART");
+    ESP_LOGE("setup()","trouble initting Output and Control system for wired UART");
   }
 #elif F_USE_WIRELESS_UART
   // setup IO subsystem to use only WiFi
   if (!(sensor_fusion->InitializeInputOutputSubsystem(NULL, &tcp_client))) {
-    ESP_LOGE("setup()","trouble initting Output and Control system: wireless UART");
+    ESP_LOGE("setup()","Trouble initting Output and Control system for wireless UART");
   }
 #else
-  // setup IO subsystem for no output
+  // setup IO subsystem for no output (except serial output from main loop())
   if (!(sensor_fusion->InitializeInputOutputSubsystem(NULL, NULL))) {
-    ESP_LOGE("setup()","trouble initting Output and Control system: zero output");
+    ESP_LOGE("setup()","Trouble initting Output and Control system for zero output");
   }
 #endif
 
   // connect to the sensors.  Accelerometer and magnetometer are in same IC.
   if(! sensor_fusion->InstallSensor(BOARD_MAG_I2C_ADDR,
                                SensorType::kMagnetometer) ) {
-    ESP_LOGE("setup()","trouble installing Magnetometer");
+    ESP_LOGE("setup()","Trouble installing Magnetometer");
   }
   if(! sensor_fusion->InstallSensor(BOARD_ACCEL_I2C_ADDR,
                                SensorType::kAccelerometer) ) {
-    ESP_LOGE("setup()","trouble installing Accelerometer");
+    ESP_LOGE("setup()","Trouble installing Accelerometer");
   }
   if(! sensor_fusion->InstallSensor(BOARD_THERM_I2C_ADDR,
                                SensorType::kThermometer) ) {
-    ESP_LOGE("setup()","trouble installing Thermometer");
+    ESP_LOGE("setup()","Trouble installing Thermometer");
   }
   if(! sensor_fusion->InstallSensor(BOARD_GYRO_I2C_ADDR,
                                SensorType::kGyroscope) ) {
-    ESP_LOGE("setup()","trouble installing Gyroscope");
+    ESP_LOGE("setup()","Trouble installing Gyroscope");
   }
   ESP_LOGI("setup()","Sensors connected");
 
@@ -178,8 +178,8 @@ void setup() {
   if(sensor_fusion->GetSystemStatus() == NORMAL)
   { ESP_LOGI("setup()","Fusion Engine Ready");
   }else
-  { ESP_LOGW("setup()","Fusion status: %d\n",(int)sensor_fusion->GetSystemStatus());
-    //may not see this if Begin() hangs, which it does when non-I2C pins chosen.
+  { ESP_LOGW("setup()","Sensor may not be attached. Fusion status: %d\n",(int)sensor_fusion->GetSystemStatus());
+    //may not see this if Begin() hangs, which happens when non-I2C pins chosen.
     //If pins are I2C-capable, but no physical sensor attached, then will see this error.
   }
   last_loop_time = millis(); //these will be used in loop()
@@ -243,13 +243,21 @@ void loop() {
   if ((millis() - last_print_time) > kPrintIntervalMs) {
     last_print_time += kPrintIntervalMs;
     snprintf(output_str, MAX_LEN_OUT_BUF,
-            "Heading %03.0f, Pitch %+4.0f, Roll %+4.0f, Temp %3.0fC, TurnRate %+5.0f, B %3.0f uT, Inc %3.0f deg, Status %d",
+            "Heading %03.0f, Pitch %+4.0f, Roll %+4.0f, Temp %3.0fC, TurnRate %+5.0f, B %3.0f uT,\
+ Order %2.0f, FitErr %0.3f, FitErrT %0.3f, Noise %1.3f, PitchRate %+3.0f, RollRate %+3.0f,\
+ Inc %3.0f deg, Status %d",
             sensor_fusion->GetHeadingDegrees(),
             sensor_fusion->GetPitchDegrees(),
             sensor_fusion->GetRollDegrees(),
             sensor_fusion->GetTemperatureC(),
             sensor_fusion->GetTurnRateDegPerS(),
             sensor_fusion->GetMagneticBMagTrial(),
+            sensor_fusion->GetMagneticCalSolver(),
+            sensor_fusion->GetMagneticFitError(),
+            sensor_fusion->GetMagneticFitErrorTrial(),
+            sensor_fusion->GetMagneticNoiseCovariance(),
+            sensor_fusion->GetPitchRateDegPerS(),
+            sensor_fusion->GetRollRateDegPerS(),
             sensor_fusion->GetMagneticInclinationDeg(),
             sensor_fusion->GetSystemStatus()
    );
@@ -259,8 +267,7 @@ void loop() {
     /**
      * If preferred, the library's input/output subsystem can be used
      * to output data. This is useful, for example, to send the data
-     * via WiFi instead of a wired connection. To do this, comment out
-     * the Serial.print() command above, and use the 
+     * via WiFi instead of a wired connection. To do this, use the 
      * following call to SendArbitraryData(), or the earlier-mentioned
      * ProduceToolboxOutput().  With either I/O subsystem call, ensure
      * that at least one of either the Serial stream or WiFi stream is
