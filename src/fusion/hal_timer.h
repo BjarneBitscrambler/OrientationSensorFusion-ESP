@@ -10,8 +10,7 @@
 
 /*! \file hal_timer.h
     \brief Wrapper for Hardware Abstraction Layer (HAL)
-    Contains replacements for hardware-specific functions 
-    Currently only timer functions.
+    Contains implementations for hardware-specific timer functions.
 */
 
 #ifndef __HAL_TIMER_H__

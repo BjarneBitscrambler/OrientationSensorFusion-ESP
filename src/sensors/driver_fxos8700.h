@@ -14,18 +14,28 @@
 #ifndef DRIVER_FXOS8700_H_
 #define DRIVER_FXOS8700_H_
 
+#include <stdint.h>
+#include "driver_sensors_types.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdint.h>
-
-#include "driver_sensors_types.h"
 
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
+int8_t FXOS8700_Accel_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+int8_t FXOS8700_Mag_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+int8_t FXOS8700_Therm_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+int8_t FXOS8700_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+
+int8_t FXOS8700_Accel_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+int8_t FXOS8700_Mag_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+int8_t FXOS8700_Therm_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+int8_t FXOS8700_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+
+int8_t FXOS8700_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
 
 /*!
  * @brief This defines the sensor specific information for I2C.

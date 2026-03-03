@@ -18,9 +18,9 @@
 
 #include "board.h"
 #include "build.h"
-#include "sensor_fusion/sensor_fusion.h"
-#include "sensor_fusion/control.h"
-#include "sensor_fusion/status.h"
+#include "fusion/sensor_fusion.h"
+#include "fusion/control.h"
+#include "fusion/status.h"
 
 /**
  *  enum constants used to indicate what type of sensor is being installed
@@ -29,7 +29,6 @@
 enum class SensorType {
   kMagnetometer,
   kAccelerometer,
-  kMagnetometerAccelerometer,
   kGyroscope,
   kBarometer,
   kThermometer
@@ -107,13 +106,15 @@ class SensorFusion {
    * number of sensor reads and each execution of the fusion algorithm.
    * Normally there is a 1:1 relationship (i.e. read, fuse, read, fuse,...)
    * but other arrangements are possible (e.g. read, read, fuse, read,
-   * read,...) The rate at which main loop() executes is set by
-   * LOOP_RATE_HZ in build.h
+   * read,...) The rate at which main loop() calls Reads and RunFusion is set by
+   * LOOP_RATE_HZ in build.h. The Read and RunFusion functions then check
+   * whether the requested number of loops have been run, before actually
+   * performing the action. 
    */
-  const uint8_t kLoopsPerMagRead =
-      1;  ///< how often a magnetometer read is performed
   const uint8_t kLoopsPerThermRead =
       1;  ///< how often a thermometer read is performed
+  const uint8_t kLoopsPerMagRead =
+      1;  ///< how often a magnetometer read is performed
   const uint8_t kLoopsPerAccelRead =
       1;  ///< how often an accelerometer read is performed
   const uint8_t kLoopsPerGyroRead =

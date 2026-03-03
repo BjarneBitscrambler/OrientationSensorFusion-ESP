@@ -1,0 +1,56 @@
+Output Data Rates of sensors Vs. Fusion Rates
+
+In sensor_fusion_class.h
+  const uint8_t kLoopsPerThermRead =
+      1;  ///< how often a thermometer read is performed
+  const uint8_t kLoopsPerMagRead =
+      1;  ///< how often a magnetometer read is performed
+  const uint8_t kLoopsPerAccelRead =
+      1;  ///< how often an accelerometer read is performed
+  const uint8_t kLoopsPerGyroRead =
+      1;  ///< how often a gyroscope read is performed
+  const uint8_t kLoopsPerFusionCalc =
+      1;  ///< how often to fuse. Usually the max of previous 3 constants.
+
+    member loops_per_fuse_counter_ is incremented each call to SensorFusion::RunFusion(),
+    and Fusion is only performed each kLoopsPerFusionCalc'th time through. Reset to 1 after fusion.
+
+    SensorFusion::ReadSensors() passes  loops_per_fuse_counter_ to ReadSensors() unchanged. Then in sensor_fusion.c
+    in readSensors() we read if ( 0 == (read_loop_counter % pSensor->schedule)).  schedule is set when 
+    SensorFusion::InstallSensor() is called , using the kLoopsPer___Read constants.
+
+In build.h
+    // The Output Data Rates (ODR) are set by the calls to *_Init() for each physical sensor.
+    // If a sensor has a FIFO, then it can be read once/fusion cycle; if not, then read more often
+    #define GYRO_ODR_HZ     400 ///< (int) requested gyroscope ODR Hz
+    #define ACCEL_ODR_HZ    200 ///< (int) requested accelerometer ODR Hz (overrides MAG_ODR_HZ for FXOS8700)
+    #define MAG_ODR_HZ      200 ///< (int) requested magnetometer ODR Hz (overridden by ACCEL_ODR_HZ for FXOS8700)
+    #define LOOP_RATE_HZ     40 //adjust according to the size of the FIFOs on sensors. If no FIFO (e.g. 
+    //FXOS8700 magnetometer) and don't want to skip any readings then need to read at same rate as ODR. 
+    //If FIFO exists or willing to skip readings, then usually set same as FUSION_HZ. See also sensor_fusion_class.h
+    #define FUSION_HZ       40  ///< (int) rate of fusion algorithm execution
+
+    GYRO_ODR_HZ is used in driver_fxos21002.c when configuring IC registers. Same for other ODR defines.
+
+In sensor_fusion.h 
+    the sensor structs that contain the software FIFOs are defined, with a size of GYRO_FIFO_SIZE etc.
+    Each sensor maintains  its own software FIFO, which is added to by addToFifo() in sensor_fusion.h, which is called
+    each time a sensor is read. 
+    We don't want to overrun this FIFO.
+
+
+ 
+
+In driver_sensors.h
+    #define GYRO_FIFO_SIZE  32	///< FXAX21000, FXAS21002 have 32 element FIFO
+    #define ACCEL_FIFO_SIZE 32	///< FXOS8700 (accel), MMA8652, FXLS8952 all have 32 element FIFO
+    #define MAG_FIFO_SIZE 	1	///< FXOS8700 (mag) and MAG3110 have no FIFO so equivalent to 1 element FIFO. For 
+there is a define section for each particular sensor IC.   To avoid overrunning the software FIFOs, these should
+be >= the GYRO_ODR_HZ / FUSION_HZ
+
+
+ReadSensors() and RunFusion() are called in main loop(), at LOOP_RATE_HZ. RunFusion() could probably be checked against FUSION_HZ,
+but then would need to check how this affects the loop counter inside the sensor_fusion_class.
+
+
+ 

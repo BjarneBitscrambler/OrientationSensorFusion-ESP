@@ -26,7 +26,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "driver_sensors_types.h"
+#include "../sensors/driver_sensors_types.h"
 
 #ifndef I2C_ERROR_OK
     #define I2C_ERROR_OK (0)  //not defined in ESP8266 Wire library, but is in the ESP32 version

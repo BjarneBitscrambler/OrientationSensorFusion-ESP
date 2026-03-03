@@ -18,6 +18,10 @@
 extern "C" {
 #endif
 
+int8_t FXAS21002_Init(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+int8_t FXAS21002_Read(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+int8_t FXAS21002_Idle(PhysicalSensor *sensor, SensorFusionGlobals *sfg);
+
 /**
  **
  ** @brief The FXAS21002 Sensor Register  Map.
