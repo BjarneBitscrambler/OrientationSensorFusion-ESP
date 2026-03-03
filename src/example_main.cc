@@ -234,9 +234,9 @@ void loop() {
 
   }  // end of if() that reads sensors and runs fusion as needed
 
-  // Send example output to Serial port
-  // A few example parameters are chosen - see sensor_fusion_class.h for
-  // a complete list of Get___() methods.
+  /// Send example output to Serial port
+  /// Some example parameters are chosen - see sensor_fusion_class.h for
+  /// a complete list of Get___() methods.
   if ((millis() - last_print_time) > kPrintIntervalMs) {
     last_print_time += kPrintIntervalMs;
     snprintf(output_str, MAX_LEN_OUT_BUF,
@@ -259,7 +259,7 @@ void loop() {
             sensor_fusion->GetSystemStatus()
    );
 
-    ESP_LOGI("main()", "%s", output_str ); //simplest way to see library output
+    ESP_LOGI("main()", "%s", output_str ); //serial port - simplest way to see library output
 
     /**
      * If preferred, the library's input/output subsystem can be used

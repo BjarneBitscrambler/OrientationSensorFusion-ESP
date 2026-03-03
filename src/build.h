@@ -23,9 +23,9 @@ extern "C" {
 
 #define THISBUILD 720 ///< define build number sent in debug packet for display purposes only
 
-// print debug messages to serial output. Set to 1 to enable, 0 to disable
-#define ENABLE_DEBUG_LOG 0
-#define LOGGING_LEVEL ESP_LOG_DEBUG
+/// print debug_log() messages (mostly used in calibration_storage.cc) to serial output. Set to 1 to enable, 0 to disable
+#define ENABLE_DEBUG_LOG 0  ///see debug_print.h  Points debug_log() to use ESP_LOGx() functionality.
+#define LOGGING_LEVEL ESP_LOG_DEBUG ///set level of log messages output to serial port
 
 /// @name CoordinateSystemBitFields
 /// These defines determine the frame of reference (x, y, z axes and Euler angles) standard
@@ -83,7 +83,7 @@ extern "C" {
 /// multiple data points which are then stored in the sensor's software FIFO until fusion.
 ///@{
 #define LOOP_RATE_HZ    40 //adjust according to the size of the FIFOs on sensors. If no FIFO (e.g. 
-//FXOS8700 magnetometer) and don't want to skip any readings then need to read at same rate as ODR. 
+//FXOS8700 magnetometer) and don't want to skip any readings then need to read at same rate as sensor's ODR. 
 //If FIFO exists or willing to skip readings, then usually set same as FUSION_HZ. See also sensor_fusion_class.h
 #define FUSION_HZ       40  ///< (int) rate of fusion algorithm execution
 ///@}

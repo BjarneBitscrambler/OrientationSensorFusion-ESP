@@ -49,7 +49,8 @@ there is a define section for each particular sensor IC.   To avoid overrunning 
 be >= the GYRO_ODR_HZ / FUSION_HZ
 
 
-ReadSensors() and RunFusion() are called in main loop(), at LOOP_RATE_HZ (RunFusion() should probably be checked against FUSION_HZ)
+ReadSensors() and RunFusion() are called in main loop(), at LOOP_RATE_HZ. RunFusion() could probably be checked against FUSION_HZ,
+but then would need to check how this affects the loop counter inside the sensor_fusion_class.
 
 
  

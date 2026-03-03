@@ -15,6 +15,7 @@
 #include <Arduino.h>
 #include <sstream>
 #include <string>
+#include <esp_log.h>
 
 #ifdef ESP8266
   #include <ESP8266WiFi.h>
@@ -43,12 +44,14 @@
   #define PIN_I2C_SCL   (14)  // will use default Arduino pins.
 #endif
 #ifdef ESP32
-  #define PIN_I2C_SDA   (-1)  //Adjust to your board. A value of -1
-  #define PIN_I2C_SCL   (-1)  // will use default Arduino pins.
+  #define PIN_I2C_SDA   (11)  //Adjust to your board. A value of -1 (11) for Nano (23) for ESP32-WROVER
+  #define PIN_I2C_SCL   (12)  // will use default Arduino pins.     (12) for nano (25) for ESP32-WROVER
 #endif
 // sensor hardware details       
-#define BOARD_ACCEL_MAG_I2C_ADDR    (0x1F) //I2C address on Adafruit breakout board
-#define BOARD_GYRO_I2C_ADDR         (0x21) //I2C address on Adafruit breakout board
+#define BOARD_ACCEL_I2C_ADDR  (0x6a) //I2C address (0x6A Adafruit 4517; 0x1F Adafruit 3643)
+#define BOARD_MAG_I2C_ADDR    (0x1c) //I2C address (0x1C Adafruit 4517; 0x1F Adafruit 3643)
+#define BOARD_GYRO_I2C_ADDR   (0x6a) //I2C address (0x6A Adafruit 4517; 0x21 Adafruit 3643)
+#define BOARD_THERM_I2C_ADDR  (0x6a) //I2C address (0x6A Adafruit 4517; 0x1F Adafruit 3643)
 
 //pin that can be twiddled for debugging
 #ifdef ESP8266
@@ -93,22 +96,17 @@ void setup() {
 
   pinMode(DEBUG_OUTPUT_PIN, GPIO_MODE_OUTPUT);
 
-  Serial.begin(BOARD_DEBUG_UART_BAUDRATE);  // initialize serial UART
-  // delay not necessary - gives time to open a serial monitor
-  delay(1000);
-  Serial.println("Serial port configured.");
+  esp_log_level_set("*", LOGGING_LEVEL);  //init serial port, set up logging at level selected in build.h
+  ESP_LOGI("setup()","Serial port configured.");
 
   // wifi config - using ESP as Access Point (AP)
 #if F_USE_WIRELESS_UART
   // init WiFi connection
   WiFi.softAP(ssid, password);
   IPAddress myIP = WiFi.softAPIP();
-  Serial.print("My AP IP address: ");
-  Serial.println(myIP);
+  ESP_LOGI("setup()","My AP IP address: %s", myIP);
   server.begin(23);
-  Serial.print("TCP server started. Connect to ");
-  Serial.print(myIP);
-  Serial.println(" on port 23.");
+  ESP_LOGI("setup()","TCP server started. Connect to %s on port 23.", myIP);
 #endif
 
   //create our fusion engine instance
@@ -135,50 +133,50 @@ void setup() {
 #if F_USE_WIRELESS_UART && F_USE_WIRED_UART
   // setup IO subsystem to use both Serial and WiFi
   if (!(sensor_fusion->InitializeInputOutputSubsystem(&Serial, &tcp_client))) {
-    Serial.println("trouble initting Output and Control system");
+    ESP_LOGE("setup()","trouble initting Output and Control system for wireless and wired UART");
   }
 #elif F_USE_WIRED_UART
   // setup IO subsystem to use only Serial port
   if (!(sensor_fusion->InitializeInputOutputSubsystem(&Serial, NULL))) {
-    Serial.println("trouble initting Output and Control system");
+    ESP_LOGE("setup()","trouble initting Output and Control system for wired UART");
   }
 #elif F_USE_WIRELESS_UART
   // setup IO subsystem to use only WiFi
   if (!(sensor_fusion->InitializeInputOutputSubsystem(NULL, &tcp_client))) {
-    Serial.println("trouble initting Output and Control system");
+    ESP_LOGE("setup()","Trouble initting Output and Control system for wireless UART");
   }
 #else
-  // setup IO subsystem for no output
+  // setup IO subsystem for no output (except serial output from main loop())
   if (!(sensor_fusion->InitializeInputOutputSubsystem(NULL, NULL))) {
-    Serial.println("trouble initting Output and Control system");
+    ESP_LOGE("setup()","Trouble initting Output and Control system for zero output");
   }
 #endif
 
   // connect to the sensors.  Accelerometer and magnetometer are in same IC.
-  if(! sensor_fusion->InstallSensor(BOARD_ACCEL_MAG_I2C_ADDR,
+  if(! sensor_fusion->InstallSensor(BOARD_MAG_I2C_ADDR,
                                SensorType::kMagnetometer) ) {
-    Serial.println("trouble installing Magnetometer");
+    ESP_LOGE("setup()","Trouble installing Magnetometer");
   }
-  if(! sensor_fusion->InstallSensor(BOARD_ACCEL_MAG_I2C_ADDR,
+  if(! sensor_fusion->InstallSensor(BOARD_ACCEL_I2C_ADDR,
                                SensorType::kAccelerometer) ) {
-    Serial.println("trouble installing Accelerometer");
+    ESP_LOGE("setup()","Trouble installing Accelerometer");
   }
-  if(! sensor_fusion->InstallSensor(BOARD_ACCEL_MAG_I2C_ADDR,
+  if(! sensor_fusion->InstallSensor(BOARD_THERM_I2C_ADDR,
                                SensorType::kThermometer) ) {
-    Serial.println("trouble installing Thermometer");
+    ESP_LOGE("setup()","Trouble installing Thermometer");
   }
   if(! sensor_fusion->InstallSensor(BOARD_GYRO_I2C_ADDR,
                                SensorType::kGyroscope) ) {
-    Serial.println("trouble installing Gyroscope");
+    ESP_LOGE("setup()","Trouble installing Gyroscope");
   }
-  Serial.println("Sensors connected");
+  ESP_LOGI("setup()","Sensors connected");
 
   sensor_fusion->Begin(PIN_I2C_SDA, PIN_I2C_SCL);
   if(sensor_fusion->GetSystemStatus() == NORMAL)
-  { Serial.println("Fusion Engine Ready");
+  { ESP_LOGI("setup()","Fusion Engine Ready");
   }else
-  { Serial.printf("Fusion status: %d\n",(int)sensor_fusion->GetSystemStatus());
-    //may not see this if Begin() hangs, which it does when non-I2C pins chosen.
+  { ESP_LOGW("setup()","Sensor may not be attached. Fusion status: %d\n",(int)sensor_fusion->GetSystemStatus());
+    //may not see this if Begin() hangs, which happens when non-I2C pins chosen.
     //If pins are I2C-capable, but no physical sensor attached, then will see this error.
   }
   last_loop_time = millis(); //these will be used in loop()
@@ -229,38 +227,44 @@ void loop() {
 
 //    sfg.applyPerturbation(
 //            &sfg);  // apply debug perturbation (if testing mode enabled)
-              //      Serial.println("applied perturbation");
+              //      ESP_LOGI("loop()","applied perturbation");
 
     digitalWrite(DEBUG_OUTPUT_PIN, i % 2);  // toggle pin for debugging
     i++;
 
   }  // end of if() that reads sensors and runs fusion as needed
 
-  // Send example output to Serial port
-  // A few example parameters are chosen - see sensor_fusion_class.h for
-  // a complete list of Get___() methods.
+  /// Send example output to Serial port
+  /// Some example parameters are chosen - see sensor_fusion_class.h for
+  /// a complete list of Get___() methods.
   if ((millis() - last_print_time) > kPrintIntervalMs) {
     last_print_time += kPrintIntervalMs;
     snprintf(output_str, MAX_LEN_OUT_BUF,
-            "%lu: Heading %03.0f, Pitch %+4.0f, Roll %+4.0f, Temp %3.0fC, TurnRate %+5.0f, B %3.0f uT, Inc %3.0f deg, Status %d",
-            millis(), 
+            "Heading %03.0f, Pitch %+4.0f, Roll %+4.0f, Temp %3.0fC, TurnRate %+5.0f, B %3.0f uT,\
+ Order %2.0f, FitErr %0.3f, FitErrT %0.3f, Noise %1.3f, PitchRate %+3.0f, RollRate %+3.0f,\
+ Inc %3.0f deg, Status %d",
             sensor_fusion->GetHeadingDegrees(),
             sensor_fusion->GetPitchDegrees(),
             sensor_fusion->GetRollDegrees(),
             sensor_fusion->GetTemperatureC(),
             sensor_fusion->GetTurnRateDegPerS(),
-            sensor_fusion->GetMagneticBMag(),
+            sensor_fusion->GetMagneticBMagTrial(),
+            sensor_fusion->GetMagneticCalSolver(),
+            sensor_fusion->GetMagneticFitError(),
+            sensor_fusion->GetMagneticFitErrorTrial(),
+            sensor_fusion->GetMagneticNoiseCovariance(),
+            sensor_fusion->GetPitchRateDegPerS(),
+            sensor_fusion->GetRollRateDegPerS(),
             sensor_fusion->GetMagneticInclinationDeg(),
             sensor_fusion->GetSystemStatus()
    );
 
-    Serial.println( output_str ); //simplest way to see library output
+    ESP_LOGI("main()", "%s", output_str ); //serial port - simplest way to see library output
 
     /**
      * If preferred, the library's input/output subsystem can be used
-     * yo output data. This is useful, for example, to send the data
-     * via WiFi instead of a wired connection. To do this, comment out
-     * the Serial.print() command above, and use the 
+     * to output data. This is useful, for example, to send the data
+     * via WiFi instead of a wired connection. To do this, use the 
      * following call to SendArbitraryData(), or the earlier-mentioned
      * ProduceToolboxOutput().  With either I/O subsystem call, ensure
      * that at least one of either the Serial stream or WiFi stream is
@@ -269,7 +273,7 @@ void loop() {
      * references the desired stream(s).
      */
 //    if (!sensor_fusion->SendArbitraryData(output_str, strlen(output_str))) {
-//    Serial.println("couldn't send output");
+//    ESP_LOGW("loop()","couldn't send output in SendArbitraryData()");
 //    }
 
   } // end timed if() that prints data as text
